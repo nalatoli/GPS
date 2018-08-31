@@ -91,6 +91,8 @@
       </ToolNumber>
       <ToolName>Custom Programming Tool</ToolName>
     </custom>
+    <ResetRule>0</ResetRule>
+    <EraseKey />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -174,13 +176,25 @@
     <Compile Include="driver_BUZZER.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="driver_EEPROM.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver_GPS.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="driver_I2C.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="driver_LCD.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="FSM_BASIC.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="header_BUZZER.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_FUNCTIONS.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="header_I2C.h">
@@ -189,7 +203,13 @@
     <Compile Include="header_LCD.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="header_MACROS.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="table_TRANSITION.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
