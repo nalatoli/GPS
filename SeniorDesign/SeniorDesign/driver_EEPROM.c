@@ -6,31 +6,34 @@
 	some of the system variables to the device EEPROM space, which has a 512 byte space.
 	9 bits are used in the [EEARH:EEARL] register pair to access bytes within the space.
 	Some functions from this module are automatically loaded upon system restart.	
- */ 
+*/ 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//								DRIVER SYSTEM VARIABLES           								  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/io.h>
 #include "header_MACROS.h"
 #include "header_FUNCTIONS.h"
 #define F_CPU 16000000UL
 #include "util/delay.h"
+
+uint8_t	NV_USER_PREFERENCES_0,
+		NV_USER_PREFERENCES_1,
+		NV_SYSTEM_STATUS_0,
+		NV_SYSTEM_STATUS_1;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								ADDRESS SPACE CONTENTS           								  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/* PREFERENCES */
-	uint8_t SYS_PREFERENCES_0 = 0;
-	#define PREFERENCES_0 0
-		//UI color {7-4}, Buzzer enabled {3}, Buzz during trace {2}, 
-	#define PREFERENCES_1 1
-	/* NAVIGATION DATA */
-	#define NAV_START 2
-		//Temporal data registers
-		#define NAV_UTC_H 2
-		#define NAV_UTC_M 3
-		#define NAV_UTC_S 4
-
+	//Use this space to define addresses in the EEPROM space, that you have delegated
+	//specific roles to.
 	
-	/* SYSTEM FLAGS */
+	//For example:
+	#define EEPROM_USER_PREF_0		0
+	#define EEPROM_USER_PREF_1		1
+	#define EEPROM_SYSTEM_STATUS_0	2
+	#define EEPROM_SYSTEM_STATUS_1	3
+	#define EEPROM_SD_NEXT_SERIAL	4		//Used to format unique SD cards.
+	
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								FUNCTIONS            											  //
@@ -82,15 +85,13 @@ uint8_t EEPROM_read(uint16_t address){
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void EEPROM_recovery(void){
 	
-	//Enable the EEPROM:
-	EEPROM_enable();
-	
-	//Load in the runtime EEPROM system dashboard:
-	SYS_PREFERENCES_0 = EEPROM_read(PREFERENCES_0);
-	
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void EEPROM_system_autosave(void){
+	//Clear out erroneous data from powerdown:
+
+	//Fetch all of the data stored in the EEPROM space, and return it to its space in memory:
+	NV_SYSTEM_STATUS_0 = EEPROM_read(EEPROM_SYSTEM_STATUS_0);
+	NV_SYSTEM_STATUS_1 = EEPROM_read(EEPROM_SYSTEM_STATUS_1);
+	NV_USER_PREFERENCES_0 = EEPROM_read(EEPROM_USER_PREF_0);
+	NV_USER_PREFERENCES_1 = EEPROM_read(EEPROM_USER_PREF_1);
 	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

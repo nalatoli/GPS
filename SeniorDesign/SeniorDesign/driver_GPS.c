@@ -42,7 +42,27 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								GPS FIRMWARE COMMAND SEQUENCES									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define MTK_EXAMPLE 500
+#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29"
+#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17"
+#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C"
+#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F"
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//								BUFFER LOCATION DEFINITIONS  									  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//This is used to maintain the offsets for various segments of data for the parser to look at.
+#define RMC_UTC			7
+#define RMC_STATUS		18
+#define RMC_LAT			20
+#define RMC_NS			30
+#define RMC_LON			32
+#define RMC_EW			43
+#define RMC_SPEED		45
+#define RMC_COURSE		50
+#define RMC_DATE		57
+#define RMC_MAGVAR		64
+#define RMC_MODE		69
+#define RMC_CHECKSUM	71
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								DRIVER SYSTEM VARIABLES											  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +80,7 @@ typedef struct{
 	uint8_t UTC_YEAR;			//The current year.
 		
 	//Data validity status byte (A = VALID, V = INVALID)
-	unsigned char validity;
+	uint8_t STATUS;
 									
 	//Latitude and longitude in degrees
 	uint16_t latitude_H;
@@ -70,12 +90,15 @@ typedef struct{
 	uint16_t longitude_L;	//Below the decimal point
 	uint8_t EW;				//Indicates you placement relative to the prime meridian.
 	
-	//Ground speed (1*10^-2 knots)
-	uint8_t ground_speed;
+	//Ground speed
+	uint8_t ground_speed_high;
+	uint8_t ground_speed_low;
 	
 	//Course over ground (azimuth angle from GPS North) {DECIMATED}
 	uint16_t course_high;	//Indicates the 360 degrees above the decimal point.
-	uint8_t  couse_low;		//Indicates the precision value below the decimal point.
+	uint8_t  course_low;		//Indicates the precision value below the decimal point.
+	
+	//***Some parameters have been excluded like magnetic variation to save processor speed***
 
 	}GPS_data;
 	
@@ -101,15 +124,10 @@ const char *MONTH_TABLE[] = {	"January  ",
 //is detected in the UDR0 register. After detection, serial storage of data will begin,
 //until the checksum is evaluated, whereupon the system will flush the buffer and wait
 //for another '$'
-unsigned char GPS_BUFFER [256];			//A byte-address length buffer (256 bytes) 
+unsigned char GPS_BUFFER[125];			//A byte-address length buffer (256 bytes) 
 										//							   {Max address: 0xFF, or 255}
 unsigned char GPS_BUFFER_INDEX = 0;
-unsigned char PRE_PARSING_STATUS = 0;	//Used to indicate whether or not we can currently receive
-										//a valid string of data.
-unsigned char PARSING_PHASE[2] = {0,0};	//The array related to the parsing phase is broken up into
-										//two bytes:
-										//PARSING_PHASE[0] : Contains the larger phase count
-										//PARSING_PHASE[1] : Contains a pace counter for sub-phases
+unsigned char GPS_MESSAGE_READY = 0;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								DRIVER FUNCTION SET/PROTOTYPES									  //
@@ -120,12 +138,6 @@ unsigned char PARSING_PHASE[2] = {0,0};	//The array related to the parsing phase
 		-GPS_init_USART			:	Set the framing/baud rate for the system, with asynchronous
 									operation (9600 Baud). Un-assert other colliding peripherals, 
 									and assert the GPS unit.
-		-GPS_select_datum		:	Chooses one of the data packing formats listed in the GPS
-									data sheet. For more information, go there. Consider using
-									enumeration encoding for the 3-character parameters to this
-									function.
-		-GPS_satellite_acquire	:	Does necessary work to engage the GPS module to prompt 
-									satellite acquisition. Also presents wait message to UI. 
 									Ideally can be terminated with interrupts, albeit unnecessary.
 		-GPS_parse_buffer		:	This is triggered at the end of a transmission from the GPS
 									device, specifically when the control characters are
@@ -151,9 +163,6 @@ unsigned char PARSING_PHASE[2] = {0,0};	//The array related to the parsing phase
 									acquisition of data in the TRACING mode is automatically
 									achieved in the 'GPS_parse_buffer' function, which has a
 									logically gated check, that depends on the system state status.
-		-store_trace			:
-		-terminate_trace		:
-		
 */
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								DRIVER FUNCTIONS												  //
@@ -167,16 +176,15 @@ void GPS_disable_stream(void);
 void GPS_send_byte(unsigned char data);
 char GPS_receive_byte(void);
 void GPS_flush_buffer(void);
-void GPS_parse_data(char datum);
-	//Sub-functions necessary for the parsing algorithm:
-	void parse_GPRMC(void);
+void GPS_parse_data(void);
+
 /* FIRMWARE COMMANDS */
 //Or at least the ones we care about:
 // turn on only the second sentence (GPRMC)
-#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29"
-#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17"
-#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C"
-#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F"
+const unsigned char firmware_RMC[49] = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29";
+const unsigned char firmware_BAUD[16] = "$PMTK251,9600*17";
+const unsigned char firmware_HZ[24] = "$PMTK300,1000,0,0,0,0*1C";
+const unsigned char firmware_update_rate[16] = "$PMTK220,1000*1F";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -206,19 +214,36 @@ void GPS_init_USART(uint16_t UBRR){
 	FUNCTION:		GPS_configure_firmware(void);
 	AUTHOR:			Christopher DeFranco
 	
-	DESCRIPTION:	Function initializes the USART system to operate at 9600 baud for the GPS.
-					Then, the transmitter is enabled, and a few commands are sent over to the
-					device to configure its firmware for specified parameters. Afterwards,
-					the device is un-asserted, and everything returns to normal to prevent
-					collision.
+	DESCRIPTION:	This function assumes that the system USART baud rate was already configured
+					to operate at the appropriate baud rate. Ideally, the stream should be closed
+					when invoking this function. Therefore for proper initialization at the
+					outset of chip startup, the process should follow:
+					
+					1.	System recovery
+					2.	GPS_init_USART(9600);
+					3.	GPS_configure_firmware();
+					4.	GPS_enable_stream();
 	
 */
 void GPS_configure_firmware(void){
-	//Enable USART
-	GPS_init_USART();
 
-	//Make sure the receiver is closed, but load linear buffers to send out the firmware commands
-	//serially:
+		//1. Configure baud rate
+		for(int i = 0; i < 16; i++){
+			GPS_send_byte(firmware_BAUD[i]);
+		}
+		//2. Set update rate
+		for(int i = 0; i < 24; i++){
+			GPS_send_byte(firmware_HZ[i]);
+		}
+		//3. Set fix rate
+		for(int i = 0; i < 16; i++){
+			GPS_send_byte(firmware_update_rate[i]);
+		}
+		//4. Set RMC enabled
+		for(int i = 0; i < 49; i++){
+			GPS_send_byte(firmware_RMC[i]);
+		}
+	
 	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,7 +264,7 @@ void GPS_enable_stream(void){
 	GPS_flush_buffer();
 	
 	//Also make sure that the parsing flag is reset as well to prevent erroneous behavior:
-	PRE_PARSING_STATUS = 0;
+	GPS_MESSAGE_READY = 0;
 	
 	//Set receiver-interrupt enable bit, while maintaining register contents:
 	UCSRB |= (1 << RXCIE);
@@ -309,7 +334,7 @@ char GPS_receive_byte(void){
 void GPS_flush_buffer(void){
 	
 	//Clear out data
-	for(int i = 0; i <= 255; i++){
+	for(int i = 0; i < 120; i++){
 		GPS_BUFFER[i] = 0;
 	}
 	
@@ -317,7 +342,7 @@ void GPS_flush_buffer(void){
 	GPS_BUFFER_INDEX = 0;				//Buffer is at start position.
 	
 	//Clear the pre-parsing flag:
-	PRE_PARSING_STATUS = 0;				//Buffer is closed off.
+	GPS_MESSAGE_READY = 0;				//Buffer is closed off.
 	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -332,228 +357,71 @@ void GPS_flush_buffer(void){
 					will clear the buffer and its reception flag, and the cycle will repeat.
 			
 */
-void GPS_parse_data(char datum){
+void GPS_parse_data(void){
 	
-	//Reset parsing counter variables:
-	/* RIGHT NOW IM USING THE GLOBAL ONES */
-	PARSING_PHASE[0] = 0;
-	PARSING_PHASE[1] = 0;
-	
-	//Disable USART receiver:
+	//1. Shut down the stream.
 	GPS_disable_stream();
 	
-	//***NOTE:*** May need to add an extra logical layer here like "while(GPS_BUFFER_INDEX < 255)" to allow multiple
-	//cycles.
+	//2. Reset the MESSAGE_RECEIVED flag
+	GPS_MESSAGE_READY = 0;
 	
-	uint8_t sentence_found = 0;						//Sentence detected flag.
-	//Start by looking for the $ character:
-	while(sentence_found == 0){
-		
-		//If you found the beginning of a sentence, then break:
-		if(GPS_BUFFER[GPS_BUFFER_INDEX] == '$'){
-						sentence_found = 1; 
-						break;
-												}
-
-		//If you didn't detect the '$', then you'd better keep looking:
-		GPS_BUFFER_INDEX++;
-		
-		//If for some reason no sentence is detected (weird), then break the loop entirely,
-		//maintaining the sentence_found = 0 flag, which should cause the function to terminate
-		//in a desirable fashion:
-		if(GPS_BUFFER_INDEX == 255){break;}
-			
-	}
-	
-	//After searching for a sentence, depending on the outcome, you will either want to terminate
-	//the function and reset the buffer entirely... Or if the sentence was detected, now you're interested
-	//in determining what type of sentence was sent:
-	if((sentence_found = 1)){
-		
-		//Normal program operation:
-		char sentence_type[5];
-		//Get the next five bytes from the buffer, and figure out what sentence is selected:
-			//Shift into next character position:
-			GPS_BUFFER_INDEX++;
-			//Grab the next five bytes:
-			for(int i = 0; i < 5; i++){
-				sentence_type[i] = GPS_BUFFER[GPS_BUFFER_INDEX];
-				GPS_BUFFER_INDEX++;
-			}
-			//Now figure out if the sentence matches "GPRMC":
-			if((	(sentence_type[0] == 'G') &&
-					(sentence_type[1] == 'P') &&
-					(sentence_type[2] == 'R') &&
-					(sentence_type[3] == 'M') &&
-					(sentence_type[4] == 'C')		)){
-						
-						//At this point, the test succeeded.
-						//Time to parse the following data:
-						
-							//1. Check and see if the remaining buffer length is long enough to
-							//	support a full sentence:
-							#define GPRMC_LENGTH_BYTES 75
-							if((255 - GPS_BUFFER_INDEX) < GPRMC_LENGTH_BYTES){
-								//Not enough space remains! The parsing will fail. Break out now!
-							}
-							else{
-								//There's enough space, so just continue normally:
-								
-								//2. Invoke the void parse_GPRMC(void) function:
-								// *** You may consider making a branching function for other sentence types ***
-								parse_GPRMC();
-							}
-														}
-			else{
-				
-				//This indicates that the sentence is not of the "GPRMC" type,
-				//therefore we don't care about it (right now).
-				//If we wanted to use other sentence types, then this would be
-				//the go-to area to add additional screening.
-	
-				}
-	
-	} 
-	
-	//Two things could have happened to get to this point:
-	//	1.	The IF statement was false, and it's time to bail.
-	//	2.	The IF statement was true, and the program operated normally.
-	//In any event, this is where the function resets the buffer, re-enables the USART receiver,
-	//and terminates.
-	
-	//Enable receiver and flush buffer:
-	GPS_enable_stream();
-};
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-	SUB-FUNCTION:	void parse_GPRMC(void);
-	AUTHOR:			Christopher DeFranco
-	
-	DESCRIPTION:	Function begins at the first ',' of the sentence. This function assumes the
-					buffer is loaded at the proper index.
-	
-*/
-void parse_GPRMC(void){
-	/* LOOK AHEAD OFFSETS */
-	//These definitions specify how far away a particular segment of data is from the
-	//buffer index:
-	#define to_UTC 0
-	#define to_Status 11	//Lands on the actual character
-	#define to_Latitude 13
-	#define to_NS_indicator 23
-	#define to_Longitude 25
-	#define to_EW_indicator 36
-	#define to_Speed 38
-	#define to_Course 43
-	#define to_Date 50
-	#define to_MagVar 57
-	#define to_Mode 62
-	#define to_Checksum 63	//Lands on '*'
-	/* SUB-DATUM LENGTHS */
-	//These are used to specify the length in bytes of a particular value that is
-	//contained within a typical RMC output sentence.
-	#define len_UTC 10
-	#define len_Status 1
-	#define len_Latitude 9
-	#define len_NS 1
-	#define len_Longitude 10
-	#define len_EW 1
-	#define len_Speed 4
-	#define len_Course 6
-	#define len_date 6
-	#define len_MagVar 6
-	#define len_Mode 1
-	#define len_Checksum 3
-	
-	//Advance one byte in the buffer (skips over ','):
-	GPS_BUFFER_INDEX++;
-	
-	/* EVALUATE CHECKSUM */
-	//Skip ahead, and look for a checksum:
-	//To do this, you must XOR every byte between '$' and '*' with each subsequent byte.
-	uint8_t checksum = 0;
-	for(char i = (GPS_BUFFER_INDEX - 6); i < (GPS_BUFFER_INDEX + to_Checksum); i++){
-		checksum ^= i;	
-	}
-	//After this evaluation, check the flag, and see what happened in the emulator:
-	if(checksum != 0){
-		//Checksum is bad, so we want to exit.
-		checksum = '!';								//Indicator for debugging.
-	}
+	//3. Look for the sentence type, and confirm RMC:
+	//	-The first character should be '$'
+	//	-Therefore, GPS_BUFFER[1] is the first sentence-indicating character.
+	if( (GPS_BUFFER[1] == 'G')&&
+		(GPS_BUFFER[2] == 'P')&&
+		(GPS_BUFFER[3] == 'R')&&
+		(GPS_BUFFER[4] == 'M')&&
+		(GPS_BUFFER[5] == 'C')	){
+			//Continue normally!
+		}
 	else{
-		//Checksum is good, so we can mark it as such.
-		checksum = '*';								//Ditto.
+		//Enter an interminable loop for debugging:
+		while(1);		//YOU FAILED!
 	}
 	
-	/* BEGIN PARSING */
-	//Temporary buffer, has a maximum allocated length of 10.
-	char data_temp[10];
-		
-		//0: Obtain UTC data:
-			//Get raw data:
-			for(int i = 0; i < 10; i++){
-				//Place 10 bytes into a temporary buffer:
-				data_temp[i] = GPS_BUFFER[GPS_BUFFER_INDEX];
-				GPS_BUFFER_INDEX++;
-			}
-			//Condition raw data:
-				//HOUR:
-				SYS_GPS.UTC_H = ((data_temp[0] * 10) + (data_temp[1]));
-				//MINUTE:
-				SYS_GPS.UTC_M = ((data_temp[2] * 10) + (data_temp[3]));
-				//SECOND:
-				SYS_GPS.UTC_S = ((data_temp[4] * 10) + (data_temp[5]));
-				//We do not care about the point precision, although it may be added at a later date.
-		//1: Obtain data valid status:
-			//Grab the data:
-			SYS_GPS.validity = GPS_BUFFER[GPS_BUFFER_INDEX+1];
-			//Put buffer index at first character of next data segment:
-			GPS_BUFFER_INDEX = GPS_BUFFER_INDEX + 3;
-		//2: Obtain latitude:
-			//Loop through buffer to obtain data:
-			for(int i = 0; i < 9; i++){
-				//Grab data:
-				data_temp[i] = GPS_BUFFER[GPS_BUFFER_INDEX];
-				//Increase buffer:
-				GPS_BUFFER_INDEX++;			//At the end of this the next character will be the next ','
-			}
-			//Condition the raw data:
-			SYS_GPS.latitude_H = (	((short)data_temp[0] * 1000)	+ 
-									((short)data_temp[1] * 100)		+ 
-									((short)data_temp[2] * 10)		+ 
-									 (short)data_temp[3]);
-									 //Skip over decimal point:
-			SYS_GPS.latitude_L = (	((short)data_temp[5] * 1000)	+
-									((short)data_temp[6] * 100)		+
-									((short)data_temp[7] * 10)		+
-									 (short)data_temp[8]);
-		//3: Obtain NORTH/SOUTH character:
-			//Grab the indicator character:
-			SYS_GPS.NS = GPS_BUFFER[GPS_BUFFER_INDEX + 1];
-			GPS_BUFFER_INDEX = GPS_BUFFER_INDEX + 3;		//Now you're looking at the first byte of
-															//longitude.
-		//4. Obtain longitude:
-			//Load temporary buffer:
-			for(int i = 0; i < 10; i++){
-				//Grab data:
-				data_temp[i] = GPS_BUFFER[GPS_BUFFER_INDEX];
-				//Increment:
-				GPS_BUFFER_INDEX++;
-			}
-			//Condition that data:
-			SYS_GPS.longitude_H = (	((uint32_t)data_temp[0] * 10000)	+
-									((uint32_t)data_temp[1] * 1000)		+
-									((uint32_t)data_temp[2] * 100)		+
-									((uint32_t)data_temp[3] * 10)		+
-									 (uint32_t)data_temp[4]		);
-			SYS_GPS.longitude_L = (	((uint16_t)data_temp[6] * 1000)		+
-									((uint16_t)data_temp[7] * 100)		+
-									((uint16_t)data_temp[8] * 10)		+
-									 (uint16_t)data_temp[9]		);
-		//5. Obtain EAST/WEST character:
-			//Fetch the character:
-			SYS_GPS.EW = GPS_BUFFER[GPS_BUFFER_INDEX+1];
-			GPS_BUFFER_INDEX = GPS_BUFFER_INDEX + 3;
-		//6. TO BE CONTINUED...
-}
+	//4. Unpack all of the data between '$' and '*'. Store it on the SYS_GPS object.
+		//A. UTC data:
+		SYS_GPS.UTC_H = (GPS_BUFFER[RMC_UTC] * 10) + (GPS_BUFFER[RMC_UTC + 1]);	
+		SYS_GPS.UTC_M = ((GPS_BUFFER[RMC_UTC + 2] * 10) + (GPS_BUFFER[RMC_UTC + 3])); 
+		SYS_GPS.UTC_S = ((GPS_BUFFER[RMC_UTC + 4] * 10) + (GPS_BUFFER[RMC_UTC + 5]));
+		//B. STATUS:
+		SYS_GPS.STATUS = GPS_BUFFER[RMC_STATUS];
+		//C. LATITUDE:
+		SYS_GPS.latitude_H =	(	(GPS_BUFFER[RMC_LAT] * 1000) + 
+									(GPS_BUFFER[RMC_LAT + 1] * 100)+
+									(GPS_BUFFER[RMC_LAT + 2] * 10)+
+									(GPS_BUFFER[RMC_LAT + 3])	);
+		SYS_GPS.latitude_L =	(	(GPS_BUFFER[RMC_LAT + 5] * 1000) +
+									(GPS_BUFFER[RMC_LAT + 6] * 100)+
+									(GPS_BUFFER[RMC_LAT + 7] * 10)+
+									(GPS_BUFFER[RMC_LAT + 8])	);
+		SYS_GPS.NS = GPS_BUFFER[RMC_NS];
+		//D. LONGITUDE
+		SYS_GPS.longitude_H =	(	(GPS_BUFFER[RMC_LON] * 10000)+
+									(GPS_BUFFER[RMC_LON + 1] * 1000)+
+									(GPS_BUFFER[RMC_LON + 2] * 100)+
+									(GPS_BUFFER[RMC_LON + 3] * 10)+
+									(GPS_BUFFER[RMC_LON + 4])	);
+		SYS_GPS.longitude_L =	(	(GPS_BUFFER[RMC_LON + 6] * 1000)+
+									(GPS_BUFFER[RMC_LON + 7] * 100)+
+									(GPS_BUFFER[RMC_LON + 8] * 10)+
+									(GPS_BUFFER[RMC_LON + 9])	);
+		SYS_GPS.EW = GPS_BUFFER[RMC_EW];
+		//E. SPEED AND COURSE
+		SYS_GPS.ground_speed_high = GPS_BUFFER[RMC_SPEED];
+		SYS_GPS.ground_speed_low = ((GPS_BUFFER[RMC_SPEED + 2] * 10) + (GPS_BUFFER[RMC_SPEED + 3]));
+		SYS_GPS.course_high =	(	(GPS_BUFFER[RMC_COURSE] * 100)+
+									(GPS_BUFFER[RMC_COURSE + 1] * 10)+
+									(GPS_BUFFER[RMC_COURSE + 2])	);
+		SYS_GPS.course_low = ((GPS_BUFFER[RMC_COURSE + 4] * 10) + (GPS_BUFFER[RMC_COURSE + 5]));
+		//F. DATE
+		SYS_GPS.UTC_DAY =	((GPS_BUFFER[RMC_DATE] * 10) + (GPS_BUFFER[RMC_DATE + 1]));
+		SYS_GPS.UTC_MONTH = ((GPS_BUFFER[RMC_DATE + 2] * 10) + (GPS_BUFFER[RMC_DATE + 3]));
+		SYS_GPS.UTC_YEAR =	((GPS_BUFFER[RMC_DATE + 4] * 10) + (GPS_BUFFER[RMC_DATE + 5]));
+	
+	//?. Enable stream, thereby flushing the buffer of all its contents.
+	GPS_enable_stream();
+	
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////

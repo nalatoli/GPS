@@ -38,9 +38,13 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../driver_BUZZER.c \
+../driver_EEPROM.c \
+../driver_GPS.c \
 ../driver_I2C.c \
 ../driver_LCD.c \
-../main.c
+../driver_SD.c \
+../main.c \
+../table_TRANSITION.c
 
 
 PREPROCESSING_SRCS += 
@@ -51,27 +55,43 @@ ASM_SRCS +=
 
 OBJS +=  \
 driver_BUZZER.o \
+driver_EEPROM.o \
+driver_GPS.o \
 driver_I2C.o \
 driver_LCD.o \
-main.o
+driver_SD.o \
+main.o \
+table_TRANSITION.o
 
 OBJS_AS_ARGS +=  \
 driver_BUZZER.o \
+driver_EEPROM.o \
+driver_GPS.o \
 driver_I2C.o \
 driver_LCD.o \
-main.o
+driver_SD.o \
+main.o \
+table_TRANSITION.o
 
 C_DEPS +=  \
 driver_BUZZER.d \
+driver_EEPROM.d \
+driver_GPS.d \
 driver_I2C.d \
 driver_LCD.d \
-main.d
+driver_SD.d \
+main.d \
+table_TRANSITION.d
 
 C_DEPS_AS_ARGS +=  \
 driver_BUZZER.d \
+driver_EEPROM.d \
+driver_GPS.d \
 driver_I2C.d \
 driver_LCD.d \
-main.d
+driver_SD.d \
+main.d \
+table_TRANSITION.d
 
 OUTPUT_FILE_PATH +=SeniorDesign.elf
 
@@ -87,6 +107,14 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
+
+
 
 
 
