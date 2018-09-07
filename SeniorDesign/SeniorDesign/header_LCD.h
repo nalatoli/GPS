@@ -10,9 +10,39 @@
 typedef enum {FALSE,TRUE}	Bool;
 typedef uint16_t			Color;
 typedef struct{
+	int16_t x;
+	int16_t y;
+	} Vector2;
+	
+typedef struct{
+	int16_t x;
+	int16_t y;
+	int16_t w;
+	int16_t h;
+	int16_t xoff;
+	int16_t yoff;
+	int16_t space;
+	Color fg;
+	Color bg;
+	Bool isDrawn;
+} Grid;
+
+typedef struct{
+	uint16_t x0;
+	uint16_t y0;
+	int16_t rot;
+	Color color;
+	Bool isDrawn;
+} Arrow;
+
+typedef struct{
 	uint16_t x;
 	uint16_t y;
-	} Vector2;
+	uint8_t size;
+	Color fg;
+	Color bg;
+	
+} TextHandler;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //									      LCD Public Functions									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,10 +68,13 @@ void LCD_print_str(char * str);
 void LCD_print_num(float num, uint8_t width, uint8_t prec);
 
 /* One-Instance Drawing */
-void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xoff, int16_t yoff, Color color);
+void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xoff, int16_t yoff, Color fg, Color bg);
 void LCD_init_arrow(uint16_t x0, uint16_t y0, uint16_t rot, uint16_t fg);
-//void LCD_shiftGrid(Vector2 dir);
-//void LCD_scaleGrid(int16_t scale);
+Grid LCD_get_grid();
+Arrow LCD_get_arrow();
+void LCD_shiftGrid(Vector2 dir);
+void LCD_zoomGridIn(uint16_t x, uint16_t y);
+void LCD_zoomGridOut(uint16_t x, uint16_t y);
 //void LCD_moveArrow(Vector2 dir);
 //void LCD_rotateArrow(int16_t rot);
 
@@ -56,8 +89,8 @@ void LCD_writedata8(uint8_t);
 //									       LCD Public MACROS									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Direction MACROS */
-static const Vector2 UP = {0,-1};
-static const Vector2 DOWN = {0,1};
+static const Vector2 UP = {0,1};
+static const Vector2 DOWN = {0,-1};
 static const Vector2 LEFT = {-1,0};
 static const Vector2 RIGHT = {1,0};
 
@@ -93,7 +126,7 @@ static const Vector2 RIGHT = {1,0};
 #define GREENYELLOW 0xAFE5     
 #define PINK        0xF81F
 
-static const uint32_t arrow_BMP[18][29] PROGMEM = {
+static const uint32_t arrow_BMPs[18][29] PROGMEM = {
 	{0,0,0,0,0x00800000,0x00f00000,0x00fc0000,0x007f8000,0x007fe000,0x007ff800,0x003fff00,0x003fffc0,0x003ffff0,0x001ffffe,0x001fffff,0x001ffffe,0x003ffff0,0x003fffc0,0x003fff00,0x007ff800,0x007fe000,0x007f8000,0x00fc0000,0x00f00000,0x00800000,0,0,0,0},
 	{0,0,0,0,0x00800000,0x00f00000,0x00fc0000,0x007fa000,0x007ff800,0x007fff00,0x003fffc0,0x003ffff6,0x003fffff,0x001fffff,0x000ffffc,0x000ffff8,0x001fffe0,0x001fff80,0x001ffc00,0x003ff000,0x003fc000,0x003fc000,0x007e0000,0x00780000,0x00400000,0,0,0,0},
 	{0,0,0,0,0,0x01000000,0x01f80000,0x01ff4000,0x00fff800,0x007fffc0,0x007ffff6,0x003fffff,0x003ffffe,0x003ffffc,0x001ffff8,0x000fffe0,0x000fff80,0x001fff00,0x001ffc00,0x001ff800,0x001fe000,0x001fe000,0x001f0000,0x003c0000,0x00380000,0x00200000,0,0,0},
