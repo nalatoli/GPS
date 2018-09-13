@@ -33,54 +33,14 @@
 #include "header_BUZZER.h"
 #include <string.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//								SYSTEM VARIABLES/FUNCTIONS    									  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/* FROM SD */
-extern void SD_init_SPI(void);
-extern void SD_init_card(void);
-extern void SD_assert(void);
-extern void SD_unassert(void);
-extern void SD_SPI_send_byte(uint8_t byte);
-extern void SD_SPI_send_command(uint8_t command, uint32_t arguments, uint8_t CRC);
-extern void SD_SPI_set_block_length(uint16_t bytes);
-extern void SD_SPI_save_coordinate(char type);
-extern void SD_format_card(void);
+/* Temporary test function prototype */
+void HYBRID_print_GPS_data(void);
+//Temporary memory for debug:
+char text_buffer[2] = {0,'|'};
+unsigned char text_column = 0;
+unsigned char text_x = 0;
+const char test_msg[51] = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
 
-/* FROM GPS DRIVER */
-extern unsigned char GPS_BUFFER[125];
-extern unsigned char GPS_BUFFER_INDEX;
-extern unsigned char GPS_MESSAGE_READY;
-extern void GPS_init_USART(uint16_t UBRR);
-extern void GPS_enable_stream(void);
-extern void GPS_disable_stream(void);
-extern void GPS_send_byte(unsigned char data);
-extern char GPS_receive_byte(void);
-extern void GPS_flush_buffer(void);
-extern void GPS_parse_data(void);
-extern void GPS_configure_firmware(void);
-
-/* FROM EEPROM */
-//Persistent (EEPROM-buffered) data:
-extern uint8_t	NV_USER_PREFERENCES_0,
-				NV_USER_PREFERENCES_1,
-				NV_SYSTEM_STATUS_0,
-				NV_SYSTEM_STATUS_1;	
-extern void EEPROM_enable(void);
-extern void EEPROM_write(uint16_t address, uint8_t data);
-extern uint8_t EEPROM_read(uint16_t address);
-extern void EEPROM_recovery(void);
-				
-/* FROM BUZZER */
-extern void init_buzzer(void);
-extern void delay_ms(uint16_t duration);
-extern void tone(uint16_t frequency, uint16_t duration);
-extern void tone_START(uint16_t frequency);
-extern void tone_END (void);
-extern void play(Note *song, uint8_t song_len, uint8_t song_cut);
-
-/* FROM LCD */
-
-//NOTE TO SELF: Migrate all of these extern references (^) to their own header file eventually. 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								INTERRUPTS    											          //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,8 +49,19 @@ extern void play(Note *song, uint8_t song_len, uint8_t song_cut);
 /* GPS INTERRUPT FOR PARSING */
 ISR(USARTRXC_vect){
 	
+	
 	//Receive the byte to empty out the buffer, then operate on it:
 	char vector_data = GPS_receive_byte();
+	text_buffer[0] = vector_data;
+	LCD_print_str(text_buffer);
+	text_x++;
+	if(text_x >= 4){
+		text_x = 0;
+		text_column = text_column + 12;
+		if(text_column > 200){text_column = 0;}
+		LCD_print_str("\n");
+	}
+	
 	
 	//Always start with an overflow check:
 	// -Since the sentence length won't exceed 120, we should worry if it gets to 121.
@@ -106,13 +77,14 @@ ISR(USARTRXC_vect){
 		GPS_BUFFER_INDEX = 1;
 	}
 	//If the character received is instead a terminator, begin the parsing!
-	else if(vector_data == '*'){
+	else if((vector_data == '*') && (GPS_MESSAGE_READY)){
 		GPS_parse_data();
 	}
 	//If neither character was detected, but '$' appeared previously, then just buffer the characters:
 	else if(GPS_MESSAGE_READY){
 		GPS_BUFFER[GPS_BUFFER_INDEX] = vector_data;
 		GPS_BUFFER_INDEX++;
+		LCD_print_str(vector_data);
 	}
 	
 }
@@ -135,7 +107,7 @@ int main(void)
 	DDRC = 0x00;	//Port C contains:
 	PORTC = 0x00;	// JTAG interface; this renders some of the pins unusable as I/O.
 	
-	DDRD = 0x4F;	//Port D contains:
+	DDRD = 0b00010010;	//Port D contains:
 	PORTD = 0x80;	// USART, INT0, INT1, buzzer driver pin
 	
 	/* RECOVERY */
@@ -145,40 +117,67 @@ int main(void)
 	//EEPROM_recovery(); AND SD_recovery(); which is not yet available!
 	EEPROM_recovery();				//Reacquire old persistent information.
 	//SD Card must be initialized here as well, and erroneous data must be purged:
-	SD_assert();
+	//SD_assert();
 	//Initialize the SD card: {Be sure to look into the function when single-stepping}
-	SD_init_card();
+	//SD_init_card();
 	//Find the last entry in memory, then check it byte-wise for both the beginning of
 	//an entry ('%') as well as a few other entry-confirming characters.
-	
-	
-	
-	/* INTERRUPTS */
-	//Must enable global interrupts to use GPS hardware.
 	
 	/* GPS */
 	//Initialize communication, then configure MTK3339 firmware, then open up.
 	GPS_BUFFER_INDEX = 0;			//Begin at start of data buffer.
 	GPS_MESSAGE_READY= 0;			//Buffer will begin to fill normally.
-	GPS_init_USART(9600);
+	GPS_init_USART(MY_UBBR);
 	GPS_configure_firmware();
-	//Consider actually enabling the stream.
-	GPS_disable_stream();
-
+	GPS_enable_stream();
 	
 	/* TIMERS/BUZZER */
-	//Initialize the buzzer:
-	init_buzzer();
+
 	
 	/* DISPLAY */
+	GPS_enable_stream();
 	
+	/* INTERRUPTS */
+	//sei();
 	
-		
+	/* P R O G R A M */
 	//Dormant program loop for testing.
-    while (1) 
-    {
-		_delay_us(0.5);
-		PORTB &= ~(1<<0);
+    while (1){
 		
-    }
+		_delay_ms(5000);
+		//Send a firmware command serially:
+		for (int i = 0; i < 51; i++)
+		{
+			GPS_configure_firmware();
+		}
+		
+		
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//								FUNCTION BUILD SITE  								              //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void HYBRID_print_GPS_data(){
+	
+	//Print out UTC:
+	uint8_t temporary;
+	uint16_t large_temp;
+	uint32_t huge_temp;
+	
+	temporary = SYS_GPS.UTC_H;
+	//Print text:
+	LCD_print_str("HOUR: ");
+	LCD_print_num(temporary,2,0);
+	LCD_print_str("\n");
+	LCD_print_str("MINUTE: ");
+	LCD_print_num(SYS_GPS.UTC_M,2,0);
+	LCD_print_str("\n");
+	LCD_print_str("SECOND: ");
+	LCD_print_num(SYS_GPS.UTC_S,2,0);
+	
+	//Reset cursor
+	LCD_setText_cursor(0,0);
+	
+	
+	
 }

@@ -182,9 +182,6 @@
     <Compile Include="driver_GPS.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="driver_I2C.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="driver_LCD.c">
       <SubType>compile</SubType>
     </Compile>
@@ -197,7 +194,7 @@
     <Compile Include="header_BUZZER.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="header_I2C.h">
+    <Compile Include="header_FUNCTIONS.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="header_LCD.h">

@@ -3,1257 +3,2059 @@ SeniorDesign.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000061a  00000000  00000000  00000094  2**1
+  0 .text         00000d2a  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         0000006a  00800060  0000061a  000006ae  2**0
+  1 .data         00000084  00800060  00000d2a  00000dbe  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          0000009c  008000ca  008000ca  00000718  2**0
+  2 .bss          0000009d  008000e4  008000e4  00000e42  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000718  2**0
+  3 .comment      00000030  00000000  00000000  00000e42  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000748  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000e74  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000148  00000000  00000000  00000784  2**0
+  5 .debug_aranges 000001a0  00000000  00000000  00000eb0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000021ad  00000000  00000000  000008cc  2**0
+  6 .debug_info   00003841  00000000  00000000  00001050  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000bc5  00000000  00000000  00002a79  2**0
+  7 .debug_abbrev 00000cb7  00000000  00000000  00004891  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000a32  00000000  00000000  0000363e  2**0
+  8 .debug_line   00000fb7  00000000  00000000  00005548  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000002c4  00000000  00000000  00004070  2**2
+  9 .debug_frame  00000650  00000000  00000000  00006500  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000712  00000000  00000000  00004334  2**0
+ 10 .debug_str    0000091c  00000000  00000000  00006b50  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000755  00000000  00000000  00004a46  2**0
+ 11 .debug_loc    00002120  00000000  00000000  0000746c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000f8  00000000  00000000  0000519b  2**0
+ 12 .debug_ranges 000002a0  00000000  00000000  0000958c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
 
 00000000 <__vectors>:
-   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
-   4:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-   8:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-   c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  10:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  14:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  18:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  1c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  20:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  24:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  28:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  2c:	0c 94 97 02 	jmp	0x52e	; 0x52e <__vector_11>
-  30:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  34:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  38:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  3c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  40:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  44:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  48:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  4c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
-  50:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   0:	0c 94 a8 02 	jmp	0x550	; 0x550 <__ctors_end>
+   4:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+   8:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+   c:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  10:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  14:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  18:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  1c:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  20:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  24:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  28:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  2c:	0c 94 f3 05 	jmp	0xbe6	; 0xbe6 <__vector_11>
+  30:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  34:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  38:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  3c:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  40:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  44:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  48:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  4c:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
+  50:	0c 94 c5 02 	jmp	0x58a	; 0x58a <__bad_interrupt>
 
-00000054 <__ctors_end>:
-  54:	11 24       	eor	r1, r1
-  56:	1f be       	out	0x3f, r1	; 63
-  58:	cf e5       	ldi	r28, 0x5F	; 95
-  5a:	d4 e0       	ldi	r29, 0x04	; 4
-  5c:	de bf       	out	0x3e, r29	; 62
-  5e:	cd bf       	out	0x3d, r28	; 61
+00000054 <__trampolines_end>:
+  54:	00 00       	nop
+  56:	00 00       	nop
+  58:	00 3e       	cpi	r16, 0xE0	; 224
+  5a:	5b 4f       	sbci	r21, 0xFB	; 251
+  5c:	5b 3e       	cpi	r21, 0xEB	; 235
+  5e:	3e 6b       	ori	r19, 0xBE	; 190
+  60:	4f 6b       	ori	r20, 0xBF	; 191
+  62:	3e 1c       	adc	r3, r14
+  64:	3e 7c       	andi	r19, 0xCE	; 206
+  66:	3e 1c       	adc	r3, r14
+  68:	18 3c       	cpi	r17, 0xC8	; 200
+  6a:	7e 3c       	cpi	r23, 0xCE	; 206
+  6c:	18 1c       	adc	r1, r8
+  6e:	57 7d       	andi	r21, 0xD7	; 215
+  70:	57 1c       	adc	r5, r7
+  72:	1c 5e       	subi	r17, 0xEC	; 236
+  74:	7f 5e       	subi	r23, 0xEF	; 239
+  76:	1c 00       	.word	0x001c	; ????
+  78:	18 3c       	cpi	r17, 0xC8	; 200
+  7a:	18 00       	.word	0x0018	; ????
+  7c:	ff e7       	ldi	r31, 0x7F	; 127
+  7e:	c3 e7       	ldi	r28, 0x73	; 115
+  80:	ff 00       	.word	0x00ff	; ????
+  82:	18 24       	eor	r1, r8
+  84:	18 00       	.word	0x0018	; ????
+  86:	ff e7       	ldi	r31, 0x7F	; 127
+  88:	db e7       	ldi	r29, 0x7B	; 123
+  8a:	ff 30       	cpi	r31, 0x0F	; 15
+  8c:	48 3a       	cpi	r20, 0xA8	; 168
+  8e:	06 0e       	add	r0, r22
+  90:	26 29       	or	r18, r6
+  92:	79 29       	or	r23, r9
+  94:	26 40       	sbci	r18, 0x06	; 6
+  96:	7f 05       	cpc	r23, r15
+  98:	05 07       	cpc	r16, r21
+  9a:	40 7f       	andi	r20, 0xF0	; 240
+  9c:	05 25       	eor	r16, r5
+  9e:	3f 5a       	subi	r19, 0xAF	; 175
+  a0:	3c e7       	ldi	r19, 0x7C	; 124
+  a2:	3c 5a       	subi	r19, 0xAC	; 172
+  a4:	7f 3e       	cpi	r23, 0xEF	; 239
+  a6:	1c 1c       	adc	r1, r12
+  a8:	08 08       	sbc	r0, r8
+  aa:	1c 1c       	adc	r1, r12
+  ac:	3e 7f       	andi	r19, 0xFE	; 254
+  ae:	14 22       	and	r1, r20
+  b0:	7f 22       	and	r7, r31
+  b2:	14 5f       	subi	r17, 0xF4	; 244
+  b4:	5f 00       	.word	0x005f	; ????
+  b6:	5f 5f       	subi	r21, 0xFF	; 255
+  b8:	06 09       	sbc	r16, r6
+  ba:	7f 01       	movw	r14, r30
+  bc:	7f 00       	.word	0x007f	; ????
+  be:	66 89       	ldd	r22, Z+22	; 0x16
+  c0:	95 6a       	ori	r25, 0xA5	; 165
+  c2:	60 60       	ori	r22, 0x00	; 0
+  c4:	60 60       	ori	r22, 0x00	; 0
+  c6:	60 94       	com	r6
+  c8:	a2 ff       	sbrs	r26, 2
+  ca:	a2 94       	swap	r10
+  cc:	08 04       	cpc	r0, r8
+  ce:	7e 04       	cpc	r7, r14
+  d0:	08 10       	cpse	r0, r8
+  d2:	20 7e       	andi	r18, 0xE0	; 224
+  d4:	20 10       	cpse	r2, r0
+  d6:	08 08       	sbc	r0, r8
+  d8:	2a 1c       	adc	r2, r10
+  da:	08 08       	sbc	r0, r8
+  dc:	1c 2a       	or	r1, r28
+  de:	08 08       	sbc	r0, r8
+  e0:	1e 10       	cpse	r1, r14
+  e2:	10 10       	cpse	r1, r0
+  e4:	10 0c       	add	r1, r0
+  e6:	1e 0c       	add	r1, r14
+  e8:	1e 0c       	add	r1, r14
+  ea:	30 38       	cpi	r19, 0x80	; 128
+  ec:	3e 38       	cpi	r19, 0x8E	; 142
+  ee:	30 06       	cpc	r3, r16
+  f0:	0e 3e       	cpi	r16, 0xEE	; 238
+  f2:	0e 06       	cpc	r0, r30
+  f4:	00 00       	nop
+  f6:	00 00       	nop
+  f8:	00 00       	nop
+  fa:	00 5f       	subi	r16, 0xF0	; 240
+  fc:	00 00       	nop
+  fe:	00 07       	cpc	r16, r16
+ 100:	00 07       	cpc	r16, r16
+ 102:	00 14       	cp	r0, r0
+ 104:	7f 14       	cp	r7, r15
+ 106:	7f 14       	cp	r7, r15
+ 108:	24 2a       	or	r2, r20
+ 10a:	7f 2a       	or	r7, r31
+ 10c:	12 23       	and	r17, r18
+ 10e:	13 08       	sbc	r1, r3
+ 110:	64 62       	ori	r22, 0x24	; 36
+ 112:	36 49       	sbci	r19, 0x96	; 150
+ 114:	56 20       	and	r5, r6
+ 116:	50 00       	.word	0x0050	; ????
+ 118:	08 07       	cpc	r16, r24
+ 11a:	03 00       	.word	0x0003	; ????
+ 11c:	00 1c       	adc	r0, r0
+ 11e:	22 41       	sbci	r18, 0x12	; 18
+ 120:	00 00       	nop
+ 122:	41 22       	and	r4, r17
+ 124:	1c 00       	.word	0x001c	; ????
+ 126:	2a 1c       	adc	r2, r10
+ 128:	7f 1c       	adc	r7, r15
+ 12a:	2a 08       	sbc	r2, r10
+ 12c:	08 3e       	cpi	r16, 0xE8	; 232
+ 12e:	08 08       	sbc	r0, r8
+ 130:	00 80       	ld	r0, Z
+ 132:	70 30       	cpi	r23, 0x00	; 0
+ 134:	00 08       	sbc	r0, r0
+ 136:	08 08       	sbc	r0, r8
+ 138:	08 08       	sbc	r0, r8
+ 13a:	00 00       	nop
+ 13c:	60 60       	ori	r22, 0x00	; 0
+ 13e:	00 20       	and	r0, r0
+ 140:	10 08       	sbc	r1, r0
+ 142:	04 02       	muls	r16, r20
+ 144:	3e 51       	subi	r19, 0x1E	; 30
+ 146:	49 45       	sbci	r20, 0x59	; 89
+ 148:	3e 00       	.word	0x003e	; ????
+ 14a:	42 7f       	andi	r20, 0xF2	; 242
+ 14c:	40 00       	.word	0x0040	; ????
+ 14e:	72 49       	sbci	r23, 0x92	; 146
+ 150:	49 49       	sbci	r20, 0x99	; 153
+ 152:	46 21       	and	r20, r6
+ 154:	41 49       	sbci	r20, 0x91	; 145
+ 156:	4d 33       	cpi	r20, 0x3D	; 61
+ 158:	18 14       	cp	r1, r8
+ 15a:	12 7f       	andi	r17, 0xF2	; 242
+ 15c:	10 27       	eor	r17, r16
+ 15e:	45 45       	sbci	r20, 0x55	; 85
+ 160:	45 39       	cpi	r20, 0x95	; 149
+ 162:	3c 4a       	sbci	r19, 0xAC	; 172
+ 164:	49 49       	sbci	r20, 0x99	; 153
+ 166:	31 41       	sbci	r19, 0x11	; 17
+ 168:	21 11       	cpse	r18, r1
+ 16a:	09 07       	cpc	r16, r25
+ 16c:	36 49       	sbci	r19, 0x96	; 150
+ 16e:	49 49       	sbci	r20, 0x99	; 153
+ 170:	36 46       	sbci	r19, 0x66	; 102
+ 172:	49 49       	sbci	r20, 0x99	; 153
+ 174:	29 1e       	adc	r2, r25
+ 176:	00 00       	nop
+ 178:	14 00       	.word	0x0014	; ????
+ 17a:	00 00       	nop
+ 17c:	40 34       	cpi	r20, 0x40	; 64
+ 17e:	00 00       	nop
+ 180:	00 08       	sbc	r0, r0
+ 182:	14 22       	and	r1, r20
+ 184:	41 14       	cp	r4, r1
+ 186:	14 14       	cp	r1, r4
+ 188:	14 14       	cp	r1, r4
+ 18a:	00 41       	sbci	r16, 0x10	; 16
+ 18c:	22 14       	cp	r2, r2
+ 18e:	08 02       	muls	r16, r24
+ 190:	01 59       	subi	r16, 0x91	; 145
+ 192:	09 06       	cpc	r0, r25
+ 194:	3e 41       	sbci	r19, 0x1E	; 30
+ 196:	5d 59       	subi	r21, 0x9D	; 157
+ 198:	4e 7c       	andi	r20, 0xCE	; 206
+ 19a:	12 11       	cpse	r17, r2
+ 19c:	12 7c       	andi	r17, 0xC2	; 194
+ 19e:	7f 49       	sbci	r23, 0x9F	; 159
+ 1a0:	49 49       	sbci	r20, 0x99	; 153
+ 1a2:	36 3e       	cpi	r19, 0xE6	; 230
+ 1a4:	41 41       	sbci	r20, 0x11	; 17
+ 1a6:	41 22       	and	r4, r17
+ 1a8:	7f 41       	sbci	r23, 0x1F	; 31
+ 1aa:	41 41       	sbci	r20, 0x11	; 17
+ 1ac:	3e 7f       	andi	r19, 0xFE	; 254
+ 1ae:	49 49       	sbci	r20, 0x99	; 153
+ 1b0:	49 41       	sbci	r20, 0x19	; 25
+ 1b2:	7f 09       	sbc	r23, r15
+ 1b4:	09 09       	sbc	r16, r9
+ 1b6:	01 3e       	cpi	r16, 0xE1	; 225
+ 1b8:	41 41       	sbci	r20, 0x11	; 17
+ 1ba:	51 73       	andi	r21, 0x31	; 49
+ 1bc:	7f 08       	sbc	r7, r15
+ 1be:	08 08       	sbc	r0, r8
+ 1c0:	7f 00       	.word	0x007f	; ????
+ 1c2:	41 7f       	andi	r20, 0xF1	; 241
+ 1c4:	41 00       	.word	0x0041	; ????
+ 1c6:	20 40       	sbci	r18, 0x00	; 0
+ 1c8:	41 3f       	cpi	r20, 0xF1	; 241
+ 1ca:	01 7f       	andi	r16, 0xF1	; 241
+ 1cc:	08 14       	cp	r0, r8
+ 1ce:	22 41       	sbci	r18, 0x12	; 18
+ 1d0:	7f 40       	sbci	r23, 0x0F	; 15
+ 1d2:	40 40       	sbci	r20, 0x00	; 0
+ 1d4:	40 7f       	andi	r20, 0xF0	; 240
+ 1d6:	02 1c       	adc	r0, r2
+ 1d8:	02 7f       	andi	r16, 0xF2	; 242
+ 1da:	7f 04       	cpc	r7, r15
+ 1dc:	08 10       	cpse	r0, r8
+ 1de:	7f 3e       	cpi	r23, 0xEF	; 239
+ 1e0:	41 41       	sbci	r20, 0x11	; 17
+ 1e2:	41 3e       	cpi	r20, 0xE1	; 225
+ 1e4:	7f 09       	sbc	r23, r15
+ 1e6:	09 09       	sbc	r16, r9
+ 1e8:	06 3e       	cpi	r16, 0xE6	; 230
+ 1ea:	41 51       	subi	r20, 0x11	; 17
+ 1ec:	21 5e       	subi	r18, 0xE1	; 225
+ 1ee:	7f 09       	sbc	r23, r15
+ 1f0:	19 29       	or	r17, r9
+ 1f2:	46 26       	eor	r4, r22
+ 1f4:	49 49       	sbci	r20, 0x99	; 153
+ 1f6:	49 32       	cpi	r20, 0x29	; 41
+ 1f8:	03 01       	movw	r0, r6
+ 1fa:	7f 01       	movw	r14, r30
+ 1fc:	03 3f       	cpi	r16, 0xF3	; 243
+ 1fe:	40 40       	sbci	r20, 0x00	; 0
+ 200:	40 3f       	cpi	r20, 0xF0	; 240
+ 202:	1f 20       	and	r1, r15
+ 204:	40 20       	and	r4, r0
+ 206:	1f 3f       	cpi	r17, 0xFF	; 255
+ 208:	40 38       	cpi	r20, 0x80	; 128
+ 20a:	40 3f       	cpi	r20, 0xF0	; 240
+ 20c:	63 14       	cp	r6, r3
+ 20e:	08 14       	cp	r0, r8
+ 210:	63 03       	mulsu	r22, r19
+ 212:	04 78       	andi	r16, 0x84	; 132
+ 214:	04 03       	mulsu	r16, r20
+ 216:	61 59       	subi	r22, 0x91	; 145
+ 218:	49 4d       	sbci	r20, 0xD9	; 217
+ 21a:	43 00       	.word	0x0043	; ????
+ 21c:	7f 41       	sbci	r23, 0x1F	; 31
+ 21e:	41 41       	sbci	r20, 0x11	; 17
+ 220:	02 04       	cpc	r0, r2
+ 222:	08 10       	cpse	r0, r8
+ 224:	20 00       	.word	0x0020	; ????
+ 226:	41 41       	sbci	r20, 0x11	; 17
+ 228:	41 7f       	andi	r20, 0xF1	; 241
+ 22a:	04 02       	muls	r16, r20
+ 22c:	01 02       	muls	r16, r17
+ 22e:	04 40       	sbci	r16, 0x04	; 4
+ 230:	40 40       	sbci	r20, 0x00	; 0
+ 232:	40 40       	sbci	r20, 0x00	; 0
+ 234:	00 03       	mulsu	r16, r16
+ 236:	07 08       	sbc	r0, r7
+ 238:	00 20       	and	r0, r0
+ 23a:	54 54       	subi	r21, 0x44	; 68
+ 23c:	78 40       	sbci	r23, 0x08	; 8
+ 23e:	7f 28       	or	r7, r15
+ 240:	44 44       	sbci	r20, 0x44	; 68
+ 242:	38 38       	cpi	r19, 0x88	; 136
+ 244:	44 44       	sbci	r20, 0x44	; 68
+ 246:	44 28       	or	r4, r4
+ 248:	38 44       	sbci	r19, 0x48	; 72
+ 24a:	44 28       	or	r4, r4
+ 24c:	7f 38       	cpi	r23, 0x8F	; 143
+ 24e:	54 54       	subi	r21, 0x44	; 68
+ 250:	54 18       	sub	r5, r4
+ 252:	00 08       	sbc	r0, r0
+ 254:	7e 09       	sbc	r23, r14
+ 256:	02 18       	sub	r0, r2
+ 258:	a4 a4       	ldd	r10, Z+44	; 0x2c
+ 25a:	9c 78       	andi	r25, 0x8C	; 140
+ 25c:	7f 08       	sbc	r7, r15
+ 25e:	04 04       	cpc	r0, r4
+ 260:	78 00       	.word	0x0078	; ????
+ 262:	44 7d       	andi	r20, 0xD4	; 212
+ 264:	40 00       	.word	0x0040	; ????
+ 266:	20 40       	sbci	r18, 0x00	; 0
+ 268:	40 3d       	cpi	r20, 0xD0	; 208
+ 26a:	00 7f       	andi	r16, 0xF0	; 240
+ 26c:	10 28       	or	r1, r0
+ 26e:	44 00       	.word	0x0044	; ????
+ 270:	00 41       	sbci	r16, 0x10	; 16
+ 272:	7f 40       	sbci	r23, 0x0F	; 15
+ 274:	00 7c       	andi	r16, 0xC0	; 192
+ 276:	04 78       	andi	r16, 0x84	; 132
+ 278:	04 78       	andi	r16, 0x84	; 132
+ 27a:	7c 08       	sbc	r7, r12
+ 27c:	04 04       	cpc	r0, r4
+ 27e:	78 38       	cpi	r23, 0x88	; 136
+ 280:	44 44       	sbci	r20, 0x44	; 68
+ 282:	44 38       	cpi	r20, 0x84	; 132
+ 284:	fc 18       	sub	r15, r12
+ 286:	24 24       	eor	r2, r4
+ 288:	18 18       	sub	r1, r8
+ 28a:	24 24       	eor	r2, r4
+ 28c:	18 fc       	.word	0xfc18	; ????
+ 28e:	7c 08       	sbc	r7, r12
+ 290:	04 04       	cpc	r0, r4
+ 292:	08 48       	sbci	r16, 0x88	; 136
+ 294:	54 54       	subi	r21, 0x44	; 68
+ 296:	54 24       	eor	r5, r4
+ 298:	04 04       	cpc	r0, r4
+ 29a:	3f 44       	sbci	r19, 0x4F	; 79
+ 29c:	24 3c       	cpi	r18, 0xC4	; 196
+ 29e:	40 40       	sbci	r20, 0x00	; 0
+ 2a0:	20 7c       	andi	r18, 0xC0	; 192
+ 2a2:	1c 20       	and	r1, r12
+ 2a4:	40 20       	and	r4, r0
+ 2a6:	1c 3c       	cpi	r17, 0xCC	; 204
+ 2a8:	40 30       	cpi	r20, 0x00	; 0
+ 2aa:	40 3c       	cpi	r20, 0xC0	; 192
+ 2ac:	44 28       	or	r4, r4
+ 2ae:	10 28       	or	r1, r0
+ 2b0:	44 4c       	sbci	r20, 0xC4	; 196
+ 2b2:	90 90 90 7c 	lds	r9, 0x7C90	; 0x807c90 <__bss_end+0x7b0f>
+ 2b6:	44 64       	ori	r20, 0x44	; 68
+ 2b8:	54 4c       	sbci	r21, 0xC4	; 196
+ 2ba:	44 00       	.word	0x0044	; ????
+ 2bc:	08 36       	cpi	r16, 0x68	; 104
+ 2be:	41 00       	.word	0x0041	; ????
+ 2c0:	00 00       	nop
+ 2c2:	77 00       	.word	0x0077	; ????
+ 2c4:	00 00       	nop
+ 2c6:	41 36       	cpi	r20, 0x61	; 97
+ 2c8:	08 00       	.word	0x0008	; ????
+ 2ca:	02 01       	movw	r0, r4
+ 2cc:	02 04       	cpc	r0, r2
+ 2ce:	02 3c       	cpi	r16, 0xC2	; 194
+ 2d0:	26 23       	and	r18, r22
+ 2d2:	26 3c       	cpi	r18, 0xC6	; 198
+ 2d4:	1e a1       	ldd	r17, Y+38	; 0x26
+ 2d6:	a1 61       	ori	r26, 0x11	; 17
+ 2d8:	12 3a       	cpi	r17, 0xA2	; 162
+ 2da:	40 40       	sbci	r20, 0x00	; 0
+ 2dc:	20 7a       	andi	r18, 0xA0	; 160
+ 2de:	38 54       	subi	r19, 0x48	; 72
+ 2e0:	54 55       	subi	r21, 0x54	; 84
+ 2e2:	59 21       	and	r21, r9
+ 2e4:	55 55       	subi	r21, 0x55	; 85
+ 2e6:	79 41       	sbci	r23, 0x19	; 25
+ 2e8:	22 54       	subi	r18, 0x42	; 66
+ 2ea:	54 78       	andi	r21, 0x84	; 132
+ 2ec:	42 21       	and	r20, r2
+ 2ee:	55 54       	subi	r21, 0x45	; 69
+ 2f0:	78 40       	sbci	r23, 0x08	; 8
+ 2f2:	20 54       	subi	r18, 0x40	; 64
+ 2f4:	55 79       	andi	r21, 0x95	; 149
+ 2f6:	40 0c       	add	r4, r0
+ 2f8:	1e 52       	subi	r17, 0x2E	; 46
+ 2fa:	72 12       	cpse	r7, r18
+ 2fc:	39 55       	subi	r19, 0x59	; 89
+ 2fe:	55 55       	subi	r21, 0x55	; 85
+ 300:	59 39       	cpi	r21, 0x99	; 153
+ 302:	54 54       	subi	r21, 0x44	; 68
+ 304:	54 59       	subi	r21, 0x94	; 148
+ 306:	39 55       	subi	r19, 0x59	; 89
+ 308:	54 54       	subi	r21, 0x44	; 68
+ 30a:	58 00       	.word	0x0058	; ????
+ 30c:	00 45       	sbci	r16, 0x50	; 80
+ 30e:	7c 41       	sbci	r23, 0x1C	; 28
+ 310:	00 02       	muls	r16, r16
+ 312:	45 7d       	andi	r20, 0xD5	; 213
+ 314:	42 00       	.word	0x0042	; ????
+ 316:	01 45       	sbci	r16, 0x51	; 81
+ 318:	7c 40       	sbci	r23, 0x0C	; 12
+ 31a:	7d 12       	cpse	r7, r29
+ 31c:	11 12       	cpse	r1, r17
+ 31e:	7d f0       	brhs	.+30     	; 0x33e <__trampolines_end+0x2ea>
+ 320:	28 25       	eor	r18, r8
+ 322:	28 f0       	brcs	.+10     	; 0x32e <__trampolines_end+0x2da>
+ 324:	7c 54       	subi	r23, 0x4C	; 76
+ 326:	55 45       	sbci	r21, 0x55	; 85
+ 328:	00 20       	and	r0, r0
+ 32a:	54 54       	subi	r21, 0x44	; 68
+ 32c:	7c 54       	subi	r23, 0x4C	; 76
+ 32e:	7c 0a       	sbc	r7, r28
+ 330:	09 7f       	andi	r16, 0xF9	; 249
+ 332:	49 32       	cpi	r20, 0x29	; 41
+ 334:	49 49       	sbci	r20, 0x99	; 153
+ 336:	49 32       	cpi	r20, 0x29	; 41
+ 338:	3a 44       	sbci	r19, 0x4A	; 74
+ 33a:	44 44       	sbci	r20, 0x44	; 68
+ 33c:	3a 32       	cpi	r19, 0x2A	; 42
+ 33e:	4a 48       	sbci	r20, 0x8A	; 138
+ 340:	48 30       	cpi	r20, 0x08	; 8
+ 342:	3a 41       	sbci	r19, 0x1A	; 26
+ 344:	41 21       	and	r20, r1
+ 346:	7a 3a       	cpi	r23, 0xAA	; 170
+ 348:	42 40       	sbci	r20, 0x02	; 2
+ 34a:	20 78       	andi	r18, 0x80	; 128
+ 34c:	00 9d       	mul	r16, r0
+ 34e:	a0 a0       	ldd	r10, Z+32	; 0x20
+ 350:	7d 3d       	cpi	r23, 0xDD	; 221
+ 352:	42 42       	sbci	r20, 0x22	; 34
+ 354:	42 3d       	cpi	r20, 0xD2	; 210
+ 356:	3d 40       	sbci	r19, 0x0D	; 13
+ 358:	40 40       	sbci	r20, 0x00	; 0
+ 35a:	3d 3c       	cpi	r19, 0xCD	; 205
+ 35c:	24 ff       	sbrs	r18, 4
+ 35e:	24 24       	eor	r2, r4
+ 360:	48 7e       	andi	r20, 0xE8	; 232
+ 362:	49 43       	sbci	r20, 0x39	; 57
+ 364:	66 2b       	or	r22, r22
+ 366:	2f fc       	.word	0xfc2f	; ????
+ 368:	2f 2b       	or	r18, r31
+ 36a:	ff 09       	sbc	r31, r15
+ 36c:	29 f6       	brne	.-118    	; 0x2f8 <__trampolines_end+0x2a4>
+ 36e:	20 c0       	rjmp	.+64     	; 0x3b0 <__trampolines_end+0x35c>
+ 370:	88 7e       	andi	r24, 0xE8	; 232
+ 372:	09 03       	fmul	r16, r17
+ 374:	20 54       	subi	r18, 0x40	; 64
+ 376:	54 79       	andi	r21, 0x94	; 148
+ 378:	41 00       	.word	0x0041	; ????
+ 37a:	00 44       	sbci	r16, 0x40	; 64
+ 37c:	7d 41       	sbci	r23, 0x1D	; 29
+ 37e:	30 48       	sbci	r19, 0x80	; 128
+ 380:	48 4a       	sbci	r20, 0xA8	; 168
+ 382:	32 38       	cpi	r19, 0x82	; 130
+ 384:	40 40       	sbci	r20, 0x00	; 0
+ 386:	22 7a       	andi	r18, 0xA2	; 162
+ 388:	00 7a       	andi	r16, 0xA0	; 160
+ 38a:	0a 0a       	sbc	r0, r26
+ 38c:	72 7d       	andi	r23, 0xD2	; 210
+ 38e:	0d 19       	sub	r16, r13
+ 390:	31 7d       	andi	r19, 0xD1	; 209
+ 392:	26 29       	or	r18, r6
+ 394:	29 2f       	mov	r18, r25
+ 396:	28 26       	eor	r2, r24
+ 398:	29 29       	or	r18, r9
+ 39a:	29 26       	eor	r2, r25
+ 39c:	30 48       	sbci	r19, 0x80	; 128
+ 39e:	4d 40       	sbci	r20, 0x0D	; 13
+ 3a0:	20 38       	cpi	r18, 0x80	; 128
+ 3a2:	08 08       	sbc	r0, r8
+ 3a4:	08 08       	sbc	r0, r8
+ 3a6:	08 08       	sbc	r0, r8
+ 3a8:	08 08       	sbc	r0, r8
+ 3aa:	38 2f       	mov	r19, r24
+ 3ac:	10 c8       	rjmp	.-4064   	; 0xfffff3ce <__eeprom_end+0xff7ef3ce>
+ 3ae:	ac ba       	out	0x1c, r10	; 28
+ 3b0:	2f 10       	cpse	r2, r15
+ 3b2:	28 34       	cpi	r18, 0x48	; 72
+ 3b4:	fa 00       	.word	0x00fa	; ????
+ 3b6:	00 7b       	andi	r16, 0xB0	; 176
+ 3b8:	00 00       	nop
+ 3ba:	08 14       	cp	r0, r8
+ 3bc:	2a 14       	cp	r2, r10
+ 3be:	22 22       	and	r2, r18
+ 3c0:	14 2a       	or	r1, r20
+ 3c2:	14 08       	sbc	r1, r4
+ 3c4:	aa 00       	.word	0x00aa	; ????
+ 3c6:	55 00       	.word	0x0055	; ????
+ 3c8:	aa aa       	std	Y+50, r10	; 0x32
+ 3ca:	55 aa       	std	Z+53, r5	; 0x35
+ 3cc:	55 aa       	std	Z+53, r5	; 0x35
+ 3ce:	00 00       	nop
+ 3d0:	00 ff       	sbrs	r16, 0
+ 3d2:	00 10       	cpse	r0, r0
+ 3d4:	10 10       	cpse	r1, r0
+ 3d6:	ff 00       	.word	0x00ff	; ????
+ 3d8:	14 14       	cp	r1, r4
+ 3da:	14 ff       	sbrs	r17, 4
+ 3dc:	00 10       	cpse	r0, r0
+ 3de:	10 ff       	sbrs	r17, 0
+ 3e0:	00 ff       	sbrs	r16, 0
+ 3e2:	10 10       	cpse	r1, r0
+ 3e4:	f0 10       	cpse	r15, r0
+ 3e6:	f0 14       	cp	r15, r0
+ 3e8:	14 14       	cp	r1, r4
+ 3ea:	fc 00       	.word	0x00fc	; ????
+ 3ec:	14 14       	cp	r1, r4
+ 3ee:	f7 00       	.word	0x00f7	; ????
+ 3f0:	ff 00       	.word	0x00ff	; ????
+ 3f2:	00 ff       	sbrs	r16, 0
+ 3f4:	00 ff       	sbrs	r16, 0
+ 3f6:	14 14       	cp	r1, r4
+ 3f8:	f4 04       	cpc	r15, r4
+ 3fa:	fc 14       	cp	r15, r12
+ 3fc:	14 17       	cp	r17, r20
+ 3fe:	10 1f       	adc	r17, r16
+ 400:	10 10       	cpse	r1, r0
+ 402:	1f 10       	cpse	r1, r15
+ 404:	1f 14       	cp	r1, r15
+ 406:	14 14       	cp	r1, r4
+ 408:	1f 00       	.word	0x001f	; ????
+ 40a:	10 10       	cpse	r1, r0
+ 40c:	10 f0       	brcs	.+4      	; 0x412 <__LOCK_REGION_LENGTH__+0x12>
+ 40e:	00 00       	nop
+ 410:	00 00       	nop
+ 412:	1f 10       	cpse	r1, r15
+ 414:	10 10       	cpse	r1, r0
+ 416:	10 1f       	adc	r17, r16
+ 418:	10 10       	cpse	r1, r0
+ 41a:	10 10       	cpse	r1, r0
+ 41c:	f0 10       	cpse	r15, r0
+ 41e:	00 00       	nop
+ 420:	00 ff       	sbrs	r16, 0
+ 422:	10 10       	cpse	r1, r0
+ 424:	10 10       	cpse	r1, r0
+ 426:	10 10       	cpse	r1, r0
+ 428:	10 10       	cpse	r1, r0
+ 42a:	10 ff       	sbrs	r17, 0
+ 42c:	10 00       	.word	0x0010	; ????
+ 42e:	00 00       	nop
+ 430:	ff 14       	cp	r15, r15
+ 432:	00 00       	nop
+ 434:	ff 00       	.word	0x00ff	; ????
+ 436:	ff 00       	.word	0x00ff	; ????
+ 438:	00 1f       	adc	r16, r16
+ 43a:	10 17       	cp	r17, r16
+ 43c:	00 00       	nop
+ 43e:	fc 04       	cpc	r15, r12
+ 440:	f4 14       	cp	r15, r4
+ 442:	14 17       	cp	r17, r20
+ 444:	10 17       	cp	r17, r16
+ 446:	14 14       	cp	r1, r4
+ 448:	f4 04       	cpc	r15, r4
+ 44a:	f4 00       	.word	0x00f4	; ????
+ 44c:	00 ff       	sbrs	r16, 0
+ 44e:	00 f7       	brcc	.-64     	; 0x410 <__LOCK_REGION_LENGTH__+0x10>
+ 450:	14 14       	cp	r1, r4
+ 452:	14 14       	cp	r1, r4
+ 454:	14 14       	cp	r1, r4
+ 456:	14 f7       	brge	.-60     	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 458:	00 f7       	brcc	.-64     	; 0x41a <__LOCK_REGION_LENGTH__+0x1a>
+ 45a:	14 14       	cp	r1, r4
+ 45c:	14 17       	cp	r17, r20
+ 45e:	14 10       	cpse	r1, r4
+ 460:	10 1f       	adc	r17, r16
+ 462:	10 1f       	adc	r17, r16
+ 464:	14 14       	cp	r1, r4
+ 466:	14 f4       	brge	.+4      	; 0x46c <__stack+0xd>
+ 468:	14 10       	cpse	r1, r4
+ 46a:	10 f0       	brcs	.+4      	; 0x470 <__stack+0x11>
+ 46c:	10 f0       	brcs	.+4      	; 0x472 <__stack+0x13>
+ 46e:	00 00       	nop
+ 470:	1f 10       	cpse	r1, r15
+ 472:	1f 00       	.word	0x001f	; ????
+ 474:	00 00       	nop
+ 476:	1f 14       	cp	r1, r15
+ 478:	00 00       	nop
+ 47a:	00 fc       	sbrc	r0, 0
+ 47c:	14 00       	.word	0x0014	; ????
+ 47e:	00 f0       	brcs	.+0      	; 0x480 <__stack+0x21>
+ 480:	10 f0       	brcs	.+4      	; 0x486 <__stack+0x27>
+ 482:	10 10       	cpse	r1, r0
+ 484:	ff 10       	cpse	r15, r15
+ 486:	ff 14       	cp	r15, r15
+ 488:	14 14       	cp	r1, r4
+ 48a:	ff 14       	cp	r15, r15
+ 48c:	10 10       	cpse	r1, r0
+ 48e:	10 1f       	adc	r17, r16
+ 490:	00 00       	nop
+ 492:	00 00       	nop
+ 494:	f0 10       	cpse	r15, r0
+ 496:	ff ff       	.word	0xffff	; ????
+ 498:	ff ff       	.word	0xffff	; ????
+ 49a:	ff f0       	brie	.+62     	; 0x4da <__stack+0x7b>
+ 49c:	f0 f0       	brcs	.+60     	; 0x4da <__stack+0x7b>
+ 49e:	f0 f0       	brcs	.+60     	; 0x4dc <__stack+0x7d>
+ 4a0:	ff ff       	.word	0xffff	; ????
+ 4a2:	ff 00       	.word	0x00ff	; ????
+ 4a4:	00 00       	nop
+ 4a6:	00 00       	nop
+ 4a8:	ff ff       	.word	0xffff	; ????
+ 4aa:	0f 0f       	add	r16, r31
+ 4ac:	0f 0f       	add	r16, r31
+ 4ae:	0f 38       	cpi	r16, 0x8F	; 143
+ 4b0:	44 44       	sbci	r20, 0x44	; 68
+ 4b2:	38 44       	sbci	r19, 0x48	; 72
+ 4b4:	fc 4a       	sbci	r31, 0xAC	; 172
+ 4b6:	4a 4a       	sbci	r20, 0xAA	; 170
+ 4b8:	34 7e       	andi	r19, 0xE4	; 228
+ 4ba:	02 02       	muls	r16, r18
+ 4bc:	06 06       	cpc	r0, r22
+ 4be:	02 7e       	andi	r16, 0xE2	; 226
+ 4c0:	02 7e       	andi	r16, 0xE2	; 226
+ 4c2:	02 63       	ori	r16, 0x32	; 50
+ 4c4:	55 49       	sbci	r21, 0x95	; 149
+ 4c6:	41 63       	ori	r20, 0x31	; 49
+ 4c8:	38 44       	sbci	r19, 0x48	; 72
+ 4ca:	44 3c       	cpi	r20, 0xC4	; 196
+ 4cc:	04 40       	sbci	r16, 0x04	; 4
+ 4ce:	7e 20       	and	r7, r14
+ 4d0:	1e 20       	and	r1, r14
+ 4d2:	06 02       	muls	r16, r22
+ 4d4:	7e 02       	muls	r23, r30
+ 4d6:	02 99       	sbic	0x00, 2	; 0
+ 4d8:	a5 e7       	ldi	r26, 0x75	; 117
+ 4da:	a5 99       	sbic	0x14, 5	; 20
+ 4dc:	1c 2a       	or	r1, r28
+ 4de:	49 2a       	or	r4, r25
+ 4e0:	1c 4c       	sbci	r17, 0xCC	; 204
+ 4e2:	72 01       	movw	r14, r4
+ 4e4:	72 4c       	sbci	r23, 0xC2	; 194
+ 4e6:	30 4a       	sbci	r19, 0xA0	; 160
+ 4e8:	4d 4d       	sbci	r20, 0xDD	; 221
+ 4ea:	30 30       	cpi	r19, 0x00	; 0
+ 4ec:	48 78       	andi	r20, 0x88	; 136
+ 4ee:	48 30       	cpi	r20, 0x08	; 8
+ 4f0:	bc 62       	ori	r27, 0x2C	; 44
+ 4f2:	5a 46       	sbci	r21, 0x6A	; 106
+ 4f4:	3d 3e       	cpi	r19, 0xED	; 237
+ 4f6:	49 49       	sbci	r20, 0x99	; 153
+ 4f8:	49 00       	.word	0x0049	; ????
+ 4fa:	7e 01       	movw	r14, r28
+ 4fc:	01 01       	movw	r0, r2
+ 4fe:	7e 2a       	or	r7, r30
+ 500:	2a 2a       	or	r2, r26
+ 502:	2a 2a       	or	r2, r26
+ 504:	44 44       	sbci	r20, 0x44	; 68
+ 506:	5f 44       	sbci	r21, 0x4F	; 79
+ 508:	44 40       	sbci	r20, 0x04	; 4
+ 50a:	51 4a       	sbci	r21, 0xA1	; 161
+ 50c:	44 40       	sbci	r20, 0x04	; 4
+ 50e:	40 44       	sbci	r20, 0x40	; 64
+ 510:	4a 51       	subi	r20, 0x1A	; 26
+ 512:	40 00       	.word	0x0040	; ????
+ 514:	00 ff       	sbrs	r16, 0
+ 516:	01 03       	mulsu	r16, r17
+ 518:	e0 80       	ld	r14, Z
+ 51a:	ff 00       	.word	0x00ff	; ????
+ 51c:	00 08       	sbc	r0, r0
+ 51e:	08 6b       	ori	r16, 0xB8	; 184
+ 520:	6b 08       	sbc	r6, r11
+ 522:	36 12       	cpse	r3, r22
+ 524:	36 24       	eor	r3, r6
+ 526:	36 06       	cpc	r3, r22
+ 528:	0f 09       	sbc	r16, r15
+ 52a:	0f 06       	cpc	r0, r31
+ 52c:	00 00       	nop
+ 52e:	18 18       	sub	r1, r8
+ 530:	00 00       	nop
+ 532:	00 10       	cpse	r0, r0
+ 534:	10 00       	.word	0x0010	; ????
+ 536:	30 40       	sbci	r19, 0x00	; 0
+ 538:	ff 01       	movw	r30, r30
+ 53a:	01 00       	.word	0x0001	; ????
+ 53c:	1f 01       	movw	r2, r30
+ 53e:	01 1e       	adc	r0, r17
+ 540:	00 19       	sub	r16, r0
+ 542:	1d 17       	cp	r17, r29
+ 544:	12 00       	.word	0x0012	; ????
+ 546:	3c 3c       	cpi	r19, 0xCC	; 204
+ 548:	3c 3c       	cpi	r19, 0xCC	; 204
+ 54a:	00 00       	nop
+ 54c:	00 00       	nop
+	...
 
-00000060 <__do_copy_data>:
-  60:	10 e0       	ldi	r17, 0x00	; 0
-  62:	a0 e6       	ldi	r26, 0x60	; 96
-  64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ea e1       	ldi	r30, 0x1A	; 26
-  68:	f6 e0       	ldi	r31, 0x06	; 6
-  6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
-  6c:	05 90       	lpm	r0, Z+
-  6e:	0d 92       	st	X+, r0
-  70:	aa 3c       	cpi	r26, 0xCA	; 202
-  72:	b1 07       	cpc	r27, r17
-  74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
+00000550 <__ctors_end>:
+ 550:	11 24       	eor	r1, r1
+ 552:	1f be       	out	0x3f, r1	; 63
+ 554:	cf e5       	ldi	r28, 0x5F	; 95
+ 556:	d4 e0       	ldi	r29, 0x04	; 4
+ 558:	de bf       	out	0x3e, r29	; 62
+ 55a:	cd bf       	out	0x3d, r28	; 61
 
-00000076 <__do_clear_bss>:
-  76:	21 e0       	ldi	r18, 0x01	; 1
-  78:	aa ec       	ldi	r26, 0xCA	; 202
-  7a:	b0 e0       	ldi	r27, 0x00	; 0
-  7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
+0000055c <__do_copy_data>:
+ 55c:	10 e0       	ldi	r17, 0x00	; 0
+ 55e:	a0 e6       	ldi	r26, 0x60	; 96
+ 560:	b0 e0       	ldi	r27, 0x00	; 0
+ 562:	ea e2       	ldi	r30, 0x2A	; 42
+ 564:	fd e0       	ldi	r31, 0x0D	; 13
+ 566:	02 c0       	rjmp	.+4      	; 0x56c <__do_copy_data+0x10>
+ 568:	05 90       	lpm	r0, Z+
+ 56a:	0d 92       	st	X+, r0
+ 56c:	a4 3e       	cpi	r26, 0xE4	; 228
+ 56e:	b1 07       	cpc	r27, r17
+ 570:	d9 f7       	brne	.-10     	; 0x568 <__do_copy_data+0xc>
 
-0000007e <.do_clear_bss_loop>:
-  7e:	1d 92       	st	X+, r1
+00000572 <__do_clear_bss>:
+ 572:	21 e0       	ldi	r18, 0x01	; 1
+ 574:	a4 ee       	ldi	r26, 0xE4	; 228
+ 576:	b0 e0       	ldi	r27, 0x00	; 0
+ 578:	01 c0       	rjmp	.+2      	; 0x57c <.do_clear_bss_start>
 
-00000080 <.do_clear_bss_start>:
-  80:	a6 36       	cpi	r26, 0x66	; 102
-  82:	b2 07       	cpc	r27, r18
-  84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
-  86:	0e 94 e2 02 	call	0x5c4	; 0x5c4 <main>
-  8a:	0c 94 0b 03 	jmp	0x616	; 0x616 <_exit>
+0000057a <.do_clear_bss_loop>:
+ 57a:	1d 92       	st	X+, r1
 
-0000008e <__bad_interrupt>:
-  8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+0000057c <.do_clear_bss_start>:
+ 57c:	a1 38       	cpi	r26, 0x81	; 129
+ 57e:	b2 07       	cpc	r27, r18
+ 580:	e1 f7       	brne	.-8      	; 0x57a <.do_clear_bss_loop>
+ 582:	0e 94 64 06 	call	0xcc8	; 0xcc8 <main>
+ 586:	0c 94 93 06 	jmp	0xd26	; 0xd26 <_exit>
 
-00000092 <init_buzzer>:
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//											Functions											  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void init_buzzer(){	
-	// Initialize Buzzer
-	DDRD |= (1 << BUZZER_PIN);			// Set buzzer pin (PD4) direction
-  92:	8c 9a       	sbi	0x11, 4	; 17
-	PORTD &= ~(1 << BUZZER_PIN);		// Clear buzzer output
-  94:	94 98       	cbi	0x12, 4	; 18
-	TCCR1B = (1 << WGM12)|(1 << CS11);	// Enable "CTC" mode and set prescaler = 64	 	
-  96:	8a e0       	ldi	r24, 0x0A	; 10
-  98:	8e bd       	out	0x2e, r24	; 46
-  9a:	08 95       	ret
+0000058a <__bad_interrupt>:
+ 58a:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-0000009c <EEPROM_enable>:
+0000058e <EEPROM_enable>:
 	
 	//Enable writes to EEPROM:
 	EECR |= (1 << EEMWE);
 	
 	//Trigger the write-enable strobe:
 	EECR |= (1 << EEWE);
-  9c:	84 e0       	ldi	r24, 0x04	; 4
-  9e:	8c bb       	out	0x1c, r24	; 28
-  a0:	1f ba       	out	0x1f, r1	; 31
-  a2:	1e ba       	out	0x1e, r1	; 30
-  a4:	08 95       	ret
+ 58e:	84 e0       	ldi	r24, 0x04	; 4
+ 590:	8c bb       	out	0x1c, r24	; 28
+ 592:	1f ba       	out	0x1f, r1	; 31
+ 594:	1e ba       	out	0x1e, r1	; 30
+ 596:	08 95       	ret
 
-000000a6 <EEPROM_read>:
+00000598 <EEPROM_read>:
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 uint8_t EEPROM_read(uint16_t address){
 	
 	//Wait for previous write-enable strobe to null out:
 	while(EECR & (1 << EEWE));
-  a6:	e1 99       	sbic	0x1c, 1	; 28
-  a8:	fe cf       	rjmp	.-4      	; 0xa6 <EEPROM_read>
+ 598:	e1 99       	sbic	0x1c, 1	; 28
+ 59a:	fe cf       	rjmp	.-4      	; 0x598 <EEPROM_read>
 	
 	//Load the address:
 	EEARH = (address >> 8);
-  aa:	9f bb       	out	0x1f, r25	; 31
+ 59c:	9f bb       	out	0x1f, r25	; 31
 	EEARL = (address) & 0xFF;
-  ac:	8e bb       	out	0x1e, r24	; 30
+ 59e:	8e bb       	out	0x1e, r24	; 30
 	
 	//Read in the data by strobing:
 	EECR |= (1 << EERE);
-  ae:	e0 9a       	sbi	0x1c, 0	; 28
+ 5a0:	e0 9a       	sbi	0x1c, 0	; 28
 	
 	//Return the contents of the data register:
 	return EEDR;
-  b0:	8d b3       	in	r24, 0x1d	; 29
+ 5a2:	8d b3       	in	r24, 0x1d	; 29
 }
-  b2:	08 95       	ret
+ 5a4:	08 95       	ret
 
-000000b4 <EEPROM_recovery>:
+000005a6 <EEPROM_recovery>:
 void EEPROM_recovery(void){
 	
 	//Clear out erroneous data from powerdown:
 
 	//Fetch all of the data stored in the EEPROM space, and return it to its space in memory:
 	NV_SYSTEM_STATUS_0 = EEPROM_read(EEPROM_SYSTEM_STATUS_0);
-  b4:	82 e0       	ldi	r24, 0x02	; 2
-  b6:	90 e0       	ldi	r25, 0x00	; 0
-  b8:	0e 94 53 00 	call	0xa6	; 0xa6 <EEPROM_read>
-  bc:	80 93 cf 00 	sts	0x00CF, r24	; 0x8000cf <NV_SYSTEM_STATUS_0>
+ 5a6:	82 e0       	ldi	r24, 0x02	; 2
+ 5a8:	90 e0       	ldi	r25, 0x00	; 0
+ 5aa:	0e 94 cc 02 	call	0x598	; 0x598 <EEPROM_read>
+ 5ae:	80 93 eb 00 	sts	0x00EB, r24	; 0x8000eb <NV_SYSTEM_STATUS_0>
 	NV_SYSTEM_STATUS_1 = EEPROM_read(EEPROM_SYSTEM_STATUS_1);
-  c0:	83 e0       	ldi	r24, 0x03	; 3
-  c2:	90 e0       	ldi	r25, 0x00	; 0
-  c4:	0e 94 53 00 	call	0xa6	; 0xa6 <EEPROM_read>
-  c8:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <NV_SYSTEM_STATUS_1>
+ 5b2:	83 e0       	ldi	r24, 0x03	; 3
+ 5b4:	90 e0       	ldi	r25, 0x00	; 0
+ 5b6:	0e 94 cc 02 	call	0x598	; 0x598 <EEPROM_read>
+ 5ba:	80 93 e8 00 	sts	0x00E8, r24	; 0x8000e8 <NV_SYSTEM_STATUS_1>
 	NV_USER_PREFERENCES_0 = EEPROM_read(EEPROM_USER_PREF_0);
-  cc:	80 e0       	ldi	r24, 0x00	; 0
-  ce:	90 e0       	ldi	r25, 0x00	; 0
-  d0:	0e 94 53 00 	call	0xa6	; 0xa6 <EEPROM_read>
-  d4:	80 93 cd 00 	sts	0x00CD, r24	; 0x8000cd <NV_USER_PREFERENCES_0>
+ 5be:	80 e0       	ldi	r24, 0x00	; 0
+ 5c0:	90 e0       	ldi	r25, 0x00	; 0
+ 5c2:	0e 94 cc 02 	call	0x598	; 0x598 <EEPROM_read>
+ 5c6:	80 93 e9 00 	sts	0x00E9, r24	; 0x8000e9 <NV_USER_PREFERENCES_0>
 	NV_USER_PREFERENCES_1 = EEPROM_read(EEPROM_USER_PREF_1);
-  d8:	81 e0       	ldi	r24, 0x01	; 1
-  da:	90 e0       	ldi	r25, 0x00	; 0
-  dc:	0e 94 53 00 	call	0xa6	; 0xa6 <EEPROM_read>
-  e0:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <NV_USER_PREFERENCES_1>
-  e4:	08 95       	ret
+ 5ca:	81 e0       	ldi	r24, 0x01	; 1
+ 5cc:	90 e0       	ldi	r25, 0x00	; 0
+ 5ce:	0e 94 cc 02 	call	0x598	; 0x598 <EEPROM_read>
+ 5d2:	80 93 ea 00 	sts	0x00EA, r24	; 0x8000ea <NV_USER_PREFERENCES_1>
+ 5d6:	08 95       	ret
 
-000000e6 <GPS_init_USART>:
-*/
-void GPS_init_USART(uint16_t UBRR){
-	
-	//Set baud rate for 9600 bits per second:
-	// [TYPICAL PARAMETER: 103 @ 16MHz system clock]
-	UBRRH = (unsigned char)(UBRR >> 8);
-  e6:	90 bd       	out	0x20, r25	; 32
-	UBRRL = (unsigned char)UBRR;
-  e8:	89 b9       	out	0x09, r24	; 9
-	
-	//Enable the transmitter and receiver bits:
-	UCSRB = (1 << RXEN)|(1 << TXEN);
-  ea:	88 e1       	ldi	r24, 0x18	; 24
-  ec:	8a b9       	out	0x0a, r24	; 10
-	
-	//Set data frame format to accept 1 byte per frame, with 1 stop bit:
-	UCSRC = (0 << UMSEL)|(1 << UCSZ1)|(1 << UCSZ0)|(0 << USBS);
-  ee:	86 e0       	ldi	r24, 0x06	; 6
-  f0:	80 bd       	out	0x20, r24	; 32
-  f2:	08 95       	ret
-
-000000f4 <GPS_disable_stream>:
-	
-*/
-void GPS_disable_stream(void){
-	
-	//Clear receiver-interrupt enable bit, while maintaining register contents:
-	UCSRB = UCSRB & (!(1 << RXCIE));
-  f4:	8a b1       	in	r24, 0x0a	; 10
-  f6:	1a b8       	out	0x0a, r1	; 10
-  f8:	08 95       	ret
-
-000000fa <GPS_send_byte>:
-	
-*/
-void GPS_send_byte(unsigned char data){
+000005d8 <GPS_init_USART>:
 	
 	//Wait for the system to be ready to transmit more data:
 	while(!(UCSRA & (1 << UDRE)));
-  fa:	5d 9b       	sbis	0x0b, 5	; 11
-  fc:	fe cf       	rjmp	.-4      	; 0xfa <GPS_send_byte>
 	
 	//Load byte into the transmitter:
 	UDR = data;
-  fe:	8c b9       	out	0x0c, r24	; 12
- 100:	08 95       	ret
+ 5d8:	90 bd       	out	0x20, r25	; 32
+ 5da:	89 b9       	out	0x09, r24	; 9
+ 5dc:	88 e1       	ldi	r24, 0x18	; 24
+ 5de:	8a b9       	out	0x0a, r24	; 10
+ 5e0:	8e e8       	ldi	r24, 0x8E	; 142
+ 5e2:	80 bd       	out	0x20, r24	; 32
+ 5e4:	08 95       	ret
 
-00000102 <GPS_configure_firmware>:
-					2.	GPS_init_USART(9600);
-					3.	GPS_configure_firmware();
-					4.	GPS_enable_stream();
-	
-*/
-void GPS_configure_firmware(void){
- 102:	0f 93       	push	r16
- 104:	1f 93       	push	r17
- 106:	cf 93       	push	r28
- 108:	df 93       	push	r29
- 10a:	c8 e8       	ldi	r28, 0x88	; 136
- 10c:	d0 e0       	ldi	r29, 0x00	; 0
- 10e:	08 e9       	ldi	r16, 0x98	; 152
- 110:	10 e0       	ldi	r17, 0x00	; 0
+000005e6 <GPS_USART_Transmit>:
+ 5e6:	5d 9b       	sbis	0x0b, 5	; 11
+ 5e8:	fe cf       	rjmp	.-4      	; 0x5e6 <GPS_USART_Transmit>
+ 5ea:	8c b9       	out	0x0c, r24	; 12
+ 5ec:	08 95       	ret
 
-		//1. Configure baud rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_BAUD[i]);
- 112:	89 91       	ld	r24, Y+
- 114:	0e 94 7d 00 	call	0xfa	; 0xfa <GPS_send_byte>
-	
-*/
-void GPS_configure_firmware(void){
+000005ee <GPS_configure_firmware>:
+ 5ee:	0f 93       	push	r16
+ 5f0:	1f 93       	push	r17
+ 5f2:	cf 93       	push	r28
+ 5f4:	df 93       	push	r29
+ 5f6:	c5 e9       	ldi	r28, 0x95	; 149
+ 5f8:	d0 e0       	ldi	r29, 0x00	; 0
+ 5fa:	08 ec       	ldi	r16, 0xC8	; 200
+ 5fc:	10 e0       	ldi	r17, 0x00	; 0
+ 5fe:	89 91       	ld	r24, Y+
+ 600:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <GPS_USART_Transmit>
+ 604:	0c 17       	cp	r16, r28
+ 606:	1d 07       	cpc	r17, r29
+ 608:	d1 f7       	brne	.-12     	; 0x5fe <GPS_configure_firmware+0x10>
+ 60a:	c4 e8       	ldi	r28, 0x84	; 132
+ 60c:	d0 e0       	ldi	r29, 0x00	; 0
+ 60e:	05 e9       	ldi	r16, 0x95	; 149
+ 610:	10 e0       	ldi	r17, 0x00	; 0
+ 612:	89 91       	ld	r24, Y+
+ 614:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <GPS_USART_Transmit>
+ 618:	0c 17       	cp	r16, r28
+ 61a:	1d 07       	cpc	r17, r29
+ 61c:	d1 f7       	brne	.-12     	; 0x612 <GPS_configure_firmware+0x24>
+ 61e:	cb e6       	ldi	r28, 0x6B	; 107
+ 620:	d0 e0       	ldi	r29, 0x00	; 0
+ 622:	04 e8       	ldi	r16, 0x84	; 132
+ 624:	10 e0       	ldi	r17, 0x00	; 0
+ 626:	89 91       	ld	r24, Y+
+ 628:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <GPS_USART_Transmit>
+ 62c:	0c 17       	cp	r16, r28
+ 62e:	1d 07       	cpc	r17, r29
+ 630:	d1 f7       	brne	.-12     	; 0x626 <GPS_configure_firmware+0x38>
+ 632:	df 91       	pop	r29
+ 634:	cf 91       	pop	r28
+ 636:	1f 91       	pop	r17
+ 638:	0f 91       	pop	r16
+ 63a:	08 95       	ret
 
-		//1. Configure baud rate
-		for(int i = 0; i < 16; i++){
- 118:	0c 17       	cp	r16, r28
- 11a:	1d 07       	cpc	r17, r29
- 11c:	d1 f7       	brne	.-12     	; 0x112 <GPS_configure_firmware+0x10>
- 11e:	c0 e7       	ldi	r28, 0x70	; 112
- 120:	d0 e0       	ldi	r29, 0x00	; 0
- 122:	08 e8       	ldi	r16, 0x88	; 136
- 124:	10 e0       	ldi	r17, 0x00	; 0
-			GPS_send_byte(firmware_BAUD[i]);
-		}
-		//2. Set update rate
-		for(int i = 0; i < 24; i++){
-			GPS_send_byte(firmware_HZ[i]);
- 126:	89 91       	ld	r24, Y+
- 128:	0e 94 7d 00 	call	0xfa	; 0xfa <GPS_send_byte>
-		//1. Configure baud rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_BAUD[i]);
-		}
-		//2. Set update rate
-		for(int i = 0; i < 24; i++){
- 12c:	0c 17       	cp	r16, r28
- 12e:	1d 07       	cpc	r17, r29
- 130:	d1 f7       	brne	.-12     	; 0x126 <GPS_configure_firmware+0x24>
- 132:	c0 e6       	ldi	r28, 0x60	; 96
- 134:	d0 e0       	ldi	r29, 0x00	; 0
- 136:	00 e7       	ldi	r16, 0x70	; 112
- 138:	10 e0       	ldi	r17, 0x00	; 0
-			GPS_send_byte(firmware_HZ[i]);
-		}
-		//3. Set fix rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_update_rate[i]);
- 13a:	89 91       	ld	r24, Y+
- 13c:	0e 94 7d 00 	call	0xfa	; 0xfa <GPS_send_byte>
-		//2. Set update rate
-		for(int i = 0; i < 24; i++){
-			GPS_send_byte(firmware_HZ[i]);
-		}
-		//3. Set fix rate
-		for(int i = 0; i < 16; i++){
- 140:	0c 17       	cp	r16, r28
- 142:	1d 07       	cpc	r17, r29
- 144:	d1 f7       	brne	.-12     	; 0x13a <GPS_configure_firmware+0x38>
- 146:	c8 e9       	ldi	r28, 0x98	; 152
- 148:	d0 e0       	ldi	r29, 0x00	; 0
- 14a:	09 ec       	ldi	r16, 0xC9	; 201
- 14c:	10 e0       	ldi	r17, 0x00	; 0
-			GPS_send_byte(firmware_update_rate[i]);
-		}
-		//4. Set RMC enabled
-		for(int i = 0; i < 49; i++){
-			GPS_send_byte(firmware_RMC[i]);
- 14e:	89 91       	ld	r24, Y+
- 150:	0e 94 7d 00 	call	0xfa	; 0xfa <GPS_send_byte>
-		//3. Set fix rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_update_rate[i]);
-		}
-		//4. Set RMC enabled
-		for(int i = 0; i < 49; i++){
- 154:	0c 17       	cp	r16, r28
- 156:	1d 07       	cpc	r17, r29
- 158:	d1 f7       	brne	.-12     	; 0x14e <GPS_configure_firmware+0x4c>
-			GPS_send_byte(firmware_RMC[i]);
-		}
-	
-	
-}
- 15a:	df 91       	pop	r29
- 15c:	cf 91       	pop	r28
- 15e:	1f 91       	pop	r17
- 160:	0f 91       	pop	r16
- 162:	08 95       	ret
-
-00000164 <GPS_receive_byte>:
+0000063c <GPS_receive_byte>:
 	
 */
 char GPS_receive_byte(void){
 	
 	//Check to see if data has been received:
 	while(!(UCSRA & (1 << RXC)));
- 164:	5f 9b       	sbis	0x0b, 7	; 11
- 166:	fe cf       	rjmp	.-4      	; 0x164 <GPS_receive_byte>
+ 63c:	5f 9b       	sbis	0x0b, 7	; 11
+ 63e:	fe cf       	rjmp	.-4      	; 0x63c <GPS_receive_byte>
 	
 	//Return the data to where it is desired:
 	return UDR;
- 168:	8c b1       	in	r24, 0x0c	; 12
+ 640:	8c b1       	in	r24, 0x0c	; 12
 	
 }
- 16a:	08 95       	ret
+ 642:	08 95       	ret
 
-0000016c <GPS_flush_buffer>:
+00000644 <GPS_flush_buffer>:
 	
 	DESCRIPTION:	Systematically clears out the data contained in the USART receive buffer, 
 					then sets the value of the head pointer to 0;
 	
 */
 void GPS_flush_buffer(void){
- 16c:	e0 ed       	ldi	r30, 0xD0	; 208
- 16e:	f0 e0       	ldi	r31, 0x00	; 0
- 170:	88 e4       	ldi	r24, 0x48	; 72
- 172:	91 e0       	ldi	r25, 0x01	; 1
+ 644:	ec ee       	ldi	r30, 0xEC	; 236
+ 646:	f0 e0       	ldi	r31, 0x00	; 0
+ 648:	84 e6       	ldi	r24, 0x64	; 100
+ 64a:	91 e0       	ldi	r25, 0x01	; 1
 	
 	//Clear out data
 	for(int i = 0; i < 120; i++){
 		GPS_BUFFER[i] = 0;
- 174:	11 92       	st	Z+, r1
+ 64c:	11 92       	st	Z+, r1
 	
 */
 void GPS_flush_buffer(void){
 	
 	//Clear out data
 	for(int i = 0; i < 120; i++){
- 176:	e8 17       	cp	r30, r24
- 178:	f9 07       	cpc	r31, r25
- 17a:	e1 f7       	brne	.-8      	; 0x174 <GPS_flush_buffer+0x8>
+ 64e:	e8 17       	cp	r30, r24
+ 650:	f9 07       	cpc	r31, r25
+ 652:	e1 f7       	brne	.-8      	; 0x64c <GPS_flush_buffer+0x8>
 		GPS_BUFFER[i] = 0;
 	}
 	
 	//Set pointer to zero:
 	GPS_BUFFER_INDEX = 0;				//Buffer is at start position.
- 17c:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <GPS_BUFFER_INDEX>
+ 654:	10 92 e5 00 	sts	0x00E5, r1	; 0x8000e5 <GPS_BUFFER_INDEX>
 	
 	//Clear the pre-parsing flag:
 	GPS_MESSAGE_READY = 0;				//Buffer is closed off.
- 180:	10 92 ca 00 	sts	0x00CA, r1	; 0x8000ca <__data_end>
- 184:	08 95       	ret
+ 658:	10 92 e4 00 	sts	0x00E4, r1	; 0x8000e4 <__data_end>
+ 65c:	08 95       	ret
 
-00000186 <GPS_enable_stream>:
+0000065e <GPS_enable_stream>:
 	
 */
 void GPS_enable_stream(void){
 	
 	//Flush the buffer each time, such that there is a fresh start:
 	GPS_flush_buffer();
- 186:	0e 94 b6 00 	call	0x16c	; 0x16c <GPS_flush_buffer>
+ 65e:	0e 94 22 03 	call	0x644	; 0x644 <GPS_flush_buffer>
 	
 	//Also make sure that the parsing flag is reset as well to prevent erroneous behavior:
 	GPS_MESSAGE_READY = 0;
- 18a:	10 92 ca 00 	sts	0x00CA, r1	; 0x8000ca <__data_end>
+ 662:	10 92 e4 00 	sts	0x00E4, r1	; 0x8000e4 <__data_end>
 	
 	//Set receiver-interrupt enable bit, while maintaining register contents:
 	UCSRB |= (1 << RXCIE);
- 18e:	57 9a       	sbi	0x0a, 7	; 10
- 190:	08 95       	ret
+ 666:	57 9a       	sbi	0x0a, 7	; 10
+ 668:	08 95       	ret
 
-00000192 <GPS_parse_data>:
+0000066a <GPS_parse_data>:
 					byte through the linear buffer to extract the relevant NMEA output sentences.
 					After the completion of this parsing, the receiver will be enabled again, which
 					will clear the buffer and its reception flag, and the cycle will repeat.
 			
 */
 void GPS_parse_data(void){
- 192:	0f 93       	push	r16
- 194:	1f 93       	push	r17
- 196:	cf 93       	push	r28
+ 66a:	0f 93       	push	r16
+ 66c:	1f 93       	push	r17
+ 66e:	cf 93       	push	r28
 	
 	//1. Shut down the stream.
-	GPS_disable_stream();
- 198:	0e 94 7a 00 	call	0xf4	; 0xf4 <GPS_disable_stream>
+	//GPS_disable_stream();
 	
 	//2. Reset the MESSAGE_RECEIVED flag
 	GPS_MESSAGE_READY = 0;
- 19c:	10 92 ca 00 	sts	0x00CA, r1	; 0x8000ca <__data_end>
-	
-	//3. Look for the sentence type, and confirm RMC:
-	//	-The first character should be '$'
-	//	-Therefore, GPS_BUFFER[1] is the first sentence-indicating character.
-	if( (GPS_BUFFER[1] == 'G')&&
- 1a0:	80 91 d1 00 	lds	r24, 0x00D1	; 0x8000d1 <GPS_BUFFER+0x1>
- 1a4:	87 34       	cpi	r24, 0x47	; 71
- 1a6:	81 f4       	brne	.+32     	; 0x1c8 <GPS_parse_data+0x36>
- 1a8:	80 91 d2 00 	lds	r24, 0x00D2	; 0x8000d2 <GPS_BUFFER+0x2>
- 1ac:	80 35       	cpi	r24, 0x50	; 80
- 1ae:	61 f4       	brne	.+24     	; 0x1c8 <GPS_parse_data+0x36>
-		(GPS_BUFFER[2] == 'P')&&
- 1b0:	80 91 d3 00 	lds	r24, 0x00D3	; 0x8000d3 <GPS_BUFFER+0x3>
- 1b4:	82 35       	cpi	r24, 0x52	; 82
- 1b6:	41 f4       	brne	.+16     	; 0x1c8 <GPS_parse_data+0x36>
-		(GPS_BUFFER[3] == 'R')&&
- 1b8:	80 91 d4 00 	lds	r24, 0x00D4	; 0x8000d4 <GPS_BUFFER+0x4>
- 1bc:	8d 34       	cpi	r24, 0x4D	; 77
- 1be:	21 f4       	brne	.+8      	; 0x1c8 <GPS_parse_data+0x36>
-		(GPS_BUFFER[4] == 'M')&&
- 1c0:	80 91 d5 00 	lds	r24, 0x00D5	; 0x8000d5 <GPS_BUFFER+0x5>
- 1c4:	83 34       	cpi	r24, 0x43	; 67
- 1c6:	09 f0       	breq	.+2      	; 0x1ca <GPS_parse_data+0x38>
- 1c8:	ff cf       	rjmp	.-2      	; 0x1c8 <GPS_parse_data+0x36>
-		while(1);		//YOU FAILED!
+ 670:	10 92 e4 00 	sts	0x00E4, r1	; 0x8000e4 <__data_end>
+		//while(1);		//YOU FAILED!
 	}
 	
 	//4. Unpack all of the data between '$' and '*'. Store it on the SYS_GPS object.
 		//A. UTC data:
 		SYS_GPS.UTC_H = (GPS_BUFFER[RMC_UTC] * 10) + (GPS_BUFFER[RMC_UTC + 1]);	
- 1ca:	ad e4       	ldi	r26, 0x4D	; 77
- 1cc:	b1 e0       	ldi	r27, 0x01	; 1
- 1ce:	e0 ed       	ldi	r30, 0xD0	; 208
- 1d0:	f0 e0       	ldi	r31, 0x00	; 0
- 1d2:	87 81       	ldd	r24, Z+7	; 0x07
- 1d4:	88 0f       	add	r24, r24
- 1d6:	98 2f       	mov	r25, r24
- 1d8:	99 0f       	add	r25, r25
- 1da:	99 0f       	add	r25, r25
- 1dc:	89 0f       	add	r24, r25
- 1de:	90 85       	ldd	r25, Z+8	; 0x08
- 1e0:	89 0f       	add	r24, r25
- 1e2:	8c 93       	st	X, r24
+ 674:	a9 e6       	ldi	r26, 0x69	; 105
+ 676:	b1 e0       	ldi	r27, 0x01	; 1
+ 678:	ec ee       	ldi	r30, 0xEC	; 236
+ 67a:	f0 e0       	ldi	r31, 0x00	; 0
+ 67c:	87 81       	ldd	r24, Z+7	; 0x07
+ 67e:	88 0f       	add	r24, r24
+ 680:	98 2f       	mov	r25, r24
+ 682:	99 0f       	add	r25, r25
+ 684:	99 0f       	add	r25, r25
+ 686:	89 0f       	add	r24, r25
+ 688:	90 85       	ldd	r25, Z+8	; 0x08
+ 68a:	89 0f       	add	r24, r25
+ 68c:	8c 93       	st	X, r24
 		SYS_GPS.UTC_M = ((GPS_BUFFER[RMC_UTC + 2] * 10) + (GPS_BUFFER[RMC_UTC + 3])); 
- 1e4:	81 85       	ldd	r24, Z+9	; 0x09
- 1e6:	88 0f       	add	r24, r24
- 1e8:	98 2f       	mov	r25, r24
- 1ea:	99 0f       	add	r25, r25
- 1ec:	99 0f       	add	r25, r25
- 1ee:	89 0f       	add	r24, r25
- 1f0:	92 85       	ldd	r25, Z+10	; 0x0a
- 1f2:	89 0f       	add	r24, r25
- 1f4:	11 96       	adiw	r26, 0x01	; 1
- 1f6:	8c 93       	st	X, r24
- 1f8:	11 97       	sbiw	r26, 0x01	; 1
+ 68e:	81 85       	ldd	r24, Z+9	; 0x09
+ 690:	88 0f       	add	r24, r24
+ 692:	98 2f       	mov	r25, r24
+ 694:	99 0f       	add	r25, r25
+ 696:	99 0f       	add	r25, r25
+ 698:	89 0f       	add	r24, r25
+ 69a:	92 85       	ldd	r25, Z+10	; 0x0a
+ 69c:	89 0f       	add	r24, r25
+ 69e:	11 96       	adiw	r26, 0x01	; 1
+ 6a0:	8c 93       	st	X, r24
+ 6a2:	11 97       	sbiw	r26, 0x01	; 1
 		SYS_GPS.UTC_S = ((GPS_BUFFER[RMC_UTC + 4] * 10) + (GPS_BUFFER[RMC_UTC + 5]));
- 1fa:	83 85       	ldd	r24, Z+11	; 0x0b
- 1fc:	88 0f       	add	r24, r24
- 1fe:	98 2f       	mov	r25, r24
- 200:	99 0f       	add	r25, r25
- 202:	99 0f       	add	r25, r25
- 204:	89 0f       	add	r24, r25
- 206:	94 85       	ldd	r25, Z+12	; 0x0c
- 208:	89 0f       	add	r24, r25
- 20a:	12 96       	adiw	r26, 0x02	; 2
- 20c:	8c 93       	st	X, r24
- 20e:	12 97       	sbiw	r26, 0x02	; 2
+ 6a4:	83 85       	ldd	r24, Z+11	; 0x0b
+ 6a6:	88 0f       	add	r24, r24
+ 6a8:	98 2f       	mov	r25, r24
+ 6aa:	99 0f       	add	r25, r25
+ 6ac:	99 0f       	add	r25, r25
+ 6ae:	89 0f       	add	r24, r25
+ 6b0:	94 85       	ldd	r25, Z+12	; 0x0c
+ 6b2:	89 0f       	add	r24, r25
+ 6b4:	12 96       	adiw	r26, 0x02	; 2
+ 6b6:	8c 93       	st	X, r24
+ 6b8:	12 97       	sbiw	r26, 0x02	; 2
 		//B. STATUS:
 		SYS_GPS.STATUS = GPS_BUFFER[RMC_STATUS];
- 210:	82 89       	ldd	r24, Z+18	; 0x12
- 212:	16 96       	adiw	r26, 0x06	; 6
- 214:	8c 93       	st	X, r24
- 216:	16 97       	sbiw	r26, 0x06	; 6
+ 6ba:	82 89       	ldd	r24, Z+18	; 0x12
+ 6bc:	16 96       	adiw	r26, 0x06	; 6
+ 6be:	8c 93       	st	X, r24
+ 6c0:	16 97       	sbiw	r26, 0x06	; 6
 		//C. LATITUDE:
 		SYS_GPS.latitude_H =	(	(GPS_BUFFER[RMC_LAT] * 1000) + 
- 218:	44 89       	ldd	r20, Z+20	; 0x14
- 21a:	28 ee       	ldi	r18, 0xE8	; 232
- 21c:	33 e0       	ldi	r19, 0x03	; 3
- 21e:	42 9f       	mul	r20, r18
- 220:	c0 01       	movw	r24, r0
- 222:	43 9f       	mul	r20, r19
- 224:	90 0d       	add	r25, r0
- 226:	11 24       	eor	r1, r1
- 228:	45 89       	ldd	r20, Z+21	; 0x15
- 22a:	c4 e6       	ldi	r28, 0x64	; 100
- 22c:	bc 01       	movw	r22, r24
- 22e:	c4 9f       	mul	r28, r20
- 230:	60 0d       	add	r22, r0
- 232:	71 1d       	adc	r23, r1
- 234:	11 24       	eor	r1, r1
- 236:	96 89       	ldd	r25, Z+22	; 0x16
- 238:	89 2f       	mov	r24, r25
- 23a:	90 e0       	ldi	r25, 0x00	; 0
- 23c:	8c 01       	movw	r16, r24
- 23e:	00 0f       	add	r16, r16
- 240:	11 1f       	adc	r17, r17
- 242:	ac 01       	movw	r20, r24
- 244:	44 0f       	add	r20, r20
- 246:	55 1f       	adc	r21, r21
- 248:	44 0f       	add	r20, r20
- 24a:	55 1f       	adc	r21, r21
- 24c:	44 0f       	add	r20, r20
- 24e:	55 1f       	adc	r21, r21
- 250:	c8 01       	movw	r24, r16
- 252:	84 0f       	add	r24, r20
- 254:	95 1f       	adc	r25, r21
- 256:	86 0f       	add	r24, r22
- 258:	97 1f       	adc	r25, r23
- 25a:	47 89       	ldd	r20, Z+23	; 0x17
- 25c:	84 0f       	add	r24, r20
- 25e:	91 1d       	adc	r25, r1
- 260:	18 96       	adiw	r26, 0x08	; 8
- 262:	9c 93       	st	X, r25
- 264:	8e 93       	st	-X, r24
- 266:	17 97       	sbiw	r26, 0x07	; 7
+ 6c2:	44 89       	ldd	r20, Z+20	; 0x14
+ 6c4:	28 ee       	ldi	r18, 0xE8	; 232
+ 6c6:	33 e0       	ldi	r19, 0x03	; 3
+ 6c8:	42 9f       	mul	r20, r18
+ 6ca:	c0 01       	movw	r24, r0
+ 6cc:	43 9f       	mul	r20, r19
+ 6ce:	90 0d       	add	r25, r0
+ 6d0:	11 24       	eor	r1, r1
+ 6d2:	45 89       	ldd	r20, Z+21	; 0x15
+ 6d4:	c4 e6       	ldi	r28, 0x64	; 100
+ 6d6:	bc 01       	movw	r22, r24
+ 6d8:	c4 9f       	mul	r28, r20
+ 6da:	60 0d       	add	r22, r0
+ 6dc:	71 1d       	adc	r23, r1
+ 6de:	11 24       	eor	r1, r1
+ 6e0:	96 89       	ldd	r25, Z+22	; 0x16
+ 6e2:	89 2f       	mov	r24, r25
+ 6e4:	90 e0       	ldi	r25, 0x00	; 0
+ 6e6:	8c 01       	movw	r16, r24
+ 6e8:	00 0f       	add	r16, r16
+ 6ea:	11 1f       	adc	r17, r17
+ 6ec:	ac 01       	movw	r20, r24
+ 6ee:	44 0f       	add	r20, r20
+ 6f0:	55 1f       	adc	r21, r21
+ 6f2:	44 0f       	add	r20, r20
+ 6f4:	55 1f       	adc	r21, r21
+ 6f6:	44 0f       	add	r20, r20
+ 6f8:	55 1f       	adc	r21, r21
+ 6fa:	c8 01       	movw	r24, r16
+ 6fc:	84 0f       	add	r24, r20
+ 6fe:	95 1f       	adc	r25, r21
+ 700:	86 0f       	add	r24, r22
+ 702:	97 1f       	adc	r25, r23
+ 704:	47 89       	ldd	r20, Z+23	; 0x17
+ 706:	84 0f       	add	r24, r20
+ 708:	91 1d       	adc	r25, r1
+ 70a:	18 96       	adiw	r26, 0x08	; 8
+ 70c:	9c 93       	st	X, r25
+ 70e:	8e 93       	st	-X, r24
+ 710:	17 97       	sbiw	r26, 0x07	; 7
 									(GPS_BUFFER[RMC_LAT + 1] * 100)+
 									(GPS_BUFFER[RMC_LAT + 2] * 10)+
 									(GPS_BUFFER[RMC_LAT + 3])	);
 		SYS_GPS.latitude_L =	(	(GPS_BUFFER[RMC_LAT + 5] * 1000) +
- 268:	41 8d       	ldd	r20, Z+25	; 0x19
- 26a:	42 9f       	mul	r20, r18
- 26c:	c0 01       	movw	r24, r0
- 26e:	43 9f       	mul	r20, r19
- 270:	90 0d       	add	r25, r0
- 272:	11 24       	eor	r1, r1
- 274:	42 8d       	ldd	r20, Z+26	; 0x1a
- 276:	bc 01       	movw	r22, r24
- 278:	c4 9f       	mul	r28, r20
- 27a:	60 0d       	add	r22, r0
- 27c:	71 1d       	adc	r23, r1
- 27e:	11 24       	eor	r1, r1
- 280:	93 8d       	ldd	r25, Z+27	; 0x1b
- 282:	89 2f       	mov	r24, r25
- 284:	90 e0       	ldi	r25, 0x00	; 0
- 286:	8c 01       	movw	r16, r24
- 288:	00 0f       	add	r16, r16
- 28a:	11 1f       	adc	r17, r17
- 28c:	ac 01       	movw	r20, r24
- 28e:	44 0f       	add	r20, r20
- 290:	55 1f       	adc	r21, r21
- 292:	44 0f       	add	r20, r20
- 294:	55 1f       	adc	r21, r21
- 296:	44 0f       	add	r20, r20
- 298:	55 1f       	adc	r21, r21
- 29a:	c8 01       	movw	r24, r16
- 29c:	84 0f       	add	r24, r20
- 29e:	95 1f       	adc	r25, r21
- 2a0:	86 0f       	add	r24, r22
- 2a2:	97 1f       	adc	r25, r23
- 2a4:	44 8d       	ldd	r20, Z+28	; 0x1c
- 2a6:	84 0f       	add	r24, r20
- 2a8:	91 1d       	adc	r25, r1
- 2aa:	1a 96       	adiw	r26, 0x0a	; 10
- 2ac:	9c 93       	st	X, r25
- 2ae:	8e 93       	st	-X, r24
- 2b0:	19 97       	sbiw	r26, 0x09	; 9
+ 712:	41 8d       	ldd	r20, Z+25	; 0x19
+ 714:	42 9f       	mul	r20, r18
+ 716:	c0 01       	movw	r24, r0
+ 718:	43 9f       	mul	r20, r19
+ 71a:	90 0d       	add	r25, r0
+ 71c:	11 24       	eor	r1, r1
+ 71e:	42 8d       	ldd	r20, Z+26	; 0x1a
+ 720:	bc 01       	movw	r22, r24
+ 722:	c4 9f       	mul	r28, r20
+ 724:	60 0d       	add	r22, r0
+ 726:	71 1d       	adc	r23, r1
+ 728:	11 24       	eor	r1, r1
+ 72a:	93 8d       	ldd	r25, Z+27	; 0x1b
+ 72c:	89 2f       	mov	r24, r25
+ 72e:	90 e0       	ldi	r25, 0x00	; 0
+ 730:	8c 01       	movw	r16, r24
+ 732:	00 0f       	add	r16, r16
+ 734:	11 1f       	adc	r17, r17
+ 736:	ac 01       	movw	r20, r24
+ 738:	44 0f       	add	r20, r20
+ 73a:	55 1f       	adc	r21, r21
+ 73c:	44 0f       	add	r20, r20
+ 73e:	55 1f       	adc	r21, r21
+ 740:	44 0f       	add	r20, r20
+ 742:	55 1f       	adc	r21, r21
+ 744:	c8 01       	movw	r24, r16
+ 746:	84 0f       	add	r24, r20
+ 748:	95 1f       	adc	r25, r21
+ 74a:	86 0f       	add	r24, r22
+ 74c:	97 1f       	adc	r25, r23
+ 74e:	44 8d       	ldd	r20, Z+28	; 0x1c
+ 750:	84 0f       	add	r24, r20
+ 752:	91 1d       	adc	r25, r1
+ 754:	1a 96       	adiw	r26, 0x0a	; 10
+ 756:	9c 93       	st	X, r25
+ 758:	8e 93       	st	-X, r24
+ 75a:	19 97       	sbiw	r26, 0x09	; 9
 									(GPS_BUFFER[RMC_LAT + 6] * 100)+
 									(GPS_BUFFER[RMC_LAT + 7] * 10)+
 									(GPS_BUFFER[RMC_LAT + 8])	);
 		SYS_GPS.NS = GPS_BUFFER[RMC_NS];
- 2b2:	86 8d       	ldd	r24, Z+30	; 0x1e
- 2b4:	1b 96       	adiw	r26, 0x0b	; 11
- 2b6:	8c 93       	st	X, r24
- 2b8:	1b 97       	sbiw	r26, 0x0b	; 11
+ 75c:	86 8d       	ldd	r24, Z+30	; 0x1e
+ 75e:	1b 96       	adiw	r26, 0x0b	; 11
+ 760:	8c 93       	st	X, r24
+ 762:	1b 97       	sbiw	r26, 0x0b	; 11
 		//D. LONGITUDE
 		SYS_GPS.longitude_H =	(	(GPS_BUFFER[RMC_LON] * 10000)+
- 2ba:	60 a1       	ldd	r22, Z+32	; 0x20
- 2bc:	80 e1       	ldi	r24, 0x10	; 16
- 2be:	97 e2       	ldi	r25, 0x27	; 39
- 2c0:	68 9f       	mul	r22, r24
- 2c2:	a0 01       	movw	r20, r0
- 2c4:	69 9f       	mul	r22, r25
- 2c6:	50 0d       	add	r21, r0
- 2c8:	11 24       	eor	r1, r1
- 2ca:	61 a1       	ldd	r22, Z+33	; 0x21
- 2cc:	62 9f       	mul	r22, r18
- 2ce:	c0 01       	movw	r24, r0
- 2d0:	63 9f       	mul	r22, r19
- 2d2:	90 0d       	add	r25, r0
- 2d4:	11 24       	eor	r1, r1
- 2d6:	48 0f       	add	r20, r24
- 2d8:	59 1f       	adc	r21, r25
- 2da:	82 a1       	ldd	r24, Z+34	; 0x22
- 2dc:	c8 9f       	mul	r28, r24
- 2de:	40 0d       	add	r20, r0
- 2e0:	51 1d       	adc	r21, r1
- 2e2:	11 24       	eor	r1, r1
- 2e4:	83 a1       	ldd	r24, Z+35	; 0x23
- 2e6:	90 e0       	ldi	r25, 0x00	; 0
- 2e8:	bc 01       	movw	r22, r24
- 2ea:	66 0f       	add	r22, r22
- 2ec:	77 1f       	adc	r23, r23
- 2ee:	88 0f       	add	r24, r24
- 2f0:	99 1f       	adc	r25, r25
- 2f2:	88 0f       	add	r24, r24
- 2f4:	99 1f       	adc	r25, r25
- 2f6:	88 0f       	add	r24, r24
- 2f8:	99 1f       	adc	r25, r25
- 2fa:	86 0f       	add	r24, r22
- 2fc:	97 1f       	adc	r25, r23
- 2fe:	48 0f       	add	r20, r24
- 300:	59 1f       	adc	r21, r25
- 302:	84 a1       	ldd	r24, Z+36	; 0x24
- 304:	48 0f       	add	r20, r24
- 306:	51 1d       	adc	r21, r1
- 308:	05 2e       	mov	r0, r21
- 30a:	00 0c       	add	r0, r0
- 30c:	66 0b       	sbc	r22, r22
- 30e:	77 0b       	sbc	r23, r23
- 310:	1c 96       	adiw	r26, 0x0c	; 12
- 312:	4d 93       	st	X+, r20
- 314:	5d 93       	st	X+, r21
- 316:	6d 93       	st	X+, r22
- 318:	7c 93       	st	X, r23
- 31a:	1f 97       	sbiw	r26, 0x0f	; 15
+ 764:	60 a1       	ldd	r22, Z+32	; 0x20
+ 766:	80 e1       	ldi	r24, 0x10	; 16
+ 768:	97 e2       	ldi	r25, 0x27	; 39
+ 76a:	68 9f       	mul	r22, r24
+ 76c:	a0 01       	movw	r20, r0
+ 76e:	69 9f       	mul	r22, r25
+ 770:	50 0d       	add	r21, r0
+ 772:	11 24       	eor	r1, r1
+ 774:	61 a1       	ldd	r22, Z+33	; 0x21
+ 776:	62 9f       	mul	r22, r18
+ 778:	c0 01       	movw	r24, r0
+ 77a:	63 9f       	mul	r22, r19
+ 77c:	90 0d       	add	r25, r0
+ 77e:	11 24       	eor	r1, r1
+ 780:	48 0f       	add	r20, r24
+ 782:	59 1f       	adc	r21, r25
+ 784:	82 a1       	ldd	r24, Z+34	; 0x22
+ 786:	c8 9f       	mul	r28, r24
+ 788:	40 0d       	add	r20, r0
+ 78a:	51 1d       	adc	r21, r1
+ 78c:	11 24       	eor	r1, r1
+ 78e:	83 a1       	ldd	r24, Z+35	; 0x23
+ 790:	90 e0       	ldi	r25, 0x00	; 0
+ 792:	bc 01       	movw	r22, r24
+ 794:	66 0f       	add	r22, r22
+ 796:	77 1f       	adc	r23, r23
+ 798:	88 0f       	add	r24, r24
+ 79a:	99 1f       	adc	r25, r25
+ 79c:	88 0f       	add	r24, r24
+ 79e:	99 1f       	adc	r25, r25
+ 7a0:	88 0f       	add	r24, r24
+ 7a2:	99 1f       	adc	r25, r25
+ 7a4:	86 0f       	add	r24, r22
+ 7a6:	97 1f       	adc	r25, r23
+ 7a8:	48 0f       	add	r20, r24
+ 7aa:	59 1f       	adc	r21, r25
+ 7ac:	84 a1       	ldd	r24, Z+36	; 0x24
+ 7ae:	48 0f       	add	r20, r24
+ 7b0:	51 1d       	adc	r21, r1
+ 7b2:	05 2e       	mov	r0, r21
+ 7b4:	00 0c       	add	r0, r0
+ 7b6:	66 0b       	sbc	r22, r22
+ 7b8:	77 0b       	sbc	r23, r23
+ 7ba:	1c 96       	adiw	r26, 0x0c	; 12
+ 7bc:	4d 93       	st	X+, r20
+ 7be:	5d 93       	st	X+, r21
+ 7c0:	6d 93       	st	X+, r22
+ 7c2:	7c 93       	st	X, r23
+ 7c4:	1f 97       	sbiw	r26, 0x0f	; 15
 									(GPS_BUFFER[RMC_LON + 1] * 1000)+
 									(GPS_BUFFER[RMC_LON + 2] * 100)+
 									(GPS_BUFFER[RMC_LON + 3] * 10)+
 									(GPS_BUFFER[RMC_LON + 4])	);
 		SYS_GPS.longitude_L =	(	(GPS_BUFFER[RMC_LON + 6] * 1000)+
- 31c:	46 a1       	ldd	r20, Z+38	; 0x26
- 31e:	42 9f       	mul	r20, r18
- 320:	c0 01       	movw	r24, r0
- 322:	43 9f       	mul	r20, r19
- 324:	90 0d       	add	r25, r0
- 326:	11 24       	eor	r1, r1
- 328:	27 a1       	ldd	r18, Z+39	; 0x27
- 32a:	ac 01       	movw	r20, r24
- 32c:	c2 9f       	mul	r28, r18
- 32e:	40 0d       	add	r20, r0
- 330:	51 1d       	adc	r21, r1
- 332:	11 24       	eor	r1, r1
- 334:	90 a5       	ldd	r25, Z+40	; 0x28
- 336:	89 2f       	mov	r24, r25
- 338:	90 e0       	ldi	r25, 0x00	; 0
- 33a:	bc 01       	movw	r22, r24
- 33c:	66 0f       	add	r22, r22
- 33e:	77 1f       	adc	r23, r23
- 340:	9c 01       	movw	r18, r24
- 342:	22 0f       	add	r18, r18
- 344:	33 1f       	adc	r19, r19
- 346:	22 0f       	add	r18, r18
- 348:	33 1f       	adc	r19, r19
- 34a:	22 0f       	add	r18, r18
- 34c:	33 1f       	adc	r19, r19
- 34e:	cb 01       	movw	r24, r22
- 350:	82 0f       	add	r24, r18
- 352:	93 1f       	adc	r25, r19
- 354:	84 0f       	add	r24, r20
- 356:	95 1f       	adc	r25, r21
- 358:	21 a5       	ldd	r18, Z+41	; 0x29
- 35a:	82 0f       	add	r24, r18
- 35c:	91 1d       	adc	r25, r1
- 35e:	51 96       	adiw	r26, 0x11	; 17
- 360:	9c 93       	st	X, r25
- 362:	8e 93       	st	-X, r24
- 364:	50 97       	sbiw	r26, 0x10	; 16
+ 7c6:	46 a1       	ldd	r20, Z+38	; 0x26
+ 7c8:	42 9f       	mul	r20, r18
+ 7ca:	c0 01       	movw	r24, r0
+ 7cc:	43 9f       	mul	r20, r19
+ 7ce:	90 0d       	add	r25, r0
+ 7d0:	11 24       	eor	r1, r1
+ 7d2:	27 a1       	ldd	r18, Z+39	; 0x27
+ 7d4:	ac 01       	movw	r20, r24
+ 7d6:	c2 9f       	mul	r28, r18
+ 7d8:	40 0d       	add	r20, r0
+ 7da:	51 1d       	adc	r21, r1
+ 7dc:	11 24       	eor	r1, r1
+ 7de:	90 a5       	ldd	r25, Z+40	; 0x28
+ 7e0:	89 2f       	mov	r24, r25
+ 7e2:	90 e0       	ldi	r25, 0x00	; 0
+ 7e4:	bc 01       	movw	r22, r24
+ 7e6:	66 0f       	add	r22, r22
+ 7e8:	77 1f       	adc	r23, r23
+ 7ea:	9c 01       	movw	r18, r24
+ 7ec:	22 0f       	add	r18, r18
+ 7ee:	33 1f       	adc	r19, r19
+ 7f0:	22 0f       	add	r18, r18
+ 7f2:	33 1f       	adc	r19, r19
+ 7f4:	22 0f       	add	r18, r18
+ 7f6:	33 1f       	adc	r19, r19
+ 7f8:	cb 01       	movw	r24, r22
+ 7fa:	82 0f       	add	r24, r18
+ 7fc:	93 1f       	adc	r25, r19
+ 7fe:	84 0f       	add	r24, r20
+ 800:	95 1f       	adc	r25, r21
+ 802:	21 a5       	ldd	r18, Z+41	; 0x29
+ 804:	82 0f       	add	r24, r18
+ 806:	91 1d       	adc	r25, r1
+ 808:	51 96       	adiw	r26, 0x11	; 17
+ 80a:	9c 93       	st	X, r25
+ 80c:	8e 93       	st	-X, r24
+ 80e:	50 97       	sbiw	r26, 0x10	; 16
 									(GPS_BUFFER[RMC_LON + 7] * 100)+
 									(GPS_BUFFER[RMC_LON + 8] * 10)+
 									(GPS_BUFFER[RMC_LON + 9])	);
 		SYS_GPS.EW = GPS_BUFFER[RMC_EW];
- 366:	83 a5       	ldd	r24, Z+43	; 0x2b
- 368:	52 96       	adiw	r26, 0x12	; 18
- 36a:	8c 93       	st	X, r24
- 36c:	52 97       	sbiw	r26, 0x12	; 18
+ 810:	83 a5       	ldd	r24, Z+43	; 0x2b
+ 812:	52 96       	adiw	r26, 0x12	; 18
+ 814:	8c 93       	st	X, r24
+ 816:	52 97       	sbiw	r26, 0x12	; 18
 		//E. SPEED AND COURSE
 		SYS_GPS.ground_speed_high = GPS_BUFFER[RMC_SPEED];
- 36e:	85 a5       	ldd	r24, Z+45	; 0x2d
- 370:	53 96       	adiw	r26, 0x13	; 19
- 372:	8c 93       	st	X, r24
- 374:	53 97       	sbiw	r26, 0x13	; 19
+ 818:	85 a5       	ldd	r24, Z+45	; 0x2d
+ 81a:	53 96       	adiw	r26, 0x13	; 19
+ 81c:	8c 93       	st	X, r24
+ 81e:	53 97       	sbiw	r26, 0x13	; 19
 		SYS_GPS.ground_speed_low = ((GPS_BUFFER[RMC_SPEED + 2] * 10) + (GPS_BUFFER[RMC_SPEED + 3]));
- 376:	87 a5       	ldd	r24, Z+47	; 0x2f
- 378:	88 0f       	add	r24, r24
- 37a:	98 2f       	mov	r25, r24
- 37c:	99 0f       	add	r25, r25
- 37e:	99 0f       	add	r25, r25
- 380:	89 0f       	add	r24, r25
- 382:	90 a9       	ldd	r25, Z+48	; 0x30
- 384:	89 0f       	add	r24, r25
- 386:	54 96       	adiw	r26, 0x14	; 20
- 388:	8c 93       	st	X, r24
- 38a:	54 97       	sbiw	r26, 0x14	; 20
+ 820:	87 a5       	ldd	r24, Z+47	; 0x2f
+ 822:	88 0f       	add	r24, r24
+ 824:	98 2f       	mov	r25, r24
+ 826:	99 0f       	add	r25, r25
+ 828:	99 0f       	add	r25, r25
+ 82a:	89 0f       	add	r24, r25
+ 82c:	90 a9       	ldd	r25, Z+48	; 0x30
+ 82e:	89 0f       	add	r24, r25
+ 830:	54 96       	adiw	r26, 0x14	; 20
+ 832:	8c 93       	st	X, r24
+ 834:	54 97       	sbiw	r26, 0x14	; 20
 		SYS_GPS.course_high =	(	(GPS_BUFFER[RMC_COURSE] * 100)+
- 38c:	22 a9       	ldd	r18, Z+50	; 0x32
- 38e:	83 a9       	ldd	r24, Z+51	; 0x33
- 390:	90 e0       	ldi	r25, 0x00	; 0
- 392:	ac 01       	movw	r20, r24
- 394:	44 0f       	add	r20, r20
- 396:	55 1f       	adc	r21, r21
- 398:	88 0f       	add	r24, r24
- 39a:	99 1f       	adc	r25, r25
- 39c:	88 0f       	add	r24, r24
- 39e:	99 1f       	adc	r25, r25
- 3a0:	88 0f       	add	r24, r24
- 3a2:	99 1f       	adc	r25, r25
- 3a4:	84 0f       	add	r24, r20
- 3a6:	95 1f       	adc	r25, r21
- 3a8:	c2 9f       	mul	r28, r18
- 3aa:	80 0d       	add	r24, r0
- 3ac:	91 1d       	adc	r25, r1
- 3ae:	11 24       	eor	r1, r1
- 3b0:	24 a9       	ldd	r18, Z+52	; 0x34
- 3b2:	82 0f       	add	r24, r18
- 3b4:	91 1d       	adc	r25, r1
- 3b6:	56 96       	adiw	r26, 0x16	; 22
- 3b8:	9c 93       	st	X, r25
- 3ba:	8e 93       	st	-X, r24
- 3bc:	55 97       	sbiw	r26, 0x15	; 21
+ 836:	22 a9       	ldd	r18, Z+50	; 0x32
+ 838:	83 a9       	ldd	r24, Z+51	; 0x33
+ 83a:	90 e0       	ldi	r25, 0x00	; 0
+ 83c:	ac 01       	movw	r20, r24
+ 83e:	44 0f       	add	r20, r20
+ 840:	55 1f       	adc	r21, r21
+ 842:	88 0f       	add	r24, r24
+ 844:	99 1f       	adc	r25, r25
+ 846:	88 0f       	add	r24, r24
+ 848:	99 1f       	adc	r25, r25
+ 84a:	88 0f       	add	r24, r24
+ 84c:	99 1f       	adc	r25, r25
+ 84e:	84 0f       	add	r24, r20
+ 850:	95 1f       	adc	r25, r21
+ 852:	c2 9f       	mul	r28, r18
+ 854:	80 0d       	add	r24, r0
+ 856:	91 1d       	adc	r25, r1
+ 858:	11 24       	eor	r1, r1
+ 85a:	24 a9       	ldd	r18, Z+52	; 0x34
+ 85c:	82 0f       	add	r24, r18
+ 85e:	91 1d       	adc	r25, r1
+ 860:	56 96       	adiw	r26, 0x16	; 22
+ 862:	9c 93       	st	X, r25
+ 864:	8e 93       	st	-X, r24
+ 866:	55 97       	sbiw	r26, 0x15	; 21
 									(GPS_BUFFER[RMC_COURSE + 1] * 10)+
 									(GPS_BUFFER[RMC_COURSE + 2])	);
 		SYS_GPS.course_low = ((GPS_BUFFER[RMC_COURSE + 4] * 10) + (GPS_BUFFER[RMC_COURSE + 5]));
- 3be:	86 a9       	ldd	r24, Z+54	; 0x36
- 3c0:	88 0f       	add	r24, r24
- 3c2:	98 2f       	mov	r25, r24
- 3c4:	99 0f       	add	r25, r25
- 3c6:	99 0f       	add	r25, r25
- 3c8:	89 0f       	add	r24, r25
- 3ca:	97 a9       	ldd	r25, Z+55	; 0x37
- 3cc:	89 0f       	add	r24, r25
- 3ce:	57 96       	adiw	r26, 0x17	; 23
- 3d0:	8c 93       	st	X, r24
- 3d2:	57 97       	sbiw	r26, 0x17	; 23
+ 868:	86 a9       	ldd	r24, Z+54	; 0x36
+ 86a:	88 0f       	add	r24, r24
+ 86c:	98 2f       	mov	r25, r24
+ 86e:	99 0f       	add	r25, r25
+ 870:	99 0f       	add	r25, r25
+ 872:	89 0f       	add	r24, r25
+ 874:	97 a9       	ldd	r25, Z+55	; 0x37
+ 876:	89 0f       	add	r24, r25
+ 878:	57 96       	adiw	r26, 0x17	; 23
+ 87a:	8c 93       	st	X, r24
+ 87c:	57 97       	sbiw	r26, 0x17	; 23
 		//F. DATE
 		SYS_GPS.UTC_DAY =	((GPS_BUFFER[RMC_DATE] * 10) + (GPS_BUFFER[RMC_DATE + 1]));
- 3d4:	81 ad       	ldd	r24, Z+57	; 0x39
- 3d6:	88 0f       	add	r24, r24
- 3d8:	98 2f       	mov	r25, r24
- 3da:	99 0f       	add	r25, r25
- 3dc:	99 0f       	add	r25, r25
- 3de:	89 0f       	add	r24, r25
- 3e0:	92 ad       	ldd	r25, Z+58	; 0x3a
- 3e2:	89 0f       	add	r24, r25
- 3e4:	13 96       	adiw	r26, 0x03	; 3
- 3e6:	8c 93       	st	X, r24
- 3e8:	13 97       	sbiw	r26, 0x03	; 3
+ 87e:	81 ad       	ldd	r24, Z+57	; 0x39
+ 880:	88 0f       	add	r24, r24
+ 882:	98 2f       	mov	r25, r24
+ 884:	99 0f       	add	r25, r25
+ 886:	99 0f       	add	r25, r25
+ 888:	89 0f       	add	r24, r25
+ 88a:	92 ad       	ldd	r25, Z+58	; 0x3a
+ 88c:	89 0f       	add	r24, r25
+ 88e:	13 96       	adiw	r26, 0x03	; 3
+ 890:	8c 93       	st	X, r24
+ 892:	13 97       	sbiw	r26, 0x03	; 3
 		SYS_GPS.UTC_MONTH = ((GPS_BUFFER[RMC_DATE + 2] * 10) + (GPS_BUFFER[RMC_DATE + 3]));
- 3ea:	83 ad       	ldd	r24, Z+59	; 0x3b
- 3ec:	88 0f       	add	r24, r24
- 3ee:	98 2f       	mov	r25, r24
- 3f0:	99 0f       	add	r25, r25
- 3f2:	99 0f       	add	r25, r25
- 3f4:	89 0f       	add	r24, r25
- 3f6:	94 ad       	ldd	r25, Z+60	; 0x3c
- 3f8:	89 0f       	add	r24, r25
- 3fa:	14 96       	adiw	r26, 0x04	; 4
- 3fc:	8c 93       	st	X, r24
- 3fe:	14 97       	sbiw	r26, 0x04	; 4
+ 894:	83 ad       	ldd	r24, Z+59	; 0x3b
+ 896:	88 0f       	add	r24, r24
+ 898:	98 2f       	mov	r25, r24
+ 89a:	99 0f       	add	r25, r25
+ 89c:	99 0f       	add	r25, r25
+ 89e:	89 0f       	add	r24, r25
+ 8a0:	94 ad       	ldd	r25, Z+60	; 0x3c
+ 8a2:	89 0f       	add	r24, r25
+ 8a4:	14 96       	adiw	r26, 0x04	; 4
+ 8a6:	8c 93       	st	X, r24
+ 8a8:	14 97       	sbiw	r26, 0x04	; 4
 		SYS_GPS.UTC_YEAR =	((GPS_BUFFER[RMC_DATE + 4] * 10) + (GPS_BUFFER[RMC_DATE + 5]));
- 400:	85 ad       	ldd	r24, Z+61	; 0x3d
- 402:	88 0f       	add	r24, r24
- 404:	98 2f       	mov	r25, r24
- 406:	99 0f       	add	r25, r25
- 408:	99 0f       	add	r25, r25
- 40a:	89 0f       	add	r24, r25
- 40c:	96 ad       	ldd	r25, Z+62	; 0x3e
- 40e:	89 0f       	add	r24, r25
- 410:	15 96       	adiw	r26, 0x05	; 5
- 412:	8c 93       	st	X, r24
+ 8aa:	85 ad       	ldd	r24, Z+61	; 0x3d
+ 8ac:	88 0f       	add	r24, r24
+ 8ae:	98 2f       	mov	r25, r24
+ 8b0:	99 0f       	add	r25, r25
+ 8b2:	99 0f       	add	r25, r25
+ 8b4:	89 0f       	add	r24, r25
+ 8b6:	96 ad       	ldd	r25, Z+62	; 0x3e
+ 8b8:	89 0f       	add	r24, r25
+ 8ba:	15 96       	adiw	r26, 0x05	; 5
+ 8bc:	8c 93       	st	X, r24
 	
 	//?. Enable stream, thereby flushing the buffer of all its contents.
 	GPS_enable_stream();
- 414:	0e 94 c3 00 	call	0x186	; 0x186 <GPS_enable_stream>
+ 8be:	0e 94 2f 03 	call	0x65e	; 0x65e <GPS_enable_stream>
 	
 };
- 418:	cf 91       	pop	r28
- 41a:	1f 91       	pop	r17
- 41c:	0f 91       	pop	r16
- 41e:	08 95       	ret
+ 8c2:	cf 91       	pop	r28
+ 8c4:	1f 91       	pop	r17
+ 8c6:	0f 91       	pop	r16
+ 8c8:	08 95       	ret
 
-00000420 <SD_assert>:
-	
-	//Read in the status register to clear it:
-	clear_byte = SPSR;
-	
-	//Write a byte to the data register to prepare it:
-	SPDR = clear_byte;
- 420:	8b b3       	in	r24, 0x1b	; 27
- 422:	1b ba       	out	0x1b, r1	; 27
- 424:	08 95       	ret
-
-00000426 <SD_SPI_send_byte>:
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void SD_SPI_send_byte(char byte){
-	
-	//DO NOT assert the device. 
-	//Simply write the byte and wait until transmission has concluded:
-	SPDR = byte;
- 426:	8f b9       	out	0x0f, r24	; 15
-	//Wait for transmission termination:
-	while(!(SPSR & (1 << SPIF)));
- 428:	77 9b       	sbis	0x0e, 7	; 14
- 42a:	fe cf       	rjmp	.-4      	; 0x428 <SD_SPI_send_byte+0x2>
-	
+000008ca <LCD_spi_send>:
+		grid.xoff = xOff;
+		grid.yoff = yOff;
+		grid.color = color;
+		grid.isDrawn = TRUE;
+	}
 }
- 42c:	08 95       	ret
+ 8ca:	8f b9       	out	0x0f, r24	; 15
+ 8cc:	77 9b       	sbis	0x0e, 7	; 14
+ 8ce:	fe cf       	rjmp	.-4      	; 0x8cc <LCD_spi_send+0x2>
+ 8d0:	08 95       	ret
 
-0000042e <SD_SPI_send_command>:
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void SD_SPI_send_command(uint8_t command, uint32_t arguments, uint8_t CRC){
- 42e:	ff 92       	push	r15
- 430:	0f 93       	push	r16
- 432:	1f 93       	push	r17
- 434:	cf 93       	push	r28
- 436:	df 93       	push	r29
- 438:	d4 2f       	mov	r29, r20
- 43a:	15 2f       	mov	r17, r21
- 43c:	06 2f       	mov	r16, r22
- 43e:	f7 2e       	mov	r15, r23
- 440:	c2 2f       	mov	r28, r18
-	
-	//Send command:
-	SD_SPI_send_byte(command);
- 442:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	//Send arguments MSB first:
-	SD_SPI_send_byte((char)(arguments >> 24));
- 446:	8f 2d       	mov	r24, r15
- 448:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	SD_SPI_send_byte((char)(arguments >> 16));
- 44c:	80 2f       	mov	r24, r16
- 44e:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	SD_SPI_send_byte((char)(arguments >> 8));
- 452:	81 2f       	mov	r24, r17
- 454:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	SD_SPI_send_byte((char)(arguments));
- 458:	8d 2f       	mov	r24, r29
- 45a:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	//Send the CRC:
-	SD_SPI_send_byte(CRC);
- 45e:	8c 2f       	mov	r24, r28
- 460:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	
+000008d2 <LCD_writecommand8>:
+ 8d2:	98 b3       	in	r25, 0x18	; 24
+ 8d4:	97 7e       	andi	r25, 0xE7	; 231
+ 8d6:	98 bb       	out	0x18, r25	; 24
+ 8d8:	9a e1       	ldi	r25, 0x1A	; 26
+ 8da:	9a 95       	dec	r25
+ 8dc:	f1 f7       	brne	.-4      	; 0x8da <LCD_writecommand8+0x8>
+ 8de:	00 c0       	rjmp	.+0      	; 0x8e0 <LCD_writecommand8+0xe>
+ 8e0:	0e 94 65 04 	call	0x8ca	; 0x8ca <LCD_spi_send>
+ 8e4:	c3 9a       	sbi	0x18, 3	; 24
+ 8e6:	08 95       	ret
+
+000008e8 <LCD_writedata8>:
+ 8e8:	c4 9a       	sbi	0x18, 4	; 24
+ 8ea:	95 e0       	ldi	r25, 0x05	; 5
+ 8ec:	9a 95       	dec	r25
+ 8ee:	f1 f7       	brne	.-4      	; 0x8ec <LCD_writedata8+0x4>
+ 8f0:	00 00       	nop
+ 8f2:	c3 98       	cbi	0x18, 3	; 24
+ 8f4:	0e 94 65 04 	call	0x8ca	; 0x8ca <LCD_spi_send>
+ 8f8:	c3 9a       	sbi	0x18, 3	; 24
+ 8fa:	08 95       	ret
+
+000008fc <LCD_pushColor>:
+ 8fc:	cf 93       	push	r28
+ 8fe:	c8 2f       	mov	r28, r24
+ 900:	89 2f       	mov	r24, r25
+ 902:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 906:	8c 2f       	mov	r24, r28
+ 908:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 90c:	cf 91       	pop	r28
+ 90e:	08 95       	ret
+
+00000910 <LCD_setAddress>:
+ 910:	cf 92       	push	r12
+ 912:	df 92       	push	r13
+ 914:	ef 92       	push	r14
+ 916:	ff 92       	push	r15
+ 918:	0f 93       	push	r16
+ 91a:	1f 93       	push	r17
+ 91c:	cf 93       	push	r28
+ 91e:	df 93       	push	r29
+ 920:	d8 2e       	mov	r13, r24
+ 922:	c9 2e       	mov	r12, r25
+ 924:	16 2f       	mov	r17, r22
+ 926:	07 2f       	mov	r16, r23
+ 928:	f4 2e       	mov	r15, r20
+ 92a:	e5 2e       	mov	r14, r21
+ 92c:	c2 2f       	mov	r28, r18
+ 92e:	d3 2f       	mov	r29, r19
+ 930:	8a e2       	ldi	r24, 0x2A	; 42
+ 932:	0e 94 69 04 	call	0x8d2	; 0x8d2 <LCD_writecommand8>
+ 936:	8c 2d       	mov	r24, r12
+ 938:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 93c:	8d 2d       	mov	r24, r13
+ 93e:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 942:	8e 2d       	mov	r24, r14
+ 944:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 948:	8f 2d       	mov	r24, r15
+ 94a:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 94e:	8b e2       	ldi	r24, 0x2B	; 43
+ 950:	0e 94 69 04 	call	0x8d2	; 0x8d2 <LCD_writecommand8>
+ 954:	80 2f       	mov	r24, r16
+ 956:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 95a:	81 2f       	mov	r24, r17
+ 95c:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 960:	8d 2f       	mov	r24, r29
+ 962:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 966:	8c 2f       	mov	r24, r28
+ 968:	0e 94 74 04 	call	0x8e8	; 0x8e8 <LCD_writedata8>
+ 96c:	8c e2       	ldi	r24, 0x2C	; 44
+ 96e:	0e 94 69 04 	call	0x8d2	; 0x8d2 <LCD_writecommand8>
+ 972:	df 91       	pop	r29
+ 974:	cf 91       	pop	r28
+ 976:	1f 91       	pop	r17
+ 978:	0f 91       	pop	r16
+ 97a:	ff 90       	pop	r15
+ 97c:	ef 90       	pop	r14
+ 97e:	df 90       	pop	r13
+ 980:	cf 90       	pop	r12
+ 982:	08 95       	ret
+
+00000984 <LCD_drawPixel>:
+ 984:	cf 93       	push	r28
+ 986:	df 93       	push	r29
+ 988:	ea 01       	movw	r28, r20
+ 98a:	9b 01       	movw	r18, r22
+ 98c:	ac 01       	movw	r20, r24
+ 98e:	0e 94 88 04 	call	0x910	; 0x910 <LCD_setAddress>
+ 992:	ce 01       	movw	r24, r28
+ 994:	0e 94 7e 04 	call	0x8fc	; 0x8fc <LCD_pushColor>
+ 998:	df 91       	pop	r29
+ 99a:	cf 91       	pop	r28
+ 99c:	08 95       	ret
+
+0000099e <LCD_drawRect_filled>:
+ 99e:	af 92       	push	r10
+ 9a0:	bf 92       	push	r11
+ 9a2:	cf 92       	push	r12
+ 9a4:	df 92       	push	r13
+ 9a6:	ef 92       	push	r14
+ 9a8:	ff 92       	push	r15
+ 9aa:	0f 93       	push	r16
+ 9ac:	1f 93       	push	r17
+ 9ae:	cf 93       	push	r28
+ 9b0:	df 93       	push	r29
+ 9b2:	7a 01       	movw	r14, r20
+ 9b4:	59 01       	movw	r10, r18
+ 9b6:	21 50       	subi	r18, 0x01	; 1
+ 9b8:	31 09       	sbc	r19, r1
+ 9ba:	26 0f       	add	r18, r22
+ 9bc:	37 1f       	adc	r19, r23
+ 9be:	41 50       	subi	r20, 0x01	; 1
+ 9c0:	51 09       	sbc	r21, r1
+ 9c2:	48 0f       	add	r20, r24
+ 9c4:	59 1f       	adc	r21, r25
+ 9c6:	0e 94 88 04 	call	0x910	; 0x910 <LCD_setAddress>
+ 9ca:	a1 14       	cp	r10, r1
+ 9cc:	b1 04       	cpc	r11, r1
+ 9ce:	89 f4       	brne	.+34     	; 0x9f2 <LCD_drawRect_filled+0x54>
+ 9d0:	16 c0       	rjmp	.+44     	; 0x9fe <LCD_drawRect_filled+0x60>
+ 9d2:	c0 e0       	ldi	r28, 0x00	; 0
+ 9d4:	d0 e0       	ldi	r29, 0x00	; 0
+ 9d6:	c8 01       	movw	r24, r16
+ 9d8:	0e 94 7e 04 	call	0x8fc	; 0x8fc <LCD_pushColor>
+ 9dc:	21 96       	adiw	r28, 0x01	; 1
+ 9de:	ec 16       	cp	r14, r28
+ 9e0:	fd 06       	cpc	r15, r29
+ 9e2:	c9 f7       	brne	.-14     	; 0x9d6 <LCD_drawRect_filled+0x38>
+ 9e4:	8f ef       	ldi	r24, 0xFF	; 255
+ 9e6:	c8 1a       	sub	r12, r24
+ 9e8:	d8 0a       	sbc	r13, r24
+ 9ea:	ac 14       	cp	r10, r12
+ 9ec:	bd 04       	cpc	r11, r13
+ 9ee:	19 f4       	brne	.+6      	; 0x9f6 <LCD_drawRect_filled+0x58>
+ 9f0:	06 c0       	rjmp	.+12     	; 0x9fe <LCD_drawRect_filled+0x60>
+ 9f2:	c1 2c       	mov	r12, r1
+ 9f4:	d1 2c       	mov	r13, r1
+ 9f6:	e1 14       	cp	r14, r1
+ 9f8:	f1 04       	cpc	r15, r1
+ 9fa:	59 f7       	brne	.-42     	; 0x9d2 <LCD_drawRect_filled+0x34>
+ 9fc:	f3 cf       	rjmp	.-26     	; 0x9e4 <LCD_drawRect_filled+0x46>
+ 9fe:	df 91       	pop	r29
+ a00:	cf 91       	pop	r28
+ a02:	1f 91       	pop	r17
+ a04:	0f 91       	pop	r16
+ a06:	ff 90       	pop	r15
+ a08:	ef 90       	pop	r14
+ a0a:	df 90       	pop	r13
+ a0c:	cf 90       	pop	r12
+ a0e:	bf 90       	pop	r11
+ a10:	af 90       	pop	r10
+ a12:	08 95       	ret
+
+00000a14 <LCD_drawChar>:
+	/* Update Frame Data */
+	LCD_writecommand8(0x2C);	// Perform memory write
 }
- 464:	df 91       	pop	r29
- 466:	cf 91       	pop	r28
- 468:	1f 91       	pop	r17
- 46a:	0f 91       	pop	r16
- 46c:	ff 90       	pop	r15
- 46e:	08 95       	ret
 
-00000470 <SD_init_card>:
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void SD_init_card(void){
- 470:	cf 93       	push	r28
-	
-	//Assert the device and hold:
-	PORTA &= !(1 << SD_SLAVE_PIN);
- 472:	8b b3       	in	r24, 0x1b	; 27
- 474:	1b ba       	out	0x1b, r1	; 27
- 476:	8a e0       	ldi	r24, 0x0A	; 10
- 478:	90 e0       	ldi	r25, 0x00	; 0
-	
-	//Send ten dummy bytes:
-	for(int bytes = 0; bytes < 10; bytes++){
+void LCD_drawChar(int16_t x, int16_t y, char c, Color fg, Color bg, uint8_t size)
+{	
+ a14:	2f 92       	push	r2
+ a16:	3f 92       	push	r3
+ a18:	4f 92       	push	r4
+ a1a:	5f 92       	push	r5
+ a1c:	6f 92       	push	r6
+ a1e:	7f 92       	push	r7
+ a20:	8f 92       	push	r8
+ a22:	9f 92       	push	r9
+ a24:	af 92       	push	r10
+ a26:	bf 92       	push	r11
+ a28:	cf 92       	push	r12
+ a2a:	df 92       	push	r13
+ a2c:	ef 92       	push	r14
+ a2e:	ff 92       	push	r15
+ a30:	0f 93       	push	r16
+ a32:	1f 93       	push	r17
+ a34:	cf 93       	push	r28
+ a36:	df 93       	push	r29
+ a38:	cd b7       	in	r28, 0x3d	; 61
+ a3a:	de b7       	in	r29, 0x3e	; 62
+ a3c:	2b 97       	sbiw	r28, 0x0b	; 11
+ a3e:	0f b6       	in	r0, 0x3f	; 63
+ a40:	f8 94       	cli
+ a42:	de bf       	out	0x3e, r29	; 62
+ a44:	0f be       	out	0x3f, r0	; 63
+ a46:	cd bf       	out	0x3d, r28	; 61
+ a48:	7f 83       	std	Y+7, r23	; 0x07
+ a4a:	6e 83       	std	Y+6, r22	; 0x06
+ a4c:	e9 82       	std	Y+1, r14	; 0x01
+	/* Draw a Character with Given Text Parameters */									// ***
+	for (int8_t line = 0; line < 6; line++){											// For every line of character 'c'
+		uint8_t pattern;																//  Declare bit pattern variable
+		
+		if (line < 5)																	//  If the last line is NOT reached,
+			pattern = pgm_read_byte(font + c*5 + line);									//   Load bit pattern at designated line  
+ a4e:	50 e0       	ldi	r21, 0x00	; 0
+ a50:	ba 01       	movw	r22, r20
+ a52:	66 0f       	add	r22, r22
+ a54:	77 1f       	adc	r23, r23
+ a56:	66 0f       	add	r22, r22
+ a58:	77 1f       	adc	r23, r23
+ a5a:	46 0f       	add	r20, r22
+ a5c:	57 1f       	adc	r21, r23
+ a5e:	4e 2c       	mov	r4, r14
+ a60:	51 2c       	mov	r5, r1
+ a62:	3c 01       	movw	r6, r24
+ a64:	1c 01       	movw	r2, r24
+}
 
-		//Dummy bytes for SD are always 0xFF:
-		SPDR = 0xFF;
- 47a:	2f ef       	ldi	r18, 0xFF	; 255
- 47c:	2f b9       	out	0x0f, r18	; 15
-		//Wait for transmission:
-		while(!(SPSR & (1 << SPIF)));
- 47e:	77 9b       	sbis	0x0e, 7	; 14
- 480:	fe cf       	rjmp	.-4      	; 0x47e <SD_init_card+0xe>
- 482:	01 97       	sbiw	r24, 0x01	; 1
-	
-	//Assert the device and hold:
-	PORTA &= !(1 << SD_SLAVE_PIN);
-	
-	//Send ten dummy bytes:
-	for(int bytes = 0; bytes < 10; bytes++){
- 484:	d9 f7       	brne	.-10     	; 0x47c <SD_init_card+0xc>
-		while(!(SPSR & (1 << SPIF)));
+void LCD_drawChar(int16_t x, int16_t y, char c, Color fg, Color bg, uint8_t size)
+{	
+	/* Draw a Character with Given Text Parameters */									// ***
+	for (int8_t line = 0; line < 6; line++){											// For every line of character 'c'
+ a66:	1a 82       	std	Y+2, r1	; 0x02
+		uint8_t pattern;																//  Declare bit pattern variable
+		
+		if (line < 5)																	//  If the last line is NOT reached,
+			pattern = pgm_read_byte(font + c*5 + line);									//   Load bit pattern at designated line  
+ a68:	ba 01       	movw	r22, r20
+ a6a:	68 1b       	sub	r22, r24
+ a6c:	79 0b       	sbc	r23, r25
+ a6e:	79 87       	std	Y+9, r23	; 0x09
+ a70:	68 87       	std	Y+8, r22	; 0x08
+ a72:	42 01       	movw	r8, r4
+ a74:	ae 80       	ldd	r10, Y+6	; 0x06
+ a76:	bf 80       	ldd	r11, Y+7	; 0x07
+ a78:	78 e0       	ldi	r23, 0x08	; 8
+ a7a:	a7 0e       	add	r10, r23
+ a7c:	b1 1c       	adc	r11, r1
+
+		else																			//  Else,
+			pattern = 0x0;																//   Load an empty bit pattern
+
+		for (uint8_t bitNum = 0; bitNum < 8; bitNum++) {								//  For each bit in current pattern,
+			Color bitColor = pattern & 0x01 ? fg : bg;									//   Record color depending on state of current bit in pattern
+ a7e:	2b 83       	std	Y+3, r18	; 0x03
+ a80:	3c 83       	std	Y+4, r19	; 0x04
+ a82:	0d 83       	std	Y+5, r16	; 0x05
+ a84:	e1 2e       	mov	r14, r17
+{	
+	/* Draw a Character with Given Text Parameters */									// ***
+	for (int8_t line = 0; line < 6; line++){											// For every line of character 'c'
+		uint8_t pattern;																//  Declare bit pattern variable
+		
+		if (line < 5)																	//  If the last line is NOT reached,
+ a86:	8a 81       	ldd	r24, Y+2	; 0x02
+ a88:	85 30       	cpi	r24, 0x05	; 5
+ a8a:	bc f5       	brge	.+110    	; 0xafa <LCD_drawChar+0xe6>
+			pattern = pgm_read_byte(font + c*5 + line);									//   Load bit pattern at designated line  
+ a8c:	e8 85       	ldd	r30, Y+8	; 0x08
+ a8e:	f9 85       	ldd	r31, Y+9	; 0x09
+ a90:	e2 0d       	add	r30, r2
+ a92:	f3 1d       	adc	r31, r3
+ a94:	ec 5a       	subi	r30, 0xAC	; 172
+ a96:	ff 4f       	sbci	r31, 0xFF	; 255
+ a98:	f4 90       	lpm	r15, Z
+ a9a:	30 c0       	rjmp	.+96     	; 0xafc <LCD_drawChar+0xe8>
+
+		else																			//  Else,
+			pattern = 0x0;																//   Load an empty bit pattern
+
+		for (uint8_t bitNum = 0; bitNum < 8; bitNum++) {								//  For each bit in current pattern,
+			Color bitColor = pattern & 0x01 ? fg : bg;									//   Record color depending on state of current bit in pattern
+ a9c:	f0 fc       	sbrc	r15, 0
+ a9e:	03 c0       	rjmp	.+6      	; 0xaa6 <LCD_drawChar+0x92>
+ aa0:	0d 81       	ldd	r16, Y+5	; 0x05
+ aa2:	1e 2d       	mov	r17, r14
+ aa4:	02 c0       	rjmp	.+4      	; 0xaaa <LCD_drawChar+0x96>
+ aa6:	0b 81       	ldd	r16, Y+3	; 0x03
+ aa8:	1c 81       	ldd	r17, Y+4	; 0x04
+			
+			if(size == 1)																//   If size of text = 1,
+ aaa:	99 81       	ldd	r25, Y+1	; 0x01
+ aac:	91 30       	cpi	r25, 0x01	; 1
+ aae:	41 f4       	brne	.+16     	; 0xac0 <LCD_drawChar+0xac>
+				LCD_drawPixel(x+line, y+bitNum, bitColor);								//	  Draw pixel using recorded bit color     
+ ab0:	40 2f       	mov	r20, r16
+ ab2:	51 2f       	mov	r21, r17
+ ab4:	6a 85       	ldd	r22, Y+10	; 0x0a
+ ab6:	7b 85       	ldd	r23, Y+11	; 0x0b
+ ab8:	c1 01       	movw	r24, r2
+ aba:	0e 94 c2 04 	call	0x984	; 0x984 <LCD_drawPixel>
+ abe:	06 c0       	rjmp	.+12     	; 0xacc <LCD_drawChar+0xb8>
+					
+			else                                                                        //	 Else,
+				LCD_drawRect_filled(x+line*size, y+bitNum*size, size, size, bitColor);	//	  Draw rectangle using recorded bit color
+ ac0:	92 01       	movw	r18, r4
+ ac2:	a2 01       	movw	r20, r4
+ ac4:	b6 01       	movw	r22, r12
+ ac6:	c3 01       	movw	r24, r6
+ ac8:	0e 94 cf 04 	call	0x99e	; 0x99e <LCD_drawRect_filled>
+				
+			pattern >>= 1;																//   Advance to next bit in pattern
+ acc:	f6 94       	lsr	r15
+ ace:	6a 85       	ldd	r22, Y+10	; 0x0a
+ ad0:	7b 85       	ldd	r23, Y+11	; 0x0b
+ ad2:	6f 5f       	subi	r22, 0xFF	; 255
+ ad4:	7f 4f       	sbci	r23, 0xFF	; 255
+ ad6:	7b 87       	std	Y+11, r23	; 0x0b
+ ad8:	6a 87       	std	Y+10, r22	; 0x0a
+ ada:	c8 0c       	add	r12, r8
+ adc:	d9 1c       	adc	r13, r9
+			pattern = pgm_read_byte(font + c*5 + line);									//   Load bit pattern at designated line  
+
+		else																			//  Else,
+			pattern = 0x0;																//   Load an empty bit pattern
+
+		for (uint8_t bitNum = 0; bitNum < 8; bitNum++) {								//  For each bit in current pattern,
+ ade:	6a 15       	cp	r22, r10
+ ae0:	7b 05       	cpc	r23, r11
+ ae2:	e1 f6       	brne	.-72     	; 0xa9c <LCD_drawChar+0x88>
+ ae4:	7a 81       	ldd	r23, Y+2	; 0x02
+ ae6:	7f 5f       	subi	r23, 0xFF	; 255
+ ae8:	7a 83       	std	Y+2, r23	; 0x02
+ aea:	8f ef       	ldi	r24, 0xFF	; 255
+ aec:	28 1a       	sub	r2, r24
+ aee:	38 0a       	sbc	r3, r24
+ af0:	64 0c       	add	r6, r4
+ af2:	75 1c       	adc	r7, r5
+}
+
+void LCD_drawChar(int16_t x, int16_t y, char c, Color fg, Color bg, uint8_t size)
+{	
+	/* Draw a Character with Given Text Parameters */									// ***
+	for (int8_t line = 0; line < 6; line++){											// For every line of character 'c'
+ af4:	76 30       	cpi	r23, 0x06	; 6
+ af6:	39 f6       	brne	.-114    	; 0xa86 <LCD_drawChar+0x72>
+ af8:	07 c0       	rjmp	.+14     	; 0xb08 <LCD_drawChar+0xf4>
+		
+		if (line < 5)																	//  If the last line is NOT reached,
+			pattern = pgm_read_byte(font + c*5 + line);									//   Load bit pattern at designated line  
+
+		else																			//  Else,
+			pattern = 0x0;																//   Load an empty bit pattern
+ afa:	f1 2c       	mov	r15, r1
+ afc:	6e 81       	ldd	r22, Y+6	; 0x06
+ afe:	7f 81       	ldd	r23, Y+7	; 0x07
+			
+			if(size == 1)																//   If size of text = 1,
+				LCD_drawPixel(x+line, y+bitNum, bitColor);								//	  Draw pixel using recorded bit color     
+					
+			else                                                                        //	 Else,
+				LCD_drawRect_filled(x+line*size, y+bitNum*size, size, size, bitColor);	//	  Draw rectangle using recorded bit color
+ b00:	6b 01       	movw	r12, r22
+ b02:	7b 87       	std	Y+11, r23	; 0x0b
+ b04:	6a 87       	std	Y+10, r22	; 0x0a
+ b06:	ca cf       	rjmp	.-108    	; 0xa9c <LCD_drawChar+0x88>
+				
+			pattern >>= 1;																//   Advance to next bit in pattern
+		}	
+	}
+}
+ b08:	2b 96       	adiw	r28, 0x0b	; 11
+ b0a:	0f b6       	in	r0, 0x3f	; 63
+ b0c:	f8 94       	cli
+ b0e:	de bf       	out	0x3e, r29	; 62
+ b10:	0f be       	out	0x3f, r0	; 63
+ b12:	cd bf       	out	0x3d, r28	; 61
+ b14:	df 91       	pop	r29
+ b16:	cf 91       	pop	r28
+ b18:	1f 91       	pop	r17
+ b1a:	0f 91       	pop	r16
+ b1c:	ff 90       	pop	r15
+ b1e:	ef 90       	pop	r14
+ b20:	df 90       	pop	r13
+ b22:	cf 90       	pop	r12
+ b24:	bf 90       	pop	r11
+ b26:	af 90       	pop	r10
+ b28:	9f 90       	pop	r9
+ b2a:	8f 90       	pop	r8
+ b2c:	7f 90       	pop	r7
+ b2e:	6f 90       	pop	r6
+ b30:	5f 90       	pop	r5
+ b32:	4f 90       	pop	r4
+ b34:	3f 90       	pop	r3
+ b36:	2f 90       	pop	r2
+ b38:	08 95       	ret
+
+00000b3a <LCD_printChar>:
+
+void LCD_printChar(char c)
+{
+ b3a:	ef 92       	push	r14
+ b3c:	0f 93       	push	r16
+ b3e:	1f 93       	push	r17
+ b40:	cf 93       	push	r28
+ b42:	df 93       	push	r29
+	/* Draw 'c' */																// ***
+	if (c == '\n') {															// If the character is '\n'
+ b44:	8a 30       	cpi	r24, 0x0A	; 10
+ b46:	79 f4       	brne	.+30     	; 0xb66 <LCD_printChar+0x2c>
+		pencil.y += pencil.size * 8;											//  Move pencil cursor down and 
+ b48:	e0 e6       	ldi	r30, 0x60	; 96
+ b4a:	f0 e0       	ldi	r31, 0x00	; 0
+ b4c:	24 81       	ldd	r18, Z+4	; 0x04
+ b4e:	82 81       	ldd	r24, Z+2	; 0x02
+ b50:	93 81       	ldd	r25, Z+3	; 0x03
+ b52:	38 e0       	ldi	r19, 0x08	; 8
+ b54:	23 9f       	mul	r18, r19
+ b56:	80 0d       	add	r24, r0
+ b58:	91 1d       	adc	r25, r1
+ b5a:	11 24       	eor	r1, r1
+ b5c:	93 83       	std	Z+3, r25	; 0x03
+ b5e:	82 83       	std	Z+2, r24	; 0x02
+		pencil.x = 0;															//  Move pencil cursor all the way to the left
+ b60:	11 82       	std	Z+1, r1	; 0x01
+ b62:	10 82       	st	Z, r1
+ b64:	1d c0       	rjmp	.+58     	; 0xba0 <LCD_printChar+0x66>
+ b66:	48 2f       	mov	r20, r24
 	}
 	
-	/* INITIALIZATION PROCESS */
-	//1. COMMAND 1: CMD0
-		SD_SPI_send_byte(0x40);
- 486:	80 e4       	ldi	r24, 0x40	; 64
- 488:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-		for(char i = 0; i < 4; i++){
-			SD_SPI_send_byte(0x00);
- 48c:	80 e0       	ldi	r24, 0x00	; 0
- 48e:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
- 492:	80 e0       	ldi	r24, 0x00	; 0
- 494:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
- 498:	80 e0       	ldi	r24, 0x00	; 0
- 49a:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
- 49e:	80 e0       	ldi	r24, 0x00	; 0
- 4a0:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-		}
-		//CRC byte:
-		SD_SPI_send_byte(0x95);
- 4a4:	85 e9       	ldi	r24, 0x95	; 149
- 4a6:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-		//Check receiver constantly for the IDLE response:
-		char helper;
-		while(1){
-			//Read data register
-			helper = SPDR;
- 4aa:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x01){break;}
- 4ac:	81 30       	cpi	r24, 0x01	; 1
- 4ae:	31 f0       	breq	.+12     	; 0x4bc <SD_init_card+0x4c>
-			//Generate another 8 pulses:
-			SD_SPI_send_byte(0xFF);
- 4b0:	8f ef       	ldi	r24, 0xFF	; 255
- 4b2:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-		SD_SPI_send_byte(0x95);
-		//Check receiver constantly for the IDLE response:
-		char helper;
-		while(1){
-			//Read data register
-			helper = SPDR;
- 4b6:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x01){break;}
- 4b8:	81 30       	cpi	r24, 0x01	; 1
- 4ba:	d1 f7       	brne	.-12     	; 0x4b0 <SD_init_card+0x40>
-			SD_SPI_send_byte(0xFF);
-		}
-	//2. COMMAND 2: CMD8
-		//This is the voltage range command.
-		//We are using it to determine what generation card ours is.
-		SD_SPI_send_command(0x48, 0x000001AA, 0x87);
- 4bc:	27 e8       	ldi	r18, 0x87	; 135
- 4be:	4a ea       	ldi	r20, 0xAA	; 170
- 4c0:	51 e0       	ldi	r21, 0x01	; 1
- 4c2:	60 e0       	ldi	r22, 0x00	; 0
- 4c4:	70 e0       	ldi	r23, 0x00	; 0
- 4c6:	88 e4       	ldi	r24, 0x48	; 72
- 4c8:	0e 94 17 02 	call	0x42e	; 0x42e <SD_SPI_send_command>
-		//Wait for either GEN1 (0x05) or GEN2 (0x01)
-		while(1){
-			helper = SPDR;
- 4cc:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x05){
- 4ce:	85 30       	cpi	r24, 0x05	; 5
- 4d0:	19 f0       	breq	.+6      	; 0x4d8 <SD_init_card+0x68>
-				//GEN1
-				Card_Type = '*';
-				break;
-			}
-			else if(helper == 0x01){
- 4d2:	81 30       	cpi	r24, 0x01	; 1
- 4d4:	59 f4       	brne	.+22     	; 0x4ec <SD_init_card+0x7c>
- 4d6:	06 c0       	rjmp	.+12     	; 0x4e4 <SD_init_card+0x74>
-		//Wait for either GEN1 (0x05) or GEN2 (0x01)
-		while(1){
-			helper = SPDR;
-			if(helper == 0x05){
-				//GEN1
-				Card_Type = '*';
- 4d8:	8a e2       	ldi	r24, 0x2A	; 42
- 4da:	80 93 65 01 	sts	0x0165, r24	; 0x800165 <Card_Type>
-				break;
- 4de:	23 c0       	rjmp	.+70     	; 0x526 <SD_init_card+0xb6>
-			}
-			else if(helper == 0x01){
- 4e0:	81 30       	cpi	r24, 0x01	; 1
- 4e2:	21 f4       	brne	.+8      	; 0x4ec <SD_init_card+0x7c>
-				//GEN2
-				Card_Type = '&';
- 4e4:	86 e2       	ldi	r24, 0x26	; 38
- 4e6:	80 93 65 01 	sts	0x0165, r24	; 0x800165 <Card_Type>
-				break;
- 4ea:	1d c0       	rjmp	.+58     	; 0x526 <SD_init_card+0xb6>
-			}
-			SD_SPI_send_byte(0x00);
- 4ec:	80 e0       	ldi	r24, 0x00	; 0
- 4ee:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-		//This is the voltage range command.
-		//We are using it to determine what generation card ours is.
-		SD_SPI_send_command(0x48, 0x000001AA, 0x87);
-		//Wait for either GEN1 (0x05) or GEN2 (0x01)
-		while(1){
-			helper = SPDR;
- 4f2:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x05){
- 4f4:	85 30       	cpi	r24, 0x05	; 5
- 4f6:	a1 f7       	brne	.-24     	; 0x4e0 <SD_init_card+0x70>
- 4f8:	ef cf       	rjmp	.-34     	; 0x4d8 <SD_init_card+0x68>
-			}
-			SD_SPI_send_byte(0x00);
-		}
-		//Send a few dummy bytes to terminate the command:
-		for(char i = 0; i < 5; i++){
-			SD_SPI_send_byte(0xFF);
- 4fa:	8f ef       	ldi	r24, 0xFF	; 255
- 4fc:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
- 500:	c1 50       	subi	r28, 0x01	; 1
-				break;
-			}
-			SD_SPI_send_byte(0x00);
-		}
-		//Send a few dummy bytes to terminate the command:
-		for(char i = 0; i < 5; i++){
- 502:	d9 f7       	brne	.-10     	; 0x4fa <SD_init_card+0x8a>
-			SD_SPI_send_byte(0xFF);
-		}
-	//3. COMMAND 3: CMD1
-		//This command begins initialization, and has no arguments:
-		SD_SPI_send_command(0x61, 0x00000000, 0x00);
- 504:	20 e0       	ldi	r18, 0x00	; 0
- 506:	40 e0       	ldi	r20, 0x00	; 0
- 508:	50 e0       	ldi	r21, 0x00	; 0
- 50a:	ba 01       	movw	r22, r20
- 50c:	81 e6       	ldi	r24, 0x61	; 97
- 50e:	0e 94 17 02 	call	0x42e	; 0x42e <SD_SPI_send_command>
-		//Wait for "0x00":
-		while(1){
-			helper = SPDR;
- 512:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x00){
- 514:	88 23       	and	r24, r24
- 516:	49 f0       	breq	.+18     	; 0x52a <SD_init_card+0xba>
-				break;
-			}
-			SD_SPI_send_byte(0x00);
- 518:	80 e0       	ldi	r24, 0x00	; 0
- 51a:	0e 94 13 02 	call	0x426	; 0x426 <SD_SPI_send_byte>
-	//3. COMMAND 3: CMD1
-		//This command begins initialization, and has no arguments:
-		SD_SPI_send_command(0x61, 0x00000000, 0x00);
-		//Wait for "0x00":
-		while(1){
-			helper = SPDR;
- 51e:	8f b1       	in	r24, 0x0f	; 15
-			if(helper == 0x00){
- 520:	81 11       	cpse	r24, r1
- 522:	fa cf       	rjmp	.-12     	; 0x518 <SD_init_card+0xa8>
- 524:	02 c0       	rjmp	.+4      	; 0x52a <SD_init_card+0xba>
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-void SD_init_card(void){
-	
-	//Assert the device and hold:
-	PORTA &= !(1 << SD_SLAVE_PIN);
- 526:	c5 e0       	ldi	r28, 0x05	; 5
- 528:	e8 cf       	rjmp	.-48     	; 0x4fa <SD_init_card+0x8a>
-	
-	//This is just to use a breakpoint, please get rid of it after testing:
-	helper = '*';
-	
-	//END OF INITIALIZATION
-}
- 52a:	cf 91       	pop	r28
- 52c:	08 95       	ret
+	else {																		// Else, 
+		LCD_drawChar(pencil.x, pencil.y, c, pencil.fg, pencil.bg, pencil.size);	// Draw character using pencil
+ b68:	c0 e6       	ldi	r28, 0x60	; 96
+ b6a:	d0 e0       	ldi	r29, 0x00	; 0
+ b6c:	0f 81       	ldd	r16, Y+7	; 0x07
+ b6e:	18 85       	ldd	r17, Y+8	; 0x08
+ b70:	2d 81       	ldd	r18, Y+5	; 0x05
+ b72:	3e 81       	ldd	r19, Y+6	; 0x06
+ b74:	6a 81       	ldd	r22, Y+2	; 0x02
+ b76:	7b 81       	ldd	r23, Y+3	; 0x03
+ b78:	ec 80       	ldd	r14, Y+4	; 0x04
+ b7a:	88 81       	ld	r24, Y
+ b7c:	99 81       	ldd	r25, Y+1	; 0x01
+ b7e:	0e 94 0a 05 	call	0xa14	; 0xa14 <LCD_drawChar>
+		pencil.x += pencil.size * 6;											// Move pencil cursor 6 px to the right
+ b82:	8c 81       	ldd	r24, Y+4	; 0x04
+ b84:	90 e0       	ldi	r25, 0x00	; 0
+ b86:	9c 01       	movw	r18, r24
+ b88:	22 0f       	add	r18, r18
+ b8a:	33 1f       	adc	r19, r19
+ b8c:	82 0f       	add	r24, r18
+ b8e:	93 1f       	adc	r25, r19
+ b90:	88 0f       	add	r24, r24
+ b92:	99 1f       	adc	r25, r25
+ b94:	28 81       	ld	r18, Y
+ b96:	39 81       	ldd	r19, Y+1	; 0x01
+ b98:	82 0f       	add	r24, r18
+ b9a:	93 1f       	adc	r25, r19
+ b9c:	99 83       	std	Y+1, r25	; 0x01
+ b9e:	88 83       	st	Y, r24
+	}
+ ba0:	df 91       	pop	r29
+ ba2:	cf 91       	pop	r28
+ ba4:	1f 91       	pop	r17
+ ba6:	0f 91       	pop	r16
+ ba8:	ef 90       	pop	r14
+ baa:	08 95       	ret
 
-0000052e <__vector_11>:
+00000bac <LCD_print_str>:
+	pencil.x += pencil.size * 6 * spaces;	// Move cursor in the x-direction
+	pencil.y += pencil.size * 6 * lines;	// Move cursor in the y-direction
+}
+
+void LCD_print_str(char * str)
+{
+ bac:	1f 93       	push	r17
+ bae:	cf 93       	push	r28
+ bb0:	df 93       	push	r29
+ bb2:	ec 01       	movw	r28, r24
+	/* Print all letters of 'str' */			// ***
+	for(uint8_t i = 0; i < strlen(str); i++)	// For each letter in 'str'
+ bb4:	10 e0       	ldi	r17, 0x00	; 0
+ bb6:	07 c0       	rjmp	.+14     	; 0xbc6 <LCD_print_str+0x1a>
+		LCD_printChar(str[i]);					//  Print letter
+ bb8:	fe 01       	movw	r30, r28
+ bba:	e8 0f       	add	r30, r24
+ bbc:	f9 1f       	adc	r31, r25
+ bbe:	80 81       	ld	r24, Z
+ bc0:	0e 94 9d 05 	call	0xb3a	; 0xb3a <LCD_printChar>
+}
+
+void LCD_print_str(char * str)
+{
+	/* Print all letters of 'str' */			// ***
+	for(uint8_t i = 0; i < strlen(str); i++)	// For each letter in 'str'
+ bc4:	1f 5f       	subi	r17, 0xFF	; 255
+ bc6:	81 2f       	mov	r24, r17
+ bc8:	90 e0       	ldi	r25, 0x00	; 0
+ bca:	fe 01       	movw	r30, r28
+ bcc:	01 90       	ld	r0, Z+
+ bce:	00 20       	and	r0, r0
+ bd0:	e9 f7       	brne	.-6      	; 0xbcc <LCD_print_str+0x20>
+ bd2:	31 97       	sbiw	r30, 0x01	; 1
+ bd4:	ec 1b       	sub	r30, r28
+ bd6:	fd 0b       	sbc	r31, r29
+ bd8:	8e 17       	cp	r24, r30
+ bda:	9f 07       	cpc	r25, r31
+ bdc:	68 f3       	brcs	.-38     	; 0xbb8 <LCD_print_str+0xc>
+		LCD_printChar(str[i]);					//  Print letter
+}
+ bde:	df 91       	pop	r29
+ be0:	cf 91       	pop	r28
+ be2:	1f 91       	pop	r17
+ be4:	08 95       	ret
+
+00000be6 <__vector_11>:
 //								INTERRUPTS    											          //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* KEYPAD INTERRUPT FOR FSM */
 
 /* GPS INTERRUPT FOR PARSING */
 ISR(USARTRXC_vect){
- 52e:	1f 92       	push	r1
- 530:	0f 92       	push	r0
- 532:	0f b6       	in	r0, 0x3f	; 63
- 534:	0f 92       	push	r0
- 536:	11 24       	eor	r1, r1
- 538:	2f 93       	push	r18
- 53a:	3f 93       	push	r19
- 53c:	4f 93       	push	r20
- 53e:	5f 93       	push	r21
- 540:	6f 93       	push	r22
- 542:	7f 93       	push	r23
- 544:	8f 93       	push	r24
- 546:	9f 93       	push	r25
- 548:	af 93       	push	r26
- 54a:	bf 93       	push	r27
- 54c:	cf 93       	push	r28
- 54e:	ef 93       	push	r30
- 550:	ff 93       	push	r31
+ be6:	1f 92       	push	r1
+ be8:	0f 92       	push	r0
+ bea:	0f b6       	in	r0, 0x3f	; 63
+ bec:	0f 92       	push	r0
+ bee:	11 24       	eor	r1, r1
+ bf0:	2f 93       	push	r18
+ bf2:	3f 93       	push	r19
+ bf4:	4f 93       	push	r20
+ bf6:	5f 93       	push	r21
+ bf8:	6f 93       	push	r22
+ bfa:	7f 93       	push	r23
+ bfc:	8f 93       	push	r24
+ bfe:	9f 93       	push	r25
+ c00:	af 93       	push	r26
+ c02:	bf 93       	push	r27
+ c04:	cf 93       	push	r28
+ c06:	ef 93       	push	r30
+ c08:	ff 93       	push	r31
+	
 	
 	//Receive the byte to empty out the buffer, then operate on it:
 	char vector_data = GPS_receive_byte();
- 552:	0e 94 b2 00 	call	0x164	; 0x164 <GPS_receive_byte>
- 556:	c8 2f       	mov	r28, r24
+ c0a:	0e 94 1e 03 	call	0x63c	; 0x63c <GPS_receive_byte>
+ c0e:	c8 2f       	mov	r28, r24
+	text_buffer[0] = vector_data;
+ c10:	80 93 69 00 	sts	0x0069, r24	; 0x800069 <text_buffer>
+	LCD_print_str(text_buffer);
+ c14:	89 e6       	ldi	r24, 0x69	; 105
+ c16:	90 e0       	ldi	r25, 0x00	; 0
+ c18:	0e 94 d6 05 	call	0xbac	; 0xbac <LCD_print_str>
+	text_x++;
+ c1c:	80 91 e6 00 	lds	r24, 0x00E6	; 0x8000e6 <text_x>
+ c20:	8f 5f       	subi	r24, 0xFF	; 255
+	if(text_x >= 4){
+ c22:	84 30       	cpi	r24, 0x04	; 4
+ c24:	18 f4       	brcc	.+6      	; 0xc2c <__vector_11+0x46>
+	
+	//Receive the byte to empty out the buffer, then operate on it:
+	char vector_data = GPS_receive_byte();
+	text_buffer[0] = vector_data;
+	LCD_print_str(text_buffer);
+	text_x++;
+ c26:	80 93 e6 00 	sts	0x00E6, r24	; 0x8000e6 <text_x>
+ c2a:	10 c0       	rjmp	.+32     	; 0xc4c <__vector_11+0x66>
+	if(text_x >= 4){
+		text_x = 0;
+ c2c:	10 92 e6 00 	sts	0x00E6, r1	; 0x8000e6 <text_x>
+		text_column = text_column + 12;
+ c30:	80 91 e7 00 	lds	r24, 0x00E7	; 0x8000e7 <text_column>
+ c34:	84 5f       	subi	r24, 0xF4	; 244
+		if(text_column > 200){text_column = 0;}
+ c36:	89 3c       	cpi	r24, 0xC9	; 201
+ c38:	18 f4       	brcc	.+6      	; 0xc40 <__vector_11+0x5a>
+	text_buffer[0] = vector_data;
+	LCD_print_str(text_buffer);
+	text_x++;
+	if(text_x >= 4){
+		text_x = 0;
+		text_column = text_column + 12;
+ c3a:	80 93 e7 00 	sts	0x00E7, r24	; 0x8000e7 <text_column>
+ c3e:	02 c0       	rjmp	.+4      	; 0xc44 <__vector_11+0x5e>
+		if(text_column > 200){text_column = 0;}
+ c40:	10 92 e7 00 	sts	0x00E7, r1	; 0x8000e7 <text_column>
+		LCD_print_str("\n");
+ c44:	88 ec       	ldi	r24, 0xC8	; 200
+ c46:	90 e0       	ldi	r25, 0x00	; 0
+ c48:	0e 94 d6 05 	call	0xbac	; 0xbac <LCD_print_str>
+	
 	
 	//Always start with an overflow check:
 	// -Since the sentence length won't exceed 120, we should worry if it gets to 121.
 	// -Should this happen, a hard reset is necessary, so we'll do exactly that.
 	if(GPS_BUFFER_INDEX > 120){GPS_flush_buffer();}
- 558:	80 91 cb 00 	lds	r24, 0x00CB	; 0x8000cb <GPS_BUFFER_INDEX>
- 55c:	89 37       	cpi	r24, 0x79	; 121
- 55e:	10 f0       	brcs	.+4      	; 0x564 <__vector_11+0x36>
- 560:	0e 94 b6 00 	call	0x16c	; 0x16c <GPS_flush_buffer>
+ c4c:	80 91 e5 00 	lds	r24, 0x00E5	; 0x8000e5 <GPS_BUFFER_INDEX>
+ c50:	89 37       	cpi	r24, 0x79	; 121
+ c52:	10 f0       	brcs	.+4      	; 0xc58 <__vector_11+0x72>
+ c54:	0e 94 22 03 	call	0x644	; 0x644 <GPS_flush_buffer>
 	
 	//Filter out whether or not this data can be transferred to the buffer:
 	//	-This requires either that the received character is '$' or GPS_MESSAGE_READY = 1;
 	if(vector_data == '$'){
- 564:	c4 32       	cpi	r28, 0x24	; 36
- 566:	49 f4       	brne	.+18     	; 0x57a <__vector_11+0x4c>
+ c58:	c4 32       	cpi	r28, 0x24	; 36
+ c5a:	49 f4       	brne	.+18     	; 0xc6e <__vector_11+0x88>
 		GPS_MESSAGE_READY = 1;
- 568:	81 e0       	ldi	r24, 0x01	; 1
- 56a:	80 93 ca 00 	sts	0x00CA, r24	; 0x8000ca <__data_end>
+ c5c:	81 e0       	ldi	r24, 0x01	; 1
+ c5e:	80 93 e4 00 	sts	0x00E4, r24	; 0x8000e4 <__data_end>
 		//These assignments help with buffering alignment.
 		GPS_BUFFER[0] = '$';
- 56e:	94 e2       	ldi	r25, 0x24	; 36
- 570:	90 93 d0 00 	sts	0x00D0, r25	; 0x8000d0 <GPS_BUFFER>
+ c62:	94 e2       	ldi	r25, 0x24	; 36
+ c64:	90 93 ec 00 	sts	0x00EC, r25	; 0x8000ec <GPS_BUFFER>
 		GPS_BUFFER_INDEX = 1;
- 574:	80 93 cb 00 	sts	0x00CB, r24	; 0x8000cb <GPS_BUFFER_INDEX>
- 578:	13 c0       	rjmp	.+38     	; 0x5a0 <__vector_11+0x72>
+ c68:	80 93 e5 00 	sts	0x00E5, r24	; 0x8000e5 <GPS_BUFFER_INDEX>
+ c6c:	1b c0       	rjmp	.+54     	; 0xca4 <__vector_11+0xbe>
 	}
 	//If the character received is instead a terminator, begin the parsing!
-	else if(vector_data == '*'){
- 57a:	ca 32       	cpi	r28, 0x2A	; 42
- 57c:	19 f4       	brne	.+6      	; 0x584 <__vector_11+0x56>
+	else if((vector_data == '*') && (GPS_MESSAGE_READY)){
+ c6e:	ca 32       	cpi	r28, 0x2A	; 42
+ c70:	39 f4       	brne	.+14     	; 0xc80 <__vector_11+0x9a>
+ c72:	80 91 e4 00 	lds	r24, 0x00E4	; 0x8000e4 <__data_end>
+ c76:	88 23       	and	r24, r24
+ c78:	a9 f0       	breq	.+42     	; 0xca4 <__vector_11+0xbe>
 		GPS_parse_data();
- 57e:	0e 94 c9 00 	call	0x192	; 0x192 <GPS_parse_data>
- 582:	0e c0       	rjmp	.+28     	; 0x5a0 <__vector_11+0x72>
+ c7a:	0e 94 35 03 	call	0x66a	; 0x66a <GPS_parse_data>
+ c7e:	12 c0       	rjmp	.+36     	; 0xca4 <__vector_11+0xbe>
 	}
 	//If neither character was detected, but '$' appeared previously, then just buffer the characters:
 	else if(GPS_MESSAGE_READY){
- 584:	80 91 ca 00 	lds	r24, 0x00CA	; 0x8000ca <__data_end>
- 588:	88 23       	and	r24, r24
- 58a:	51 f0       	breq	.+20     	; 0x5a0 <__vector_11+0x72>
+ c80:	80 91 e4 00 	lds	r24, 0x00E4	; 0x8000e4 <__data_end>
+ c84:	88 23       	and	r24, r24
+ c86:	71 f0       	breq	.+28     	; 0xca4 <__vector_11+0xbe>
 		GPS_BUFFER[GPS_BUFFER_INDEX] = vector_data;
- 58c:	80 91 cb 00 	lds	r24, 0x00CB	; 0x8000cb <GPS_BUFFER_INDEX>
- 590:	e8 2f       	mov	r30, r24
- 592:	f0 e0       	ldi	r31, 0x00	; 0
- 594:	e0 53       	subi	r30, 0x30	; 48
- 596:	ff 4f       	sbci	r31, 0xFF	; 255
- 598:	c0 83       	st	Z, r28
+ c88:	80 91 e5 00 	lds	r24, 0x00E5	; 0x8000e5 <GPS_BUFFER_INDEX>
+ c8c:	e8 2f       	mov	r30, r24
+ c8e:	f0 e0       	ldi	r31, 0x00	; 0
+ c90:	e4 51       	subi	r30, 0x14	; 20
+ c92:	ff 4f       	sbci	r31, 0xFF	; 255
+ c94:	c0 83       	st	Z, r28
 		GPS_BUFFER_INDEX++;
- 59a:	8f 5f       	subi	r24, 0xFF	; 255
- 59c:	80 93 cb 00 	sts	0x00CB, r24	; 0x8000cb <GPS_BUFFER_INDEX>
+ c96:	8f 5f       	subi	r24, 0xFF	; 255
+ c98:	80 93 e5 00 	sts	0x00E5, r24	; 0x8000e5 <GPS_BUFFER_INDEX>
+		LCD_print_str(vector_data);
+ c9c:	8c 2f       	mov	r24, r28
+ c9e:	90 e0       	ldi	r25, 0x00	; 0
+ ca0:	0e 94 d6 05 	call	0xbac	; 0xbac <LCD_print_str>
 	}
 	
 }
- 5a0:	ff 91       	pop	r31
- 5a2:	ef 91       	pop	r30
- 5a4:	cf 91       	pop	r28
- 5a6:	bf 91       	pop	r27
- 5a8:	af 91       	pop	r26
- 5aa:	9f 91       	pop	r25
- 5ac:	8f 91       	pop	r24
- 5ae:	7f 91       	pop	r23
- 5b0:	6f 91       	pop	r22
- 5b2:	5f 91       	pop	r21
- 5b4:	4f 91       	pop	r20
- 5b6:	3f 91       	pop	r19
- 5b8:	2f 91       	pop	r18
- 5ba:	0f 90       	pop	r0
- 5bc:	0f be       	out	0x3f, r0	; 63
- 5be:	0f 90       	pop	r0
- 5c0:	1f 90       	pop	r1
- 5c2:	18 95       	reti
+ ca4:	ff 91       	pop	r31
+ ca6:	ef 91       	pop	r30
+ ca8:	cf 91       	pop	r28
+ caa:	bf 91       	pop	r27
+ cac:	af 91       	pop	r26
+ cae:	9f 91       	pop	r25
+ cb0:	8f 91       	pop	r24
+ cb2:	7f 91       	pop	r23
+ cb4:	6f 91       	pop	r22
+ cb6:	5f 91       	pop	r21
+ cb8:	4f 91       	pop	r20
+ cba:	3f 91       	pop	r19
+ cbc:	2f 91       	pop	r18
+ cbe:	0f 90       	pop	r0
+ cc0:	0f be       	out	0x3f, r0	; 63
+ cc2:	0f 90       	pop	r0
+ cc4:	1f 90       	pop	r1
+ cc6:	18 95       	reti
 
-000005c4 <main>:
+00000cc8 <main>:
 	///////////////
 	//   SETUP   //
 	///////////////
 	
 	/* PORTS */
 	DDRA = 0xFF;	//Port A is not currently used, but may assert slaves in the future.
- 5c4:	8f ef       	ldi	r24, 0xFF	; 255
- 5c6:	8a bb       	out	0x1a, r24	; 26
+ cc8:	8f ef       	ldi	r24, 0xFF	; 255
+ cca:	8a bb       	out	0x1a, r24	; 26
 	PORTA = 0x00;	
- 5c8:	1b ba       	out	0x1b, r1	; 27
+ ccc:	1b ba       	out	0x1b, r1	; 27
 	
 	DDRB = 0xCD;	//Port B contains:
- 5ca:	8d ec       	ldi	r24, 0xCD	; 205
- 5cc:	87 bb       	out	0x17, r24	; 23
+ cce:	8d ec       	ldi	r24, 0xCD	; 205
+ cd0:	87 bb       	out	0x17, r24	; 23
 	PORTB = 0x32;	// SPI, INT2 ( Pin 3 ), connection to LCD ( data out ).
- 5ce:	82 e3       	ldi	r24, 0x32	; 50
- 5d0:	88 bb       	out	0x18, r24	; 24
+ cd2:	82 e3       	ldi	r24, 0x32	; 50
+ cd4:	88 bb       	out	0x18, r24	; 24
 	
 	DDRC = 0x00;	//Port C contains:
- 5d2:	14 ba       	out	0x14, r1	; 20
+ cd6:	14 ba       	out	0x14, r1	; 20
 	PORTC = 0x00;	// JTAG interface; this renders some of the pins unusable as I/O.
- 5d4:	15 ba       	out	0x15, r1	; 21
+ cd8:	15 ba       	out	0x15, r1	; 21
 	
-	DDRD = 0x4F;	//Port D contains:
- 5d6:	8f e4       	ldi	r24, 0x4F	; 79
- 5d8:	81 bb       	out	0x11, r24	; 17
+	DDRD = 0b00010010;	//Port D contains:
+ cda:	82 e1       	ldi	r24, 0x12	; 18
+ cdc:	81 bb       	out	0x11, r24	; 17
 	PORTD = 0x80;	// USART, INT0, INT1, buzzer driver pin
- 5da:	80 e8       	ldi	r24, 0x80	; 128
- 5dc:	82 bb       	out	0x12, r24	; 18
+ cde:	80 e8       	ldi	r24, 0x80	; 128
+ ce0:	82 bb       	out	0x12, r24	; 18
 	
 	/* RECOVERY */
 	//Recovery program is currently defined in the EEPROM driver.
 	EEPROM_enable();
- 5de:	0e 94 4e 00 	call	0x9c	; 0x9c <EEPROM_enable>
+ ce2:	0e 94 c7 02 	call	0x58e	; 0x58e <EEPROM_enable>
 	//This recovery program must have two components!
 	//EEPROM_recovery(); AND SD_recovery(); which is not yet available!
 	EEPROM_recovery();				//Reacquire old persistent information.
- 5e2:	0e 94 5a 00 	call	0xb4	; 0xb4 <EEPROM_recovery>
-	//SD Card must be initialized here as well, and erroneous data must be purged:
-	SD_assert();
- 5e6:	0e 94 10 02 	call	0x420	; 0x420 <SD_assert>
-	//Initialize the SD card: {Be sure to look into the function when single-stepping}
-	SD_init_card();
- 5ea:	0e 94 38 02 	call	0x470	; 0x470 <SD_init_card>
-	/* INTERRUPTS */
-	//Must enable global interrupts to use GPS hardware.
+ ce6:	0e 94 d3 02 	call	0x5a6	; 0x5a6 <EEPROM_recovery>
+	//Find the last entry in memory, then check it byte-wise for both the beginning of
+	//an entry ('%') as well as a few other entry-confirming characters.
 	
 	/* GPS */
 	//Initialize communication, then configure MTK3339 firmware, then open up.
 	GPS_BUFFER_INDEX = 0;			//Begin at start of data buffer.
- 5ee:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <GPS_BUFFER_INDEX>
+ cea:	10 92 e5 00 	sts	0x00E5, r1	; 0x8000e5 <GPS_BUFFER_INDEX>
 	GPS_MESSAGE_READY= 0;			//Buffer will begin to fill normally.
- 5f2:	10 92 ca 00 	sts	0x00CA, r1	; 0x8000ca <__data_end>
-	GPS_init_USART(9600);
- 5f6:	80 e8       	ldi	r24, 0x80	; 128
- 5f8:	95 e2       	ldi	r25, 0x25	; 37
- 5fa:	0e 94 73 00 	call	0xe6	; 0xe6 <GPS_init_USART>
+ cee:	10 92 e4 00 	sts	0x00E4, r1	; 0x8000e4 <__data_end>
+	GPS_init_USART(MY_UBBR);
+ cf2:	87 e6       	ldi	r24, 0x67	; 103
+ cf4:	90 e0       	ldi	r25, 0x00	; 0
+ cf6:	0e 94 ec 02 	call	0x5d8	; 0x5d8 <GPS_init_USART>
 	GPS_configure_firmware();
- 5fe:	0e 94 81 00 	call	0x102	; 0x102 <GPS_configure_firmware>
-	//Consider actually enabling the stream.
-	GPS_disable_stream();
- 602:	0e 94 7a 00 	call	0xf4	; 0xf4 <GPS_disable_stream>
-
+ cfa:	0e 94 f7 02 	call	0x5ee	; 0x5ee <GPS_configure_firmware>
+	GPS_enable_stream();
+ cfe:	0e 94 2f 03 	call	0x65e	; 0x65e <GPS_enable_stream>
 	
 	/* TIMERS/BUZZER */
-	//Initialize the buzzer:
-	init_buzzer();
- 606:	0e 94 49 00 	call	0x92	; 0x92 <init_buzzer>
+
+	
+	/* DISPLAY */
+	GPS_enable_stream();
+ d02:	0e 94 2f 03 	call	0x65e	; 0x65e <GPS_enable_stream>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 60a:	82 e0       	ldi	r24, 0x02	; 2
- 60c:	8a 95       	dec	r24
- 60e:	f1 f7       	brne	.-4      	; 0x60c <main+0x48>
- 610:	00 c0       	rjmp	.+0      	; 0x612 <main+0x4e>
+ d06:	2f ef       	ldi	r18, 0xFF	; 255
+ d08:	83 e2       	ldi	r24, 0x23	; 35
+ d0a:	94 ef       	ldi	r25, 0xF4	; 244
+ d0c:	21 50       	subi	r18, 0x01	; 1
+ d0e:	80 40       	sbci	r24, 0x00	; 0
+ d10:	90 40       	sbci	r25, 0x00	; 0
+ d12:	e1 f7       	brne	.-8      	; 0xd0c <main+0x44>
+ d14:	00 c0       	rjmp	.+0      	; 0xd16 <main+0x4e>
+ d16:	00 00       	nop
+ d18:	c3 e3       	ldi	r28, 0x33	; 51
+ d1a:	d0 e0       	ldi	r29, 0x00	; 0
 		
+		_delay_ms(5000);
+		//Send a firmware command serially:
+		for (int i = 0; i < 51; i++)
+		{
+			GPS_configure_firmware();
+ d1c:	0e 94 f7 02 	call	0x5ee	; 0x5ee <GPS_configure_firmware>
+ d20:	21 97       	sbiw	r28, 0x01	; 1
 	//Dormant program loop for testing.
-    while (1) 
-    {
-		_delay_us(0.5);
-		PORTB &= ~(1<<0);
- 612:	c0 98       	cbi	0x18, 0	; 24
- 614:	fa cf       	rjmp	.-12     	; 0x60a <main+0x46>
+    while (1){
+		
+		_delay_ms(5000);
+		//Send a firmware command serially:
+		for (int i = 0; i < 51; i++)
+ d22:	e1 f7       	brne	.-8      	; 0xd1c <main+0x54>
+ d24:	f0 cf       	rjmp	.-32     	; 0xd06 <main+0x3e>
 
-00000616 <_exit>:
- 616:	f8 94       	cli
+00000d26 <_exit>:
+ d26:	f8 94       	cli
 
-00000618 <__stop_program>:
- 618:	ff cf       	rjmp	.-2      	; 0x618 <__stop_program>
+00000d28 <__stop_program>:
+ d28:	ff cf       	rjmp	.-2      	; 0xd28 <__stop_program>

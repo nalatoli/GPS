@@ -38,14 +38,24 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/io.h>
 #define F_CPU 16000000UL
+#define FOSC 16000000
 #include "util/delay.h"
+#include "header_FUNCTIONS.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//								BAUD RATE CONFIGURATION											  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#define BAUD 9600
+#define MY_UBBR FOSC/16/BAUD-1
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								GPS FIRMWARE COMMAND SEQUENCES									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29"
-#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17"
-#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C"
-#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F"
+#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"
+#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17\r\n"
+#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F\r\n"
+#define PMTK_SET_NMEA_UPDATE_10HZ "$PMTK220,100*2F\r\n"
+#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C\r\n"
+#define PMTK_API_SET_FIX_CTL_5HZ  "$PMTK300,200,0,0,0,0*2F\r\n"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								BUFFER LOCATION DEFINITIONS  									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,42 +76,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								DRIVER SYSTEM VARIABLES											  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* GPS CURRENT READINGS DATA STRUCTURE */
-typedef struct{
-	//Temporal data
-	uint8_t UTC_H;
-	uint8_t UTC_M;			//Technically, you can afford greater precision but we don't
-	uint8_t UTC_S;			//care in this application.			
-			
-	//Date, DD/MM/YY
-	uint8_t UTC_DAY;			//The current day of the month.
-	uint8_t UTC_MONTH;			//The current month.
-	uint8_t UTC_YEAR;			//The current year.
-		
-	//Data validity status byte (A = VALID, V = INVALID)
-	uint8_t STATUS;
-									
-	//Latitude and longitude in degrees
-	uint16_t latitude_H;
-	uint16_t latitude_L;	//Below the decimal point
-	uint8_t NS;				//Indicates your placement relative to the equator.
-	uint32_t longitude_H;
-	uint16_t longitude_L;	//Below the decimal point
-	uint8_t EW;				//Indicates you placement relative to the prime meridian.
-	
-	//Ground speed
-	uint8_t ground_speed_high;
-	uint8_t ground_speed_low;
-	
-	//Course over ground (azimuth angle from GPS North) {DECIMATED}
-	uint16_t course_high;	//Indicates the 360 degrees above the decimal point.
-	uint8_t  course_low;		//Indicates the precision value below the decimal point.
-	
-	//***Some parameters have been excluded like magnetic variation to save processor speed***
-
-	}GPS_data;
-	
 /* SYSTEM SPECIFIC STRUCTURE */
 	GPS_data SYS_GPS;				
 					
@@ -170,10 +144,11 @@ unsigned char GPS_MESSAGE_READY = 0;
 
 /* PROTOTYPES */
 void GPS_init_USART(uint16_t UBRR);
+void GPS_USART_Transmit(unsigned char data);
 void GPS_configure_firmware(void);
 void GPS_enable_stream(void);
 void GPS_disable_stream(void);
-void GPS_send_byte(unsigned char data);
+void GPS_send_byte(char data);
 char GPS_receive_byte(void);
 void GPS_flush_buffer(void);
 void GPS_parse_data(void);
@@ -181,11 +156,48 @@ void GPS_parse_data(void);
 /* FIRMWARE COMMANDS */
 //Or at least the ones we care about:
 // turn on only the second sentence (GPRMC)
-const unsigned char firmware_RMC[49] = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29";
-const unsigned char firmware_BAUD[16] = "$PMTK251,9600*17";
-const unsigned char firmware_HZ[24] = "$PMTK300,1000,0,0,0,0*1C";
-const unsigned char firmware_update_rate[16] = "$PMTK220,1000*1F";
+const unsigned char FIRM_RMC[51] =			"$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
+const unsigned char FIRM_BAUD[18] =			"$PMTK251,9600*17\r\n";
+const unsigned char FIRM_ECHO_1HZ[18] =		"$PMTK220,1000*1F\r\n";
+const unsigned char FIRM_ECHO_10HZ[17] =	"$PMTK220,100*2F\r\n";
+const unsigned char FIRM_FIX_1HZ[26] =		"$PMTK300,1000,0,0,0,0*1C\r\n";
+const unsigned char FIRM_FIX_5HZ[25] =		"$PMTK300,200,0,0,0,0*2F\r\n";
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	FUNCTION:		GPS_configure_firmware(void);
+	AUTHOR:			Christopher DeFranco
+	
+	DESCRIPTION:	This function assumes that the system USART baud rate was already configured
+					to operate at the appropriate baud rate. Ideally, the stream should be closed
+					when invoking this function. Therefore for proper initialization at the
+					outset of chip startup, the process should follow:
+					
+					1.	System recovery
+					2.	GPS_init_USART(9600);
+					3.	GPS_configure_firmware();
+					4.	GPS_enable_stream();
+	
+*/
+void GPS_configure_firmware(void){
 
+	//We want our system to receive sentences as fast as possible, but only of RMC type:
+	
+	//1. RMC ONLY!
+	for(uint8_t i = 0; i < 51; i++){
+		GPS_USART_Transmit(FIRM_RMC[i]);
+			}
+	
+	//2. 10HZ data echoing:
+	for(uint8_t i = 0; i < 17; i++){
+		GPS_USART_Transmit(FIRM_ECHO_10HZ[i]);
+			}
+	
+	//3. Fast position fix:
+	for(uint8_t i = 0; i < 25; i++){
+		GPS_USART_Transmit(FIRM_FIX_5HZ[i]);
+			}
+	
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 	FUNCTION:		GPS_init_USART(uint16_t UBRR);
@@ -207,44 +219,14 @@ void GPS_init_USART(uint16_t UBRR){
 	UCSRB = (1 << RXEN)|(1 << TXEN);
 	
 	//Set data frame format to accept 1 byte per frame, with 1 stop bit:
-	UCSRC = (0 << UMSEL)|(1 << UCSZ1)|(1 << UCSZ0)|(0 << USBS);
+	UCSRC = (1 << URSEL)|(1 << UCSZ1)|(1 << UCSZ0)|(1 << USBS);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-	FUNCTION:		GPS_configure_firmware(void);
-	AUTHOR:			Christopher DeFranco
+void GPS_USART_Transmit(unsigned char data){
 	
-	DESCRIPTION:	This function assumes that the system USART baud rate was already configured
-					to operate at the appropriate baud rate. Ideally, the stream should be closed
-					when invoking this function. Therefore for proper initialization at the
-					outset of chip startup, the process should follow:
-					
-					1.	System recovery
-					2.	GPS_init_USART(9600);
-					3.	GPS_configure_firmware();
-					4.	GPS_enable_stream();
+	while(!(UCSRA & (1 << UDRE)));
 	
-*/
-void GPS_configure_firmware(void){
-
-		//1. Configure baud rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_BAUD[i]);
-		}
-		//2. Set update rate
-		for(int i = 0; i < 24; i++){
-			GPS_send_byte(firmware_HZ[i]);
-		}
-		//3. Set fix rate
-		for(int i = 0; i < 16; i++){
-			GPS_send_byte(firmware_update_rate[i]);
-		}
-		//4. Set RMC enabled
-		for(int i = 0; i < 49; i++){
-			GPS_send_byte(firmware_RMC[i]);
-		}
-	
-	
+	UDR = data;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -295,7 +277,7 @@ void GPS_disable_stream(void){
 					deplete the transmitter buffer.
 	
 */
-void GPS_send_byte(unsigned char data){
+void GPS_send_byte(char data){
 	
 	//Wait for the system to be ready to transmit more data:
 	while(!(UCSRA & (1 << UDRE)));
@@ -360,7 +342,7 @@ void GPS_flush_buffer(void){
 void GPS_parse_data(void){
 	
 	//1. Shut down the stream.
-	GPS_disable_stream();
+	//GPS_disable_stream();
 	
 	//2. Reset the MESSAGE_RECEIVED flag
 	GPS_MESSAGE_READY = 0;
@@ -377,12 +359,12 @@ void GPS_parse_data(void){
 		}
 	else{
 		//Enter an interminable loop for debugging:
-		while(1);		//YOU FAILED!
+		//while(1);		//YOU FAILED!
 	}
 	
 	//4. Unpack all of the data between '$' and '*'. Store it on the SYS_GPS object.
 		//A. UTC data:
-		SYS_GPS.UTC_H = (GPS_BUFFER[RMC_UTC] * 10) + (GPS_BUFFER[RMC_UTC + 1]);	
+		SYS_GPS.UTC_H = (GPS_BUFFER[RMC_UTC] * 10)		+ (GPS_BUFFER[RMC_UTC + 1]);	
 		SYS_GPS.UTC_M = ((GPS_BUFFER[RMC_UTC + 2] * 10) + (GPS_BUFFER[RMC_UTC + 3])); 
 		SYS_GPS.UTC_S = ((GPS_BUFFER[RMC_UTC + 4] * 10) + (GPS_BUFFER[RMC_UTC + 5]));
 		//B. STATUS:
