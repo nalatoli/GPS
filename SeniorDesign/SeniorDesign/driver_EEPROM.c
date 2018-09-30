@@ -13,7 +13,7 @@
 #include <avr/io.h>
 #include "header_MACROS.h"
 #include "header_FUNCTIONS.h"
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #include "util/delay.h"
 
 uint8_t	NV_USER_PREFERENCES_0,

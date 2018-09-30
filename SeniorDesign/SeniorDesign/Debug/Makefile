@@ -37,6 +37,7 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../driver_APPLICATION.c \
 ../driver_BUZZER.c \
 ../driver_EEPROM.c \
 ../driver_GPS.c \
@@ -53,6 +54,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+driver_APPLICATION.o \
 driver_BUZZER.o \
 driver_EEPROM.o \
 driver_GPS.o \
@@ -62,6 +64,7 @@ main.o \
 table_TRANSITION.o
 
 OBJS_AS_ARGS +=  \
+driver_APPLICATION.o \
 driver_BUZZER.o \
 driver_EEPROM.o \
 driver_GPS.o \
@@ -71,6 +74,7 @@ main.o \
 table_TRANSITION.o
 
 C_DEPS +=  \
+driver_APPLICATION.d \
 driver_BUZZER.d \
 driver_EEPROM.d \
 driver_GPS.d \
@@ -80,6 +84,7 @@ main.d \
 table_TRANSITION.d
 
 C_DEPS_AS_ARGS +=  \
+driver_APPLICATION.d \
 driver_BUZZER.d \
 driver_EEPROM.d \
 driver_GPS.d \
@@ -102,6 +107,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

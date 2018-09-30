@@ -1,3 +1,4 @@
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //									      ILI9341 DRIVER										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,47 +29,18 @@ void LCD_pushColor(Color color);
 void LCD_setAddress(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 void LCD_drawChar(int16_t x, int16_t y, char c, Color color, Color bg, uint8_t size);
 void LCD_printChar(char c);
+void LCD_gridSmart_drawVL(uint16_t x);
+void LCD_gridSmart_drawHL(uint16_t y);
+void LCD_gridSmart_eraseVL(uint16_t x);
+void LCD_gridSmart_eraseHL(uint16_t y);
+void LCD_gridSmart_addOff(int8_t x, int8_t y);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//											Macros												  //
+//									   One Instance Objects										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-typedef struct{
-	uint16_t x;
-	uint16_t y;
-	uint16_t w;
-	uint16_t h;
-	int16_t xoff;
-	int16_t yoff;
-	uint16_t space;
-	Color color;
-	Bool isDrawn;
-} Grid;
-
-typedef struct{
-	uint16_t x0;
-	uint16_t y0;
-	int16_t rot;
-	Color color;
-	Bool isDrawn;
-} Arrow;
-
-typedef struct{
-	uint16_t x;
-	uint16_t y;
-	uint8_t size;
-	Color fg;
-	Color bg;
-} TextHandler;
-
 Grid grid;
 Arrow arrow;
 TextHandler pencil = {0,0,1,WHITE,BLACK};
 
-//volatile uint16_t textColor_fg;
-//volatile uint16_t textColor_bg;
-//volatile uint16_t textCursor_x;
-//volatile uint16_t textCursor_y;
-//volatile uint8_t textFPrecision;
-//volatile uint8_t textSize;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //										 Public Functions										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +74,7 @@ void LCD_init_system ()
 	LCD_writedata8(0x00);			//  Division Ratio to 1 (fosc/1)
 	LCD_writedata8(0x18);			//  Frame Rate to 70 Hz (default)
 	
-	/* Configure Gamma Control */	// *** 
+	/* Configure Gamma Control */	// ***
 	LCD_writecommand8(0xF2);	
 	LCD_writedata8(0x08);	
 	LCD_writecommand8(0x26);		// Select Gamma Curve
@@ -234,6 +206,27 @@ void LCD_drawCircle_empty(uint16_t x0, uint16_t y0, uint8_t radius, Color color)
 		}
 }
 
+void LCD_drawLogo(uint16_t x, uint16_t y, uint16_t size)
+{
+	/* Draw Logo */
+	uint16_t tmpWord, tmpOff_x, tmpOff_y, tmpColor;													// Declare temporary variables
+	
+	for(int i = 0; i < LOGOPXCOUNT; i++) {															// For each pixel in logo,
+		tmpWord = pgm_read_word(logo_BMP + i);														//  Read pixel code
+		tmpOff_x = tmpWord & 0x1F;															//  Extract x offset
+		tmpOff_y = (tmpWord >> 5) & 0x1F;														//  Extract y offset
+		tmpColor = logo_ColorCode[(tmpWord >> 10) & 0x1F];											//  Extract color
+		
+		if(size == 1)																				// If size = 1,
+			LCD_drawPixel(x + tmpOff_x, y + tmpOff_y, tmpColor);									//  Draw corresponding pixel 
+			
+		else																						// Else (size > 1),
+			LCD_drawRect_filled(x + tmpOff_x * size, y + tmpOff_y * size, size, size, tmpColor);	//  Draw properly offset rectangle 
+			
+	}	
+}
+
+
 void LCD_clear (Color color)
 {
 	/* Fill Screen with Color */						// ***
@@ -243,6 +236,7 @@ void LCD_clear (Color color)
 void LCD_setText_cursor(uint16_t x, uint16_t y)
 {
 	/* Set cursor at desired location to print data */
+	pencil.xorigin = x;
 	pencil.x = x;
 	pencil.y = y;
 }
@@ -272,7 +266,7 @@ void LCD_moveTextCursor(int16_t spaces, int16_t lines)
 {
 	/* Move Text Cursor */					// ***
 	pencil.x += pencil.size * 6 * spaces;	// Move cursor in the x-direction
-	pencil.y += pencil.size * 6 * lines;	// Move cursor in the y-direction
+	pencil.y += (pencil.size * 7) * lines; 	// Move cursor in the y-direction
 }
 
 void LCD_print_str(char * str)
@@ -290,178 +284,239 @@ void LCD_print_num(float num, uint8_t width, uint8_t prec)
 	LCD_print_str(str);							// Print string
 }
 
-void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xOff, int16_t yOff, Color color)
+void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xOff, int16_t yOff, Color fg, Color bg)
 {
-	/* Check if grid is already drawn */				// ***
-	if(!grid.isDrawn)
-	{
-		/* Draw Grid (PIVOT = TOP LEFT) */				//  ***
-		uint16_t lineIt = x + xOff;						//  Initialize line iterator to first vertical line (x-pivot-coordinate + xOff)
+	/* Return if Grid is Already Drawn */
+	if(grid.isDrawn)
+		return;
 		
-		while(lineIt < x + w){							//  While the line iterator is within the vertical-bounds of the grid,
-			LCD_drawRect_filled(lineIt,y,1,h,color);	//   Draw a vertical line across the grid at x = lineIt and
-			lineIt += space;							//   Iterate the line iterator to the next vertical line
-		}
+	/* Draw Grid (PIVOT = TOP LEFT) */			// ***
+	LCD_drawRect_filled(x,y,w,h,bg);			//  Fill grid background color
+	uint16_t lineIt = x + xOff;					//  Initialize line iterator to first vertical line (x-pivot-coordinate + xOff)
 		
-		lineIt = y + yOff;								//  Set line iterator to first horizontal line (y-pivot-coordinate + yOff)
-		
-		while(lineIt < y + h){							//  While the line iterator is within the horizontal-bounds of the grid,
-			LCD_drawRect_filled(x,lineIt,w,1,color);	//   Draw a horizontal line across the grid at y = lineIt and
-			lineIt += space;							//   Iterate the line iterator to the next horizontal line
-		}
-		
-		/* Store Grid Parameters */
-		grid.x = x;
-		grid.y = y;
-		grid.w = w;
-		grid.h = h;
-		grid.space = space;
-		grid.xoff = xOff;
-		grid.yoff = yOff;
-		grid.color = color;
-		grid.isDrawn = TRUE;
+	while(lineIt < x + w){						//  While the line iterator is within the horizontal-bounds of the grid,
+		LCD_drawRect_filled(lineIt,y,1,h,fg);	//   Draw a vertical line across the grid at x = lineIt and
+		lineIt += space;						//   Iterate the line iterator to the next vertical line
 	}
+		
+	lineIt = y + yOff;							//  Set line iterator to first horizontal line (y-pivot-coordinate + yOff)
+		
+	while(lineIt < y + h){						//  While the line iterator is within the vertical-bounds of the grid,
+		LCD_drawRect_filled(x,lineIt,w,1,fg);	//   Draw a horizontal line across the grid at y = lineIt and
+		lineIt += space;						//   Iterate the line iterator to the next horizontal line
+	}
+		
+	/* Store Grid Parameters */
+	grid.x = x;
+	grid.y = y;
+	grid.w = w;
+	grid.h = h;
+	grid.space = space;
+	grid.xoff = xOff;
+	grid.yoff = yOff;
+	grid.fg = fg;
+	grid.bg = bg;
+	grid.isDrawn = TRUE;
+	
 }
 
 void LCD_init_arrow(uint16_t x0, uint16_t y0, uint16_t rot, uint16_t fg)
 {
-	/* Check if arrow is already drawn */					// ***
-	if(!arrow.isDrawn)
-	{
-		/* Determine Arrow Parameters */
-		const uint32_t * bmpPtr = &arrow_BMP[(rot % 90) / 5][0];	
-		uint8_t isMirrored = (rot >= 180);								// Determine whether BMP should be mirrored
-		uint8_t isRotated = ((rot >= 90 && rot < 180) || (rot >= 270));	// Determine whether BMP should be rotated 90 degrees
-		uint16_t x = x0 - ARROWSIZE / 2;								// Determine x-corner coordinate
-		uint16_t y = y0 - ARROWSIZE / 2;								// Determine y-corner coordinate
+	/* Return if Arrow is Already Drawn or Rotation is Invalid */
+	if(arrow.isDrawn || rot >= 360 || rot % 5 != 0)
+		return;
 		
-		/* Draw Arrow (PIVOT = CENTER) */	
-		for(int bmp_row = 0; bmp_row < ARROWSIZE; bmp_row++)
-			for(int bmp_col = 0; bmp_col < ARROWSIZE; bmp_col++) {		
-				uint8_t currArrowPixel;
+	/* Determine Arrow Parameters */								// ***
+	const uint32_t * bmpPtr = &arrow_BMPs[(rot % 90) / 5][0];		// Determine specific arrow BMP to use	
+	uint16_t xCor = x0 - ARROWSIZE / 2;								// Determine x-corner coordinate
+	uint16_t yCor = y0 - ARROWSIZE / 2;								// Determine y-corner coordinate
+		
+	/* Draw Arrow (PIVOT = CENTER) */																		// ***	
+	for(int y = 0; y < ARROWSIZE; y++)																		// For each row in bounds,
+		for(int x = 0; x < ARROWSIZE; x++) {																//  For each column in bounds,		
+			uint8_t bitState;																				//   Declare variable for bit state
 					
-				if(rot < 90)
-					currArrowPixel = (pgm_read_dword(&bmpPtr[bmp_row]) >> (ARROWSIZE - 1 - bmp_col)) & 0x0001;	// regular
+			if(rot < 90)																					//   If 0 <= rot < 90,
+				bitState = (pgm_read_dword(&bmpPtr[y]) >> (ARROWSIZE - 1 - x)) & 0x0001;					//	  Read bit at (x,y)
 							
-				else if(rot >= 90 && rot < 180)
-					currArrowPixel = (pgm_read_dword(&bmpPtr[bmp_col]) >> (bmp_row)) & 0x0001;			// 90
+			else if(rot >= 90 && rot < 180)																	//   Else, if 90 <= rot < 180,
+				bitState = (pgm_read_dword(&bmpPtr[x]) >> y) & 0x0001;										//    Read bit at (-y,x)
 							
-				else if(rot >= 180 && rot < 270)
-					currArrowPixel = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - bmp_row]) >> (bmp_col)) & 0x0001;
+			else if(rot >= 180 && rot < 270)																//   Else, if 180 <= rot < 270
+				bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - y]) >> x) & 0x0001;						//	  Read bit at (-x,-y)
 						
-				else if(rot >= 270 && rot < 360)
-					currArrowPixel = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - bmp_col]) >> (ARROWSIZE - 1 - bmp_row)) & 0x0001;
+			else                                                                                            //	 Else (270 <= rot < 360),
+				bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - x]) >> (ARROWSIZE - 1 - y)) & 0x0001;	//    Read bit at (y,-x)
 									
-				if(currArrowPixel == 1)
-					LCD_drawPixel(x + bmp_col, y + bmp_row, fg);
+			if(bitState == 1)																				//   If bit read is '1'
+				LCD_drawPixel(xCor + x, yCor + y, fg);														//    Draw a pixel at (xCor + x, y + yCor)
 					
-			}
+		}
 		
-		/* Save Arrow Parameters */
-		arrow.x0 = x0;
-		arrow.y0 = y0;
-		arrow.rot = rot;
-		arrow.color = fg;
-		arrow.isDrawn = TRUE;
+	/* Save Arrow Parameters */
+	arrow.x0 = x0;
+	arrow.y0 = y0;
+	arrow.rot = rot;
+	arrow.color = fg;
+	arrow.isDrawn = TRUE;
+
+}
+
+Grid LCD_get_grid(){ return grid; }
+	
+Arrow LCD_get_arrow(){ return arrow; }
+
+void LCD_shiftGrid(Vector2 dir)
+{
+	/* Return if Grid is NOT Drawn */
+	if(!grid.isDrawn)
+		return;
+		
+	/* Shift Grid Horizontally*/																//  ***
+	if(dir.x != 0){																				//  If 'dir' has horizontal component,
+		Bool isReversed = (dir.x == -1);														//   Flag whether direction is positive (RIGHT) or negative (LEFT)
+		uint16_t lineIt = grid.x + grid.xoff;													//   Initialize line iterator to first vertical line				
+			
+		while(lineIt <= grid.x + grid.w){														//   While the line iterator is within the horizontal-bounds of the grid,
+				
+			if ((lineIt == grid.x + grid.w && !isReversed) || (lineIt == grid.x && isReversed))	//    If the line iterator is at about to extend out of bounds,
+				LCD_gridSmart_eraseVL(lineIt);													//     Smart erase vertical line at line iterator			
+				
+			else{																				//    Else,
+				LCD_gridSmart_drawVL(lineIt + dir.x);											//     Smart draw vertical line at new location
+				LCD_gridSmart_eraseVL(lineIt);													//     Smart erase old vertical line					
+			}
+				
+			lineIt += grid.space;																//    Iterate the line iterator				
+		}
+				
+		LCD_gridSmart_addOff(dir.x,0);														//   Update XOff
+					
+	}
+		
+	/* Shift Grid Vertically */																	//  ***
+	if(dir.y != 0){																				//  If 'dir' has vertical component,
+		Bool isReversed = (dir.y == -1);														//   Flag whether direction is positive (UP) or negative (DOWN)
+		uint16_t lineIt = grid.y + grid.yoff;													//   Initialize line iterator to first horizontal line
+			
+		while(lineIt <= grid.y + grid.h){														//   While the line iterator is within the vertical-bounds of the grid,
+				
+			if ((lineIt == grid.y + grid.h && isReversed) || (lineIt == grid.x && !isReversed))	//    If the line iterator is at about to extend out of bounds,
+				LCD_gridSmart_eraseHL(lineIt);													//     Smart erase horizontal line at line iterator
+				
+			else{																				//    Else,
+				LCD_gridSmart_drawHL(lineIt - dir.y);;											//     Smart draw horizontal line at new location
+				LCD_gridSmart_eraseHL(lineIt);													//	   Smart erase old horizontal line
+						
+			}
+				
+			lineIt += grid.space;																//    Iterate the line iterator
+		}
+					
+		LCD_gridSmart_addOff(0,-dir.y);														//   Update YOff
+			
 	}		
 }
 
-//bool LCD_shiftGrid (Vector2 dir)
-//{
-	//if(dir.x > 1 || dir.x < -1 || dir.y > 1 || dir.y < -1) return false;	// Return failure if a direction is invalid
-	///* Initialize Parameters */
-	//uint16_t colorCode[2] = {oldGrid.bg,oldGrid.fg};		// Color code for drawing color
-	//uint8_t isReversed = (dir.x == -1) || (dir.y == -1);	// Flag for reversing drawing color
-	//uint16_t horizLim = TFTWIDTH /oldGrid.space + 1;		// Number of possible horizontal lines
-	//uint16_t vertLim = TFTHEIGHT/oldGrid.space + 1;			// Number of possible vertical lines
-	//uint16_t offset_it;										// Grid Line Iterator
-	//
-	///* If shift has horizontal component */
-	//if(dir.x != 0) {
-		//offset_it = oldGrid.offset.x;															// Set iterator to first horizontal line
+void LCD_zoomGridIn(uint16_t x, uint16_t y)
+{
+	/* Return if Zoom-Point is NOT Within Bounds of Grid */
+	if(x < grid.x || x > grid.x + grid.h || y < grid.y || y > grid.y + grid.w)
+		return;
+	
+	/* Initialize Parameters */														// ***
+	int16_t nV = ((x - grid.x + grid.space - grid.xoff) / grid.space) * -2 + 1 ;	// Initialize nV to shift magnitude+direction of first vertical line
+	int16_t nH = ((y - grid.y + grid.space - grid.yoff) / grid.space) * -2 + 1;		// Initialize nH to shift magnitude+direction of first horizontal line
+	
+	/* Shift Vertical Lines */					// ***
+	int16_t lineIt = grid.x + grid.xoff;		// Initialize lineIt to first vertical line				
+	int16_t count = nV;							// Initialize count to nV			
+			
+	while(lineIt < grid.x + grid.w){			// While the line iterator is within the horizontal-bounds of the grid,		
+		LCD_gridSmart_drawVL(lineIt + count);	//  Smart draw vertical line 'count' away from current vertical line
+		LCD_gridSmart_eraseVL(lineIt);			//  Smart erase current vertical line
+		lineIt += grid.space;					//  Move on to next vertical line
+		count += 2;								//  Increase count by 2
+		
+	}
+	
+	/* Update Parameters */			// ***
+	grid.space += 2;				// Update space
+	LCD_gridSmart_addOff(nV, 0);	// Update XOff	
+	
+	/* Shift Horizontal Lines */				// ***
+	lineIt = grid.y + grid.yoff;				// Set lineIt to first horizontal line
+	count = nH;									// Set count to nH
+		
+	while(lineIt < grid.y + grid.h){			// While the line iterator is within the vertical-bounds of the grid,	
+		LCD_gridSmart_drawHL(lineIt + count);	//  Draw horizontal line 'count' away from current horizontal line	
+		LCD_gridSmart_eraseHL(lineIt);			//  Smart erase current horizontal line
+		lineIt += grid.space - 2;				//  Move on to next horizontal line
+		count += 2;								//  Increase count by 2
+		
+	}
+	
+	/* Update YOff */	
+	LCD_gridSmart_addOff(0,nH);
+	
+}
+
+void LCD_zoomGridOut(uint16_t x, uint16_t y)
+{
+	/* Return if Zoom-Point is NOT Within Bounds of Grid */
+	if(x < grid.x || x > grid.x + grid.h || y < grid.y || y > grid.y + grid.w)
+		return;
+	
+	/* Initialize Parameters */														// ***
+	int16_t nV = ((x - grid.x + grid.space - grid.xoff) / grid.space) * 2 + 1;		// Initialize nV to shift magnitude+direction of ghost vertical line
+	int16_t nH = ((y - grid.y + grid.space - grid.yoff) / grid.space) * 2 + 1;		// Initialize nH to shift magnitude+direction of ghost horizontal line
+	
+	/* Shift Vertical Lines */							// ***
+	int16_t lineIt = grid.x + grid.xoff - grid.space;	// Initialize lineIt to ghost vertical line
+	int16_t count = nV;									// Initialize count to nV
+	
+	while(lineIt < grid.x + grid.w){			// While the line iterator is within the horizontal-bounds of the grid,
+		LCD_gridSmart_drawVL(lineIt + count);	//  Smart draw vertical line 'count' away from current vertical line
+		LCD_gridSmart_eraseVL(lineIt);			//  Smart erase current vertical line
+		lineIt += grid.space;					//  Move on to next vertical line
+		count -= 2;								//  Increase count by 2
+		_delay_ms(1000);
+	}
+	
+	/* Update Parameters */							// ***
+	int16_t ghostOff = grid.xoff - grid.space + nV;	// Calculate y-coordinate of shifted ghost line
+	
+	if(ghostOff > 0)								// If ghost offset is within grid bounds,
+		grid.xoff = ghostOff;						//  Set xoff to ghost offset
+		
+	else{											// Else,
+		grid.space -= 2;							//  Update space
+		LCD_gridSmart_addOff(nV > 1 ? (nV - 2): -1, 0);	//  Update XOff
+	}
+		
+	/* Shift Horizontal Lines */				// ***
+	lineIt = grid.y + grid.yoff - grid.space;	// Set lineIt to first horizontal line
+	count = nH;									// Set count to nH
+	
+	while(lineIt < grid.y + grid.h){			// While the line iterator is within the vertical-bounds of the grid,
+		LCD_gridSmart_drawHL(lineIt + count);	//  Draw horizontal line 'count' away from current horizontal line
+		LCD_gridSmart_eraseHL(lineIt);			//  Smart erase current horizontal line
+		lineIt += grid.space;				//  Move on to next horizontal line
+		count -= 2;								//  Increase count by 2
+		_delay_ms(1000);
+	}
+	
+	///* Update YOff */								// ***
+	//ghostOff = grid.yoff - grid.space + nH;			// Calculate y-coordinate of shifted ghost line
 		//
-		//for(int j = 0; j < horizLim; j++) {														// For all possible horizontal lines,
-			//if(offset_it + dir.x < TFTWIDTH) { 													//  If line's pending offset is OB,
-				//LCD_setAddress(offset_it - isReversed, 0, offset_it + !isReversed, TFTHEIGHT);	//   Set drawing bounds to changing columns			
-				//for(int i = 0; i < TFTHEIGHT * 2; i++) {										//   For each pixel in bounds,
-					//LCD_pushColor(colorCode[(i + isReversed) % 2]);								//    Draw colors based on direction
-				//}
-			//}
-			//
-			//else																				// Else (line's pending offset is TFTWIDTH or -1),
-				//LCD_drawLine_vertical(offset_it, 0, TFTHEIGHT, oldGrid.bg); 					//  Simply erase line near bound
-//
-			//for(int i = 0; i < vertLim; i++)													// For all overwritten vertical lines,
-				//LCD_drawPixel(offset_it, oldGrid.offset.y + i * oldGrid.space, oldGrid.fg);		//  Fill in overwritten pixels
-			//
-			////if(offset_it >= ARROWCORNERX && offset_it < ARROWCORNERX + ARROWSIZE){
-				////LCD_drawArrow(oldArrow.rot, oldArrow.fg);
-			////}
-			//
-			//offset_it += oldGrid.space;															// Iterate offset
-		//}
+	//if(ghostOff > 0)								// If ghost offset is within grid bounds,
+	//grid.yoff = ghostOff;							//  Set xoff to ghost offset
 		//
-		///* Update Grid-X-Offset */
-		//oldGrid.offset.x = (oldGrid.offset.x + dir.x) % oldGrid.space;	// Save X-Offset
-		//if(oldGrid.offset.x < 0)										// If the new X-Offset is negative (-1),
-			//oldGrid.offset.x = oldGrid.space - 1;						//  Set new X-Offset to the space - 1 
+	//else{											// Else,
+		//LCD_gridSmart_addOff(0, nH > 1 ? nV : -1);	//  Update YOff
 	//}
-	//
-	///* If shift has vertical component */
-	//if(dir.y != 0) {
-		//offset_it = oldGrid.offset.y;															// Set iterator to first vertical line
-		//
-		//for(int j = 0; j < vertLim; j++) {														// For all possible vertical lines
-			//if(offset_it + dir.y < TFTHEIGHT) 													//  If line's pending offset is NOT OB,
-				//for(int i = 0; i < TFTWIDTH; i++) {												//	 For all columns on LCD,
-					//LCD_setAddress(i, offset_it - isReversed, i, offset_it + !isReversed);		//    Select 1px-by-2px drawing zone on changing column
-					//LCD_pushColor(colorCode[isReversed]);										//	  Send primary color data
-					//LCD_pushColor(colorCode[!isReversed]);										//	  Send secondary color data
-				//}
-			//
-			//else																				// Else (line's pending offset is TFTWIDTH or -1),
-				//LCD_drawLine_horizontal(0, offset_it, TFTWIDTH, oldGrid.bg);					//  Simply erase line near bound
-//
-			//for(int i = 0; i < horizLim; i++)													// For all overwritten vertical lines,
-				//LCD_drawPixel(oldGrid.offset.x + i * oldGrid.space, offset_it, oldGrid.fg);		//  Fill in overwritten pixels
-			//
-			//offset_it += oldGrid.space;															// Iterate offset
-		//}
-		//
-		///* Update Grid-Y-Offset */
-		//oldGrid.offset.y = (oldGrid.offset.y + dir.y) % oldGrid.space;	// Save the Y-Offset
-		//if(oldGrid.offset.y < 0)										// If the new Y-Offset is negative (-1),
-			//oldGrid.offset.y = oldGrid.space - 1;						//  Set the new Y-Offset to space - 1
-	//}
-	//
-	//return true;	// Return success
-//}
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //										 Private Functions										  //
@@ -470,7 +525,7 @@ void LCD_spi_init()
 {
 	/* Set SPI Speed and Settings */	
 	SPDDR |= (1<<1)|(1<<3)|(1<<4)|(1<<5)|(1<<7);	// Set CS(1), RST(3), D/C(4), MOSI(5), and SCK(7) as outputs
-	SPCR = (1<<SPE)|(1<<MSTR)|(SPR0);				// Enable SPI - fclk/16
+	SPCR = (1<<SPE)|(1<<MSTR);				// Enable SPI - fclk/16
 	SPPORT |= (1<<CS);								// Disable CS during startup
 }
 
@@ -486,7 +541,6 @@ void LCD_writecommand8(uint8_t command)
 {
 	/* Write 8-bit Command */
 	SPPORT &= ~((1<<DC)|(1<<CS));		// Enable chip select and set command-mode
-	_delay_us(5);						// Wait
 	LCD_spi_send(command);			// Send command
 	SPPORT |= (1<<CS);					// Disable chip select
 }
@@ -496,7 +550,6 @@ void LCD_writedata8(uint8_t data)
 {
 	/*Write 8-bit Data */
 	SPPORT |=(1<<DC);		// Set data-mode
-	_delay_us(1);			// Wait
 	SPPORT &= ~(1<<CS);		// Enable chip select
 	LCD_spi_send(data);	// Send data
 	SPPORT |=(1<<CS);		// Disable chip select
@@ -559,11 +612,82 @@ void LCD_printChar(char c)
 	/* Draw 'c' */																// ***
 	if (c == '\n') {															// If the character is '\n'
 		pencil.y += pencil.size * 8;											//  Move pencil cursor down and 
-		pencil.x = 0;															//  Move pencil cursor all the way to the left
+		pencil.x = pencil.xorigin;															//  Move pencil cursor all the way to the left
 	}
 	
 	else {																		// Else, 
 		LCD_drawChar(pencil.x, pencil.y, c, pencil.fg, pencil.bg, pencil.size);	// Draw character using pencil
 		pencil.x += pencil.size * 6;											// Move pencil cursor 6 px to the right
 	}
+}
+
+void LCD_gridSmart_drawVL(uint16_t x)
+{
+	if(!grid.isDrawn || x < grid.x || x >= grid.x + grid.w)
+		return;
+		
+	LCD_drawRect_filled(x, grid.y, 1, grid.h, grid.fg);
+}
+
+void LCD_gridSmart_drawHL(uint16_t y)
+{
+	if(!grid.isDrawn || y < grid.y || y >= grid.y + grid.h)
+		return;
+	
+	LCD_drawRect_filled(grid.x, y, grid.w, 1, grid.fg);
+}
+
+void LCD_gridSmart_eraseVL(uint16_t x)
+{
+	if(!grid.isDrawn || x < grid.x || x >= grid.x + grid.w)
+		return;
+		
+	LCD_setAddress(x, grid.y, x, grid.y + grid.h);
+	
+	for(int i = 0; i < grid.h; i++)
+		LCD_pushColor(i % grid.space != grid.yoff ? grid.bg : grid.fg);
+		
+}
+
+void LCD_gridSmart_eraseHL(uint16_t y)
+{
+	if(!grid.isDrawn || y < grid.y || y >= grid.y + grid.h){
+		LCD_print_str("FAIL!");	LCD_moveTextCursor(-strlen("FAIL!"), 0)	;
+		return;
+	}
+	
+	LCD_print_str("SUCCESS!");	LCD_moveTextCursor(-strlen("SUCCESS!"), 0)	;
+	LCD_setAddress(grid.x, y, grid.x + grid.w, y);
+	
+	for(int i = 0; i < grid.w; i++)
+		LCD_pushColor(i % grid.space != grid.xoff ? grid.bg : grid.fg);
+	
+}
+
+void LCD_gridSmart_addOff(int8_t x, int8_t y)
+{
+	if(!grid.isDrawn)
+		return;
+		
+	if(x != 0){
+		grid.xoff += x;
+	
+		while(grid.xoff < 0)
+			grid.xoff += grid.space;
+			
+		while(grid.xoff > grid.space)
+			grid.xoff -= grid.space;
+		
+	}
+	
+	if(y != 0){
+		grid.yoff += y;
+			
+		while(grid.yoff < 0)
+			grid.yoff += grid.space;
+		
+		while(grid.yoff > grid.space)
+			grid.yoff -= grid.space;
+			
+	}		
 }

@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+driver_APPLICATION.c
+
 driver_BUZZER.c
 
 driver_EEPROM.c

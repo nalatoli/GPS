@@ -173,6 +173,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="driver_APPLICATION.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="driver_BUZZER.c">
       <SubType>compile</SubType>
     </Compile>
@@ -189,6 +192,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FSM_BASIC.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_APPLICATION.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="header_BUZZER.h">

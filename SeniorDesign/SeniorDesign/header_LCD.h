@@ -3,97 +3,368 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef HEADER_LCD_H
 #define HEADER_LCD_H
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//									LCD Data Structures and Libraries							  //
+//											 LCD Libraries										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/pgmspace.h>
-typedef enum {FALSE,TRUE}	Bool;
-typedef uint16_t			Color;
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//									      LCD Type Definitions								      //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/***************************************************************************************************
+	Type Definition: Bool (Enumeration)
+	Description:
+		Analogous to C++ boolean data type. Enumeration maps the following:
+			FALSE = 0 - Usually for unmet condition / failure in function execution
+			TRUE  = 1 - Usually for met condition / success in function execution
+			
+***************************************************************************************************/
+typedef enum Bool {FALSE,TRUE} Bool;
+
+/***************************************************************************************************
+	Type Definition: Color
+	Description:
+		Identifies a 16-bit value as an RGB565 formatted code. The format of RGB565 is:
+			
+			<R4><R3><R2><R1><R0><G5><G4><G3><G2><G1><G0><B4><B3><B2><B1><B0>
+			
+		Where:
+			R[4:0] (RED) is the most significant (first oncoming) 5 bits in an oncoming transmission
+			G[4:0] (GREEN) is the next (second oncoming) 5 bits in an oncoming transmission
+			B[4:0] (BLUE) is least significant (third oncoming) 5 bits in an oncoming transmission
+			 
+***************************************************************************************************/	
+typedef uint16_t Color;
+
+/***************************************************************************************************
+	Type Definition: Vector2 (Data Structure)
+	Description:
+		Defines direction and magnitude of a 2-D Vector. The embedded data types are:
+		
+			x: magnitude of vector in x-direction [px]
+			y: magnitude of vector in y-direction [px]
+			
+		A 2-D vector can be used to describe position relative to a reference point (ex: coordinates)
+		or can be used to describe direction (ex: object shift).
+		
+***************************************************************************************************/
+typedef struct Vector2{
+	int16_t x;	// Magnitude of vector in x-direction
+	int16_t y;	// Magnitude of vector in y-direction
+} Vector2;
+
+/***************************************************************************************************
+	Type Definition: Grid (Data Structure)
+	Description:
+		Defines parameters for a grid. The embedded data types are:
+		
+			x:		 absolute x-position of grid's top-left corner [px]
+			y:		 absolute y-position of grid's top-left corner [px]
+			w:		 grid width [px]
+			h:		 grid height [px]
+			xoff:	 relative x-position (from 'x') of grid's first left-bound vertical line [px]
+			yoff:	 relative y-position (from 'y') of grid's first top-bound horizontal line [px]
+			space:	 space between successive horizontal/vertical lines [px] (spacing is uniform) 
+			fg:		 color of grid lines
+			bg:      color of grid background (constrained only to grid dimensions)
+			isDrawn: flag for indicating whether a grid has already been drawn
+			
+		A grid is an empty rectangle object with horizontal and vertical lines running along
+		its interior. The parameters above describe the "rectangle" and its lines.
+		
+		A grid is an "One Instance Drawing". This means that once a grid is drawn, another one cannot
+		be drawn until the current one is deleted. A grid has its own functions that can manipulate
+		the behavior of its lines. Furthermore, a grid will not overwrite other objects on the LCD.
+		
+***************************************************************************************************/
+typedef struct Grid{
+	uint16_t x;		// Absolute x-position of grid's top-left corner [px]
+	uint16_t y;		// Absolute y-position of grid's top-left corner [px]
+	uint16_t w;		// Grid width [px]
+	uint16_t h;		// Grid height [px]
+	int16_t xoff;	// Relative x-position (from 'x') of grid's first left-bound vertical line [px]
+	int16_t yoff;	// Relative y-position (from 'y') of grid's first top-bound horizontal line [px]
+	int16_t space;	// Space between successive horizontal/vertical lines [px] (spacing is uniform) 
+	Color fg;		// Color of grid lines
+	Color bg;		// Color of grid background (constrained only to grid dimensions)
+	Bool isDrawn;	// Flag for indicating whether a grid has already been drawn
+} Grid;
+
+/***************************************************************************************************
+	Type Definition: Arrow (Data Structure)
+	Description:
+		Defines parameters for an arrow. The embedded data types are:
+		
+			x0:		 absolute x-position of arrow's center [px]
+			y0:		 absolute y-position of arrow's center [px]
+			rot:	 current arrow rotation [degrees]
+			fg:		 color of arrow
+			isDrawn: flag for indicating whether an arrow has already been drawn
+		
+		An arrow is an "One Instance Drawing". This means that once a arrow is drawn, another one 
+		cannot be drawn until the current one is deleted. An arrow has its own functions that can 
+		manipulate its behavior. An arrow has fixed size.
+		
+***************************************************************************************************/
+typedef struct Arrow{
+	uint16_t x0;	// Absolute x-position of arrow's center [px]
+	uint16_t y0;	// Absolute y-position of arrow's center [px]
+	int16_t rot;	// Current arrow rotation [degrees]
+	Color color;	// Color of arrow	
+	Bool isDrawn;	// Flag for indicating whether an arrow has already been drawn
+} Arrow;
+
+/***************************************************************************************************
+	Type Definition: TextHandler (Data Structure)
+	Description:
+		Defines parameters for the text handler. The embedded data types are:
+		
+			x:		 absolute x-position of pending character's top-left corner [px]
+			y:		 absolute y-position of pending character's top-left corner [px]
+			size:	 text scaling factor
+			fg:		 color of characters
+			bg:		 color around characters
+		
+		The text handler is responsible for keeping track of pending characters. The text handler
+		has its own set of functions that make manipulating the flow of prints simpler. 
+		
+		The text handler is instantiated inside the LCD driver file. It SHOULD NOT instantiated
+		elsewhere.
+		
+***************************************************************************************************/
 typedef struct{
-	uint16_t x;
-	uint16_t y;
-	} Vector2;
+	uint16_t xorigin;
+	uint16_t x;		// Absolute x-position of pending character's top-left corner [px]
+	uint16_t y;		// Absolute y-position of pending character's top-left corner [px]
+	uint8_t size;	// Text scaling factor
+	Color fg;		// Color of characters
+	Color bg;		// Color around characters
+} TextHandler;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //									      LCD Public Functions									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* System Initialization */
+/***************************************************************************************************
+	Function: init_system()
+		- Used for initializing LCD module. Configures following MCU, ILI9341, and driver settings:
+		
+			1. MCU SPI Interface / Control Pin Directions
+			2. Power
+			3. Memory
+			4. Frame Rate
+			5. Gamma Control
+			6. DDRAM
+			7. Display
+			8. One-Instance Drawings		
+		
+***************************************************************************************************/
 void LCD_init_system ();
 
-/* Drawing */
+
+
+/***************************************************************************************************
+	Function: drawPixel
+		- Draws 'color'-colored pixel at coordinates ('x','y').
+		
+***************************************************************************************************/
 void LCD_drawPixel (uint16_t x, uint16_t y, Color color);
+
+/***************************************************************************************************
+	Function: drawRect_filled	
+		- Draws 'color'-colored filled rectangle at pivot-coordinates ('x','y') [PIVOT = TOPLEFT] 
+		  with width 'w' and height 'h'.	
+		
+***************************************************************************************************/	
 void LCD_drawRect_filled (uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color);
+
+/***************************************************************************************************
+	Function: drawRect_empty	
+		- Draws 'color'-colored empty rectangle [THICKNESS = 1] at pivot-coordinates ('x','y')
+	      [PIVOT = TOPLEFT] with width 'w' and height 'h'.
+		
+***************************************************************************************************/
 void LCD_drawRect_empty (uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color);
+
+/***************************************************************************************************
+	Function: drawCircle_filled	
+		- Draws 'color'-colored filled circle at pivot-coordinates ('x0','y0') [PIVOT = CENTER]
+	      with radius 'radius'.
+		
+***************************************************************************************************/
 void LCD_drawCircle_filled(uint16_t x0, uint16_t y0, uint8_t radius, Color color);
+
+/***************************************************************************************************
+	Function: drawCircle_empty	
+		- Draws 'color'-colored empty circle [THICKNESS = 1] at pivot-coordinates ('x0','y0')
+	      [PIVOT = CENTER] with radius 'radius'.
+		
+***************************************************************************************************/
 void LCD_drawCircle_empty(uint16_t x0, uint16_t y0, uint8_t radius, Color color);
+
+/***************************************************************************************************
+	Function: drawLogo	
+		- Draws 30 x 30 [px] "Power Couple" logo at pivot-coordinates ('x','y') [PIVOT = TOPLEFT] 
+		  scaled by factor 'size'.
+		
+***************************************************************************************************/
+void LCD_drawLogo(uint16_t x, uint16_t y, uint16_t size);
+
+/***************************************************************************************************
+	Function: clear	
+		- Fills entire screen with 'color'-colored pixels
+		
+***************************************************************************************************/
 void LCD_clear (Color color);
 
-/* Text */
+
+
+/***************************************************************************************************
+	Function: setText_cursor	
+		- Sets pending-character's pivot-coordinates (cursor) to ('x','y').
+		
+***************************************************************************************************/
 void LCD_setText_cursor(uint16_t x, uint16_t y);
+
+/***************************************************************************************************
+	Function: setText_size	
+		- Scales successive characters' size by 'size'.
+		
+***************************************************************************************************/
 void LCD_setText_size(uint8_t size);
+
+/***************************************************************************************************
+	Function: setText_color	
+		- Sets successive characters' text color to 'fg' and background color to 'bg'.
+		
+***************************************************************************************************/
 void LCD_setText_color(Color fg, Color bg);
+
+/***************************************************************************************************
+	Function: setText_all	
+		- Sets pending-character's pivot-coordinates (cursor) to ('x','y').
+		  Scales successive characters' size by 'size'.
+		  Sets successive characters' text color to 'fg' and background color to 'bg'.
+		
+***************************************************************************************************/
 void LCD_setText_all(uint16_t x, uint16_t y, uint8_t size, Color fg, Color bg);
+
+/***************************************************************************************************
+	Function: moveTextCursor	
+		- Moves cursor 'spaces' spaces horizontally and 'lines' lines vertically. Each parameter
+		  can be positive or negative and will move cursor with respect to text size.
+		
+***************************************************************************************************/
 void LCD_moveTextCursor(int16_t spaces, int16_t lines);
+
+/***************************************************************************************************
+	Function: print_str	
+		- Moves cursor 'spaces' spaces horizontally and 'lines' lines vertically. Each parameter
+		  can be positive or negative and will move cursor with respect to text size.
+		
+***************************************************************************************************/
 void LCD_print_str(char * str);
 void LCD_print_num(float num, uint8_t width, uint8_t prec);
 
 /* One-Instance Drawing */
-void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xoff, int16_t yoff, Color color);
+void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xoff, int16_t yoff, Color fg, Color bg);
 void LCD_init_arrow(uint16_t x0, uint16_t y0, uint16_t rot, uint16_t fg);
-//void LCD_shiftGrid(Vector2 dir);
-//void LCD_scaleGrid(int16_t scale);
+Grid LCD_get_grid();
+Arrow LCD_get_arrow();
+void LCD_shiftGrid(Vector2 dir);
+void LCD_zoomGridIn(uint16_t x, uint16_t y);
+void LCD_zoomGridOut(uint16_t x, uint16_t y);
 //void LCD_moveArrow(Vector2 dir);
 //void LCD_rotateArrow(int16_t rot);
 
-
-
-
-void LCD_pushColor(uint16_t);
-void LCD_setAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
-void LCD_writecommand8(uint8_t);
-void LCD_writedata8(uint8_t);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //									       LCD Public MACROS									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Direction MACROS */
-static const Vector2 UP = {0,-1};
-static const Vector2 DOWN = {0,1};
+/* Direction Constants */
+static const Vector2 UP = {0,1};
+static const Vector2 DOWN = {0,-1};
 static const Vector2 LEFT = {-1,0};
 static const Vector2 RIGHT = {1,0};
 
-/* Control MACROS */
+/* Control Constants */
 #define SPPORT PORTB
 #define SPDDR DDRB
 #define SPPIN PINB
 #define CS 3
 #define DC 4
-#define TFTHEIGHT 240 
+#define TFTHEIGHT 240
 #define TFTWIDTH 320
 #define ARROWSIZE 29
 #define ARROWRADIUS ARROWSIZE / 2
+#define LOGOSIZE 30
+#define LOGOPXCOUNT 514
 
-/* Color MACROS */
-#define BLACK       0x0000      
-#define NAVY        0x000F      
-#define DARKGREEN   0x03E0      
-#define DARKCYAN    0x03EF      
-#define MAROON      0x7800      
-#define PURPLE      0x780F      
-#define OLIVE       0x7BE0      
-#define LIGHTGREY   0xC618      
-#define DARKGREY    0x7BEF      
-#define BLUE        0x001F      
-#define GREEN       0x07E0      
-#define CYAN        0x07FF      
-#define RED         0xF800     
-#define MAGENTA     0xF81F      
-#define YELLOW      0xFFE0      
-#define WHITE       0xFFFF      
-#define ORANGE      0xFD20      
-#define GREENYELLOW 0xAFE5     
+/* RGB565 Color Codes */
+#define BLACK       0x0000
+#define NAVY        0x000F
+#define DARKGREEN   0x03E0
+#define DARKCYAN    0x03EF
+#define MAROON      0x7800
+#define PURPLE      0x780F
+#define OLIVE       0x7BE0
+#define LIGHTGREY   0xC618
+#define GREY		0x4A68 
+#define DARKGREY    0x7BEF
+#define BLUE        0x001F
+#define DARKBLUE    0x006A 
+#define GREEN       0x07E0
+#define CYAN        0x07FF
+#define RED         0xF800
+#define DARKRED     0x6000
+#define MAGENTA     0xF81F
+#define YELLOW      0xFFE0
+#define WHITE       0xFFFF
+#define ORANGE      0xFD20
+#define GREENYELLOW 0xAFE5
 #define PINK        0xF81F
 
-static const uint32_t arrow_BMP[18][29] PROGMEM = {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//									      LCD Static Images										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/***************************************************************************************************
+	Static Image: arrow_BMPs
+	Flash Used:   2.088 kB
+	Description:
+		The image describes a set of bitmaps describe captures of a rotating arrow. 
+		The format is as follows:
+		
+			arrow_BMPs[n][m]:
+				n - # capture of rotating arrow [0 -> 17] (0 = 0 degrees; 17 = 85 degrees)
+				m - 32-bit grouped-pixel states of corresponding capture row [pNM[31:0]]:
+				
+					<pNM31><pNM30><pNM29>...<pNM2><pNM1><NMp0>
+					
+					pNM31: state of 32nd pixel from right of capture 'n's row 'm' (furthest left)
+					pNM30: state of 31rst pixel from right of capture 'n's row 'm'
+					pNM29: state of 30th pixel from right of capture 'n's row 'm'
+					...
+					pNM2: state of 3rd pixel from right of capture 'n's row 'm'
+					pNM1: state of 2nd pixel from right of capture 'n's row 'm'
+					pNM0: state of 1rst pixel from right of capture 'n's row 'm' (furthest right)
+		
+	Drawing Procedure:			
+		1. The rotation of the arrow is passed into the arrow drawing function. The passed rotation 
+		   is divided by 5 to obtain the correct arrow capture 'n'. As a consequence, the passed 
+		   rotation MUST be divisible by 5.
+		
+		2. The arrow capture is drawn row-by-row (incrementing 'm' values). The 32-bit row 
+		   'pNM[31:0]' is analyzed.
+		   
+		3. Each pixel is drawn serially from left to right depending on the state of the pixel.
+		
+***************************************************************************************************/
+static const uint32_t arrow_BMPs[18][ARROWSIZE] PROGMEM = {
 	{0,0,0,0,0x00800000,0x00f00000,0x00fc0000,0x007f8000,0x007fe000,0x007ff800,0x003fff00,0x003fffc0,0x003ffff0,0x001ffffe,0x001fffff,0x001ffffe,0x003ffff0,0x003fffc0,0x003fff00,0x007ff800,0x007fe000,0x007f8000,0x00fc0000,0x00f00000,0x00800000,0,0,0,0},
 	{0,0,0,0,0x00800000,0x00f00000,0x00fc0000,0x007fa000,0x007ff800,0x007fff00,0x003fffc0,0x003ffff6,0x003fffff,0x001fffff,0x000ffffc,0x000ffff8,0x001fffe0,0x001fff80,0x001ffc00,0x003ff000,0x003fc000,0x003fc000,0x007e0000,0x00780000,0x00400000,0,0,0,0},
 	{0,0,0,0,0,0x01000000,0x01f80000,0x01ff4000,0x00fff800,0x007fffc0,0x007ffff6,0x003fffff,0x003ffffe,0x003ffffc,0x001ffff8,0x000fffe0,0x000fff80,0x001fff00,0x001ffc00,0x001ff800,0x001fe000,0x001fe000,0x001f0000,0x003c0000,0x00380000,0x00200000,0,0,0},
@@ -114,7 +385,90 @@ static const uint32_t arrow_BMP[18][29] PROGMEM = {
 	{0x00003000,0x00003800,0x00007800,0x0000f800,0x0000f800,0x0001f800,0x0001fc00,0x0003fc00,0x0003fe00,0x0003fe00,0x0007fe00,0x0007ff00,0x000fff00,0x000fff80,0x003fff80,0x003fff80,0x003fff80,0x007fff80,0x007fffc0,0x00ffffc0,0x00ff3fe0,0x00f81fe0,0x01c003e0,0x00000070,0,0,0,0,0}
 };
 
-
+/***************************************************************************************************
+	Static Image: logo_BMP
+	Flash Memory Used: 1.03 kB
+	Description:
+		The image describes a bitmap for the "Power Couple" logo. The format is as follows:
+		
+			logo_BMP[n]:
+				n - # 16-bit offset/color-embedded pixel
+				
+					<c5>...<c0><y4>...<y0><x4>...<x0>
+					
+					x[4:0]: x-offset from left bound
+					y[4:0]: y-offset from top bound
+					c[5:0]: color code of logo
+					
+			*The color codes map to colors needed by the logo, indicated by 'logo_ColorCode'.*
+					
+		
+	Drawing Procedure:			
+		1. Each logo parameter (x,y,c) is extracted.
+		
+		2. Pixels/Rectangles of corresponding color are dynamically offset from the pivot position
+		
+***************************************************************************************************/
+static const Color logo_ColorCode[] = {BLACK,RED,DARKRED,BLUE,DARKBLUE,YELLOW};
+static const uint16_t logo_BMP[LOGOPXCOUNT] PROGMEM = {
+	0xd, 0xe, 0xf, 0x10,
+	0x2b, 0x2c, 0x142d, 0x142e, 0x142f, 0x1430, 0x31, 0x32, 0x33,
+	0x49, 0x4a, 0x144b, 0x144c, 0x144d, 0x144e, 0x144f, 0x1450, 0x1451, 0x52,
+	0x68, 0x1469, 0x146a, 0x146b, 0x146c, 0x146d, 0x146e, 0x146f, 0x1470, 0x71, 0x72, 0x73, 0x74,
+	0x87, 0x1488, 0x1489, 0x148a, 0x148b, 0x148c, 0x8d, 0x8e, 0x8f, 0x1490, 0x1491, 0x1492, 0x1493, 0x1494, 0x95, 0x96, 0x97,
+	0xa6, 0x14a7, 0x14a8, 0x14a9, 0x14aa, 0x14ab, 0xac, 0xae, 0x14af, 0x14b0, 0x14b1, 0x14b2, 0x14b3, 0x14b4, 0x14b5, 0x14b6, 0x14b7, 0xb8,
+	0xc6, 0x14c7, 0x14c8, 0x14c9, 0xca, 0xcb, 0xcd, 0x14ce, 0x14cf, 0x14d0, 0xd1, 0xd2, 0xd3, 0x14d4, 0x14d5, 0x14d6, 0x14d7, 0x14d8, 0xd9,
+	0xe5, 0x14e6, 0x14e7, 0x14e8, 0xe9, 0xec, 0xed, 0xee, 0xef, 0xf0, 0xf4, 0xf5, 0x14f6, 0x14f7, 0x14f8, 0xf9,
+	0x105, 0x1506, 0x1507, 0x1508, 0x109, 0x116, 0x1517, 0x1518, 0x119,
+	0x125, 0x1526, 0x1527, 0x128, 0x136, 0x1537, 0x138,
+	0x144, 0x1545, 0x1546, 0x1547, 0x148, 0x157,
+	0x164, 0x1565, 0x1566, 0x1567, 0x168,
+	0x185, 0x1586, 0x187, 0x18f, 0x190, 0x191, 0x192, 0x193, 0x194, 0x195, 0x196, 0x197, 0x198, 0x199, 0x19a, 0x19b, 0x19c,
+	0x1a1, 0x1a2, 0x1a5, 0x15a6, 0x1a7, 0x1ac, 0x1ad, 0x1af, 0xdb0, 0xdb1, 0xdb2, 0xdb3, 0xdb4, 0xdb5, 0xdb6, 0xdb7, 0xdb8, 0xdb9, 0xdba, 0x1bb, 0x11bc, 0x1bd,
+	0x1c0, 0x5c1, 0x5c2, 0x1c3, 0x1c5, 0x15c6, 0x1c7, 0x1cb, 0x5cc, 0x5cd, 0x1ce, 0x1cf, 0xdd0, 0xdd1, 0xdd2, 0xdd3, 0xdd4, 0xdd5, 0xdd6, 0xdd7, 0xdd8, 0xdd9, 0xdda, 0x1db, 0x11dc, 0x1dd,
+	0x1e0, 0x5e1, 0x5e2, 0x1e3, 0x1e6, 0x1eb, 0x5ec, 0x5ed, 0x1ee, 0x9ef, 0x1f0, 0xdf1, 0xdf2, 0xdf3, 0xdf4, 0xdf5, 0xdf6, 0xdf7, 0xdf8, 0xdf9, 0xdfa, 0x1fb, 0x11fc, 0x1fd,
+	0x200, 0x201, 0x602, 0x603, 0x204, 0x20a, 0x60b, 0x60c, 0x20d, 0x20e, 0xa0f, 0x210, 0x211, 0x212, 0x213, 0xe14, 0xe15, 0xe16, 0x217, 0x218, 0x219, 0x21a, 0x21b, 0x121c, 0x21d,
+	0x221, 0x622, 0x623, 0x224, 0x22a, 0x62b, 0x62c, 0x22d, 0xa2e, 0x22f, 0x230, 0x233, 0xe34, 0xe35, 0xe36, 0x237, 0x1238, 0x1239, 0x123a, 0x123b, 0x123c, 0x23d,
+	0x241, 0x242, 0x643, 0x644, 0x245, 0x249, 0x64a, 0x64b, 0x24c, 0x24d, 0xa4e, 0x24f, 0x253, 0xe54, 0xe55, 0xe56, 0x257, 0x1258, 0x259, 0x25a, 0x25b, 0x25c,
+	0x262, 0x663, 0x664, 0x265, 0x269, 0x66a, 0x66b, 0x26c, 0xa6d, 0x26e, 0x26f, 0x273, 0xe74, 0xe75, 0xe76, 0x277, 0x1278, 0x279,
+	0x282, 0x283, 0x684, 0x685, 0x286, 0x288, 0x689, 0x68a, 0x28b, 0x28c, 0xa8d, 0x28e, 0x293, 0xe94, 0xe95, 0xe96, 0x297, 0x1298, 0x299,
+	0x2a3, 0x6a4, 0x6a5, 0x2a6, 0x2a8, 0x6a9, 0x6aa, 0x2ab, 0xaac, 0x2ad, 0x2ae, 0x2b3, 0xeb4, 0xeb5, 0xeb6, 0x2b7, 0x12b8, 0x2b9,
+	0x2c3, 0x2c4, 0x6c5, 0x6c6, 0x2c7, 0x6c8, 0x6c9, 0x2ca, 0x2cb, 0xacc, 0x2cd, 0x2d3, 0xed4, 0xed5, 0xed6, 0x2d7, 0x12d8, 0x2d9,
+	0x2e4, 0x6e5, 0x6e6, 0x6e7, 0x6e8, 0x6e9, 0x2ea, 0xaeb, 0x2ec, 0x2ed, 0x2ef, 0x2f0, 0x2f1, 0x2f2, 0x2f3, 0xef4, 0xef5, 0xef6, 0x2f7, 0x2f8, 0x2f9, 0x2fa, 0x2fb, 0x2fc,
+	0x304, 0x305, 0x706, 0x707, 0x708, 0x309, 0x30a, 0xb0b, 0x30c, 0x30f, 0xf10, 0xf11, 0xf12, 0xf13, 0xf14, 0xf15, 0xf16, 0xf17, 0xf18, 0xf19, 0xf1a, 0x31b, 0x131c, 0x31d,
+	0x325, 0x726, 0x727, 0x728, 0x329, 0xb2a, 0x32b, 0x32c, 0x32f, 0xf30, 0xf31, 0xf32, 0xf33, 0xf34, 0xf35, 0xf36, 0xf37, 0xf38, 0xf39, 0xf3a, 0x33b, 0x133c, 0x33d,
+	0x345, 0x346, 0x747, 0x348, 0x349, 0xb4a, 0x34b, 0x34f, 0xf50, 0xf51, 0xf52, 0xf53, 0xf54, 0xf55, 0xf56, 0xf57, 0xf58, 0xf59, 0xf5a, 0x35b, 0x135c, 0x35d,
+	0x366, 0x767, 0x368, 0xb69, 0x36a, 0x36b, 0x36f, 0x370, 0x371, 0x372, 0x373, 0x374, 0x375, 0x376, 0x377, 0x378, 0x379, 0x37a, 0x37b, 0x137c, 0x37d,
+	0x386, 0x387, 0x388, 0xb89, 0x38a, 0x38f, 0x1390, 0x1391, 0x1392, 0x1393, 0x1394, 0x1395, 0x1396, 0x1397, 0x1398, 0x1399, 0x139a, 0x139b, 0x39c, 0x39d,
+	0x3a7, 0x3a8, 0x3a9, 0x3b0, 0x3b1, 0x3b2, 0x3b3, 0x3b4, 0x3b5, 0x3b6, 0x3b7, 0x3b8, 0x3b9, 0x3ba, 0x3bb, 0x3bc
+};
+/***************************************************************************************************
+	Static Image: font
+	Flash Memory Used: 1.27 kB
+	Description:
+		The image describes encoding for every ASCII character. The format is as follows:
+		
+			font[n*5]:
+				c - ASCII decimal code (contains group of five 8-bit codes dC0[7:0] -> dC4[7:0])
+					<dC0.7>...<dC0.0>, <dC1.7>...<dC1.0>,..., <dC4.7>...<dC4.0>
+					
+					dC0[7:0]: Pixel states of character 'c's 1st column from left (furthest left)
+					dC1[7:0]: Pixel states of character 'c's 2nd column from left
+					...
+					dC4[7:0]: Pixel states of character 'c's 5th column from left (furthest right)
+					
+			Each group of pixel states determine whether each pixel is drawn.
+					
+		
+	Drawing Procedure:			
+		1. An ASCII character is passed in to the character drawing function, which is multiplied
+		   by 5 to get to the correct corresponding ASCII character.
+		
+		2. Each column is iterated through, drawing pixels serially from top to bottom.
+		
+		3. A padding column drawn as a final sixth column (for distinction between characters).
+		
+***************************************************************************************************/
 static const unsigned char font[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00,
 	0x3E, 0x5B, 0x4F, 0x5B, 0x3E,
@@ -373,4 +727,3 @@ static const unsigned char font[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00
 };
 #endif
-

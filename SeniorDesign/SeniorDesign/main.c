@@ -27,10 +27,11 @@
 #include <avr/interrupt.h>
 #include "header_MACROS.h"
 #include "header_FUNCTIONS.h"
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #include "util/delay.h"
 #include "header_LCD.h"
 #include "header_BUZZER.h"
+#include "header_APPLICATION.h"
 #include <string.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Temporary test function prototype */
@@ -49,20 +50,9 @@ const char test_msg[51] = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n
 /* GPS INTERRUPT FOR PARSING */
 ISR(USARTRXC_vect){
 	
-	
 	//Receive the byte to empty out the buffer, then operate on it:
 	char vector_data = GPS_receive_byte();
-	text_buffer[0] = vector_data;
-	LCD_print_str(text_buffer);
-	text_x++;
-	if(text_x >= 4){
-		text_x = 0;
-		text_column = text_column + 12;
-		if(text_column > 200){text_column = 0;}
-		LCD_print_str("\n");
-	}
-	
-	
+
 	//Always start with an overflow check:
 	// -Since the sentence length won't exceed 120, we should worry if it gets to 121.
 	// -Should this happen, a hard reset is necessary, so we'll do exactly that.
@@ -84,7 +74,6 @@ ISR(USARTRXC_vect){
 	else if(GPS_MESSAGE_READY){
 		GPS_BUFFER[GPS_BUFFER_INDEX] = vector_data;
 		GPS_BUFFER_INDEX++;
-		LCD_print_str(vector_data);
 	}
 	
 }
@@ -123,36 +112,47 @@ int main(void)
 	//Find the last entry in memory, then check it byte-wise for both the beginning of
 	//an entry ('%') as well as a few other entry-confirming characters.
 	
+	/* TIMERS/BUZZER */
+	
+
+	/* DISPLAY */
+	uint16_t text_x = 92, text_y = 184;
+	LCD_init_system();				// Init LCD
+	init_buzzer();					// Init Buzzer
+	APP_generate_menu(LOADINGMENU);	// Display Loading Screen
+	LCD_setText_all(text_x,text_y,1,WHITE,GREY);
+	_delay_ms(20);
+	
+	
 	/* GPS */
 	//Initialize communication, then configure MTK3339 firmware, then open up.
 	GPS_BUFFER_INDEX = 0;			//Begin at start of data buffer.
 	GPS_MESSAGE_READY= 0;			//Buffer will begin to fill normally.
+	LCD_print_str("Initializing USART...    ");
 	GPS_init_USART(MY_UBBR);
+	
+	LCD_setText_cursor(text_x,text_y);
+	LCD_print_str("Configuring Firmware...  ");
 	GPS_configure_firmware();
-	GPS_enable_stream();
 	
-	/* TIMERS/BUZZER */
+	LCD_setText_cursor(text_x,text_y);
+	LCD_print_str("Enabling Stream...       ");
+	APP_generate_menu(DEBUGMENU);
+	GPS_enable_stream();			//Begin receiving data
 
-	
-	/* DISPLAY */
-	GPS_enable_stream();
-	
 	/* INTERRUPTS */
-	//sei();
+	sei();
 	
+	/* DEBUG */
+	char gay = 0;
+	
+
 	/* P R O G R A M */
 	//Dormant program loop for testing.
     while (1){
-		
-		_delay_ms(5000);
-		//Send a firmware command serially:
-		for (int i = 0; i < 51; i++)
-		{
-			GPS_configure_firmware();
-		}
-		
-		
+		gay = !gay;
 	}
+	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								FUNCTION BUILD SITE  								              //
@@ -177,7 +177,5 @@ void HYBRID_print_GPS_data(){
 	
 	//Reset cursor
 	LCD_setText_cursor(0,0);
-	
-	
-	
+
 }

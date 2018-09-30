@@ -26,10 +26,14 @@ c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
                               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o) (__fp_split3)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
                               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o) (__fp_zero)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+                              driver_LCD.o (__udivmodhi4)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+                              driver_LCD.o (__divmodhi4)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
                               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o (exit)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                              driver_GPS.o (__do_copy_data)
+                              driver_APPLICATION.o (__do_copy_data)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
                               driver_EEPROM.o (__do_clear_bss)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
@@ -49,14 +53,14 @@ Allocating common symbols
 Common symbol       size              file
 
 NV_SYSTEM_STATUS_1  0x1               driver_EEPROM.o
-grid                0x11              driver_LCD.o
+grid                0x13              driver_LCD.o
 arrow               0x9               driver_LCD.o
 NV_USER_PREFERENCES_0
                     0x1               driver_EEPROM.o
 Card_Type           0x1               driver_SD.o
 present_state       0x1               table_TRANSITION.o
 GPS_BUFFER          0x7d              driver_GPS.o
-SYS_GPS             0x18              driver_GPS.o
+SYS_GPS             0x41              driver_GPS.o
 NV_USER_PREFERENCES_1
                     0x1               driver_EEPROM.o
 NV_SYSTEM_STATUS_0  0x1               driver_EEPROM.o
@@ -65,11 +69,16 @@ Discarded input sections
 
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+ .text          0x00000000        0x0 driver_APPLICATION.o
+ .data          0x00000000        0x0 driver_APPLICATION.o
+ .bss           0x00000000        0x0 driver_APPLICATION.o
+ .text.APP_generate_menu_main
+                0x00000000        0x2 driver_APPLICATION.o
+ .text.APP_generate_menu_settings
+                0x00000000        0x2 driver_APPLICATION.o
  .text          0x00000000        0x0 driver_BUZZER.o
  .data          0x00000000        0x0 driver_BUZZER.o
  .bss           0x00000000        0x0 driver_BUZZER.o
- .text.init_buzzer
-                0x00000000        0xa driver_BUZZER.o
  .text.delay_ms
                 0x00000000       0x28 driver_BUZZER.o
  .text.tone     0x00000000       0x50 driver_BUZZER.o
@@ -78,16 +87,6 @@ Discarded input sections
  .text.tone_END
                 0x00000000        0x8 driver_BUZZER.o
  .text.play     0x00000000       0x56 driver_BUZZER.o
- .debug_info    0x00000000      0x2a4 driver_BUZZER.o
- .debug_abbrev  0x00000000      0x1be driver_BUZZER.o
- .debug_loc     0x00000000      0x215 driver_BUZZER.o
- .debug_aranges
-                0x00000000       0x48 driver_BUZZER.o
- .debug_ranges  0x00000000       0x38 driver_BUZZER.o
- .debug_line    0x00000000      0x213 driver_BUZZER.o
- .debug_str     0x00000000      0x243 driver_BUZZER.o
- .comment       0x00000000       0x31 driver_BUZZER.o
- .debug_frame   0x00000000       0xa0 driver_BUZZER.o
  .text          0x00000000        0x0 driver_EEPROM.o
  .data          0x00000000        0x0 driver_EEPROM.o
  .bss           0x00000000        0x0 driver_EEPROM.o
@@ -98,8 +97,6 @@ Discarded input sections
  .bss           0x00000000        0x0 driver_GPS.o
  .text.GPS_disable_stream
                 0x00000000        0x6 driver_GPS.o
- .text.GPS_send_byte
-                0x00000000        0x8 driver_GPS.o
  .rodata.FIRM_FIX_1HZ
                 0x00000000       0x1a driver_GPS.o
  .rodata.FIRM_ECHO_1HZ
@@ -113,37 +110,44 @@ Discarded input sections
  .text          0x00000000        0x0 driver_LCD.o
  .data          0x00000000        0x0 driver_LCD.o
  .bss           0x00000000        0x0 driver_LCD.o
- .text.LCD_setText_cursor
-                0x00000000        0xe driver_LCD.o
- .text.LCD_setText_size
-                0x00000000       0x10 driver_LCD.o
  .text.LCD_setText_color
                 0x00000000        0xe driver_LCD.o
- .text.LCD_setText_all
-                0x00000000       0x36 driver_LCD.o
  .text.LCD_moveTextCursor
-                0x00000000       0x4e driver_LCD.o
- .text.LCD_spi_init
-                0x00000000        0xe driver_LCD.o
- .text.LCD_init_system
-                0x00000000      0x206 driver_LCD.o
+                0x00000000       0x64 driver_LCD.o
+ .text.LCD_get_grid
+                0x00000000       0x12 driver_LCD.o
+ .text.LCD_get_arrow
+                0x00000000       0x12 driver_LCD.o
  .text.LCD_drawCircle_filled
                 0x00000000       0xf2 driver_LCD.o
  .text.LCD_drawCircle_empty
                 0x00000000      0x108 driver_LCD.o
  .text.LCD_init_arrow
-                0x00000000      0x26e driver_LCD.o
- .text.LCD_drawRect_empty
-                0x00000000       0x7a driver_LCD.o
- .text.LCD_clear
-                0x00000000       0x20 driver_LCD.o
+                0x00000000      0x284 driver_LCD.o
  .text.LCD_init_grid
-                0x00000000      0x124 driver_LCD.o
+                0x00000000      0x12a driver_LCD.o
  .text.LCD_print_num
                 0x00000000       0x3e driver_LCD.o
- .progmem.data.arrow_BMP
+ .text.LCD_gridSmart_drawVL
+                0x00000000       0x4a driver_LCD.o
+ .text.LCD_gridSmart_drawHL
+                0x00000000       0x4c driver_LCD.o
+ .text.LCD_gridSmart_eraseVL
+                0x00000000       0x94 driver_LCD.o
+ .rodata.str1.1
+                0x00000000        0xf driver_LCD.o
+ .text.LCD_gridSmart_eraseHL
+                0x00000000       0xc2 driver_LCD.o
+ .text.LCD_gridSmart_addOff
+                0x00000000       0xc0 driver_LCD.o
+ .text.LCD_shiftGrid
+                0x00000000      0x176 driver_LCD.o
+ .text.LCD_zoomGridIn
+                0x00000000      0x1e6 driver_LCD.o
+ .text.LCD_zoomGridOut
+                0x00000000      0x1ec driver_LCD.o
+ .progmem.data.arrow_BMPs
                 0x00000000      0x828 driver_LCD.o
- COMMON         0x00000000       0x1a driver_LCD.o
  .text          0x00000000        0x0 driver_SD.o
  .data          0x00000000        0x0 driver_SD.o
  .bss           0x00000000        0x0 driver_SD.o
@@ -177,6 +181,11 @@ Discarded input sections
                 0x00000000       0x84 main.o
  .rodata.test_msg
                 0x00000000       0x33 main.o
+ .bss.text_x    0x00000000        0x1 main.o
+ .bss.text_column
+                0x00000000        0x1 main.o
+ .data.text_buffer
+                0x00000000        0x2 main.o
  .text          0x00000000        0x0 table_TRANSITION.o
  .data          0x00000000        0x0 table_TRANSITION.o
  .bss           0x00000000        0x0 table_TRANSITION.o
@@ -273,6 +282,38 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
  .text.avr-libc.fplib
                 0x00000000        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x00000000       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.div
+                0x00000000       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -403,6 +444,7 @@ user_signatures  0x00850000         0x00000400         rw !x
 Linker script and memory map
 
 LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+LOAD driver_APPLICATION.o
 LOAD driver_BUZZER.o
 LOAD driver_EEPROM.o
 LOAD driver_GPS.o
@@ -517,7 +559,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xd2a
+.text           0x00000000     0x176c
  *(.vectors)
  .vectors       0x00000000       0x54 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
                 0x00000000                __vector_default
@@ -535,36 +577,38 @@ END GROUP
  *(.progmem*)
  .progmem.data.font
                 0x00000054      0x4fb driver_LCD.o
-                0x00000550                . = ALIGN (0x2)
- *fill*         0x0000054f        0x1 
+ .progmem.data.logo_BMP
+                0x0000054f      0x404 driver_LCD.o
+                0x00000954                . = ALIGN (0x2)
+ *fill*         0x00000953        0x1 
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
  *(.lowtext*)
-                0x00000550                __ctors_start = .
+                0x00000954                __ctors_start = .
  *(.ctors)
-                0x00000550                __ctors_end = .
-                0x00000550                __dtors_start = .
+                0x00000954                __ctors_end = .
+                0x00000954                __dtors_start = .
  *(.dtors)
-                0x00000550                __dtors_end = .
+                0x00000954                __dtors_end = .
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x00000550        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
-                0x00000550                __init
+ .init0         0x00000954        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+                0x00000954                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x00000550        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+ .init2         0x00000954        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000055c       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                0x0000055c                __do_copy_data
- .init4         0x00000572       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
-                0x00000572                __do_clear_bss
+ .init4         0x00000960       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+                0x00000960                __do_copy_data
+ .init4         0x00000976       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+                0x00000976                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -575,102 +619,144 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x00000582        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+ .init9         0x00000986        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
  *(.init9)
  *(.text)
- .text          0x0000058a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
-                0x0000058a                __vector_1
-                0x0000058a                __vector_12
-                0x0000058a                __bad_interrupt
-                0x0000058a                __vector_6
-                0x0000058a                __vector_3
-                0x0000058a                __vector_13
-                0x0000058a                __vector_17
-                0x0000058a                __vector_19
-                0x0000058a                __vector_7
-                0x0000058a                __vector_5
-                0x0000058a                __vector_4
-                0x0000058a                __vector_9
-                0x0000058a                __vector_2
-                0x0000058a                __vector_15
-                0x0000058a                __vector_8
-                0x0000058a                __vector_14
-                0x0000058a                __vector_10
-                0x0000058a                __vector_16
-                0x0000058a                __vector_18
-                0x0000058a                __vector_20
-                0x0000058e                . = ALIGN (0x2)
+ .text          0x0000098e        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
+                0x0000098e                __vector_1
+                0x0000098e                __vector_12
+                0x0000098e                __bad_interrupt
+                0x0000098e                __vector_6
+                0x0000098e                __vector_3
+                0x0000098e                __vector_13
+                0x0000098e                __vector_17
+                0x0000098e                __vector_19
+                0x0000098e                __vector_7
+                0x0000098e                __vector_5
+                0x0000098e                __vector_4
+                0x0000098e                __vector_9
+                0x0000098e                __vector_2
+                0x0000098e                __vector_15
+                0x0000098e                __vector_8
+                0x0000098e                __vector_14
+                0x0000098e                __vector_10
+                0x0000098e                __vector_16
+                0x0000098e                __vector_18
+                0x0000098e                __vector_20
+                0x00000992                . = ALIGN (0x2)
  *(.text.*)
+ .text.APP_generate_menu_loading
+                0x00000992       0x4e driver_APPLICATION.o
+                0x00000992                APP_generate_menu_loading
+ .text.APP_generate_menu_debug
+                0x000009e0       0xa6 driver_APPLICATION.o
+                0x000009e0                APP_generate_menu_debug
+ .text.APP_generate_menu
+                0x00000a86       0x26 driver_APPLICATION.o
+                0x00000a86                APP_generate_menu
+ .text.init_buzzer
+                0x00000aac        0xa driver_BUZZER.o
+                0x00000aac                init_buzzer
  .text.EEPROM_enable
-                0x0000058e        0xa driver_EEPROM.o
-                0x0000058e                EEPROM_enable
+                0x00000ab6        0xa driver_EEPROM.o
+                0x00000ab6                EEPROM_enable
  .text.EEPROM_read
-                0x00000598        0xe driver_EEPROM.o
-                0x00000598                EEPROM_read
+                0x00000ac0        0xe driver_EEPROM.o
+                0x00000ac0                EEPROM_read
  .text.EEPROM_recovery
-                0x000005a6       0x32 driver_EEPROM.o
-                0x000005a6                EEPROM_recovery
+                0x00000ace       0x32 driver_EEPROM.o
+                0x00000ace                EEPROM_recovery
  .text.GPS_init_USART
-                0x000005d8        0xe driver_GPS.o
-                0x000005d8                GPS_init_USART
+                0x00000b00        0xe driver_GPS.o
+                0x00000b00                GPS_init_USART
  .text.GPS_USART_Transmit
-                0x000005e6        0x8 driver_GPS.o
-                0x000005e6                GPS_USART_Transmit
+                0x00000b0e        0x8 driver_GPS.o
+                0x00000b0e                GPS_USART_Transmit
  .text.GPS_configure_firmware
-                0x000005ee       0x4e driver_GPS.o
-                0x000005ee                GPS_configure_firmware
+                0x00000b16       0x4e driver_GPS.o
+                0x00000b16                GPS_configure_firmware
+ .text.GPS_send_byte
+                0x00000b64        0x8 driver_GPS.o
+                0x00000b64                GPS_send_byte
  .text.GPS_receive_byte
-                0x0000063c        0x8 driver_GPS.o
-                0x0000063c                GPS_receive_byte
+                0x00000b6c        0x8 driver_GPS.o
+                0x00000b6c                GPS_receive_byte
  .text.GPS_flush_buffer
-                0x00000644       0x1a driver_GPS.o
-                0x00000644                GPS_flush_buffer
+                0x00000b74       0x1a driver_GPS.o
+                0x00000b74                GPS_flush_buffer
  .text.GPS_enable_stream
-                0x0000065e        0xc driver_GPS.o
-                0x0000065e                GPS_enable_stream
+                0x00000b8e        0xc driver_GPS.o
+                0x00000b8e                GPS_enable_stream
+ .text.GPS_TX_PARSE_ERROR
+                0x00000b9a       0x74 driver_GPS.o
+                0x00000b9a                GPS_TX_PARSE_ERROR
  .text.GPS_parse_data
-                0x0000066a      0x260 driver_GPS.o
-                0x0000066a                GPS_parse_data
+                0x00000c0e      0x32e driver_GPS.o
+                0x00000c0e                GPS_parse_data
+ .text.LCD_setText_cursor
+                0x00000f3c       0x12 driver_LCD.o
+                0x00000f3c                LCD_setText_cursor
+ .text.LCD_setText_size
+                0x00000f4e       0x10 driver_LCD.o
+                0x00000f4e                LCD_setText_size
+ .text.LCD_setText_all
+                0x00000f5e       0x3a driver_LCD.o
+                0x00000f5e                LCD_setText_all
+ .text.LCD_spi_init
+                0x00000f98        0xe driver_LCD.o
+                0x00000f98                LCD_spi_init
  .text.LCD_spi_send
-                0x000008ca        0x8 driver_LCD.o
-                0x000008ca                LCD_spi_send
+                0x00000fa6        0x8 driver_LCD.o
+                0x00000fa6                LCD_spi_send
  .text.LCD_writecommand8
-                0x000008d2       0x16 driver_LCD.o
-                0x000008d2                LCD_writecommand8
+                0x00000fae        0xe driver_LCD.o
+                0x00000fae                LCD_writecommand8
  .text.LCD_writedata8
-                0x000008e8       0x14 driver_LCD.o
-                0x000008e8                LCD_writedata8
+                0x00000fbc        0xc driver_LCD.o
+                0x00000fbc                LCD_writedata8
+ .text.LCD_init_system
+                0x00000fc8      0x206 driver_LCD.o
+                0x00000fc8                LCD_init_system
  .text.LCD_pushColor
-                0x000008fc       0x14 driver_LCD.o
-                0x000008fc                LCD_pushColor
+                0x000011ce       0x14 driver_LCD.o
+                0x000011ce                LCD_pushColor
  .text.LCD_setAddress
-                0x00000910       0x74 driver_LCD.o
-                0x00000910                LCD_setAddress
+                0x000011e2       0x74 driver_LCD.o
+                0x000011e2                LCD_setAddress
  .text.LCD_drawPixel
-                0x00000984       0x1a driver_LCD.o
-                0x00000984                LCD_drawPixel
+                0x00001256       0x1a driver_LCD.o
+                0x00001256                LCD_drawPixel
  .text.LCD_drawRect_filled
-                0x0000099e       0x76 driver_LCD.o
-                0x0000099e                LCD_drawRect_filled
+                0x00001270       0x76 driver_LCD.o
+                0x00001270                LCD_drawRect_filled
+ .text.LCD_drawRect_empty
+                0x000012e6       0x7a driver_LCD.o
+                0x000012e6                LCD_drawRect_empty
+ .text.LCD_drawLogo
+                0x00001360       0xd0 driver_LCD.o
+                0x00001360                LCD_drawLogo
+ .text.LCD_clear
+                0x00001430       0x20 driver_LCD.o
+                0x00001430                LCD_clear
  .text.LCD_drawChar
-                0x00000a14      0x126 driver_LCD.o
-                0x00000a14                LCD_drawChar
+                0x00001450      0x126 driver_LCD.o
+                0x00001450                LCD_drawChar
  .text.LCD_printChar
-                0x00000b3a       0x72 driver_LCD.o
-                0x00000b3a                LCD_printChar
+                0x00001576       0x76 driver_LCD.o
+                0x00001576                LCD_printChar
  .text.LCD_print_str
-                0x00000bac       0x3a driver_LCD.o
-                0x00000bac                LCD_print_str
+                0x000015ec       0x3a driver_LCD.o
+                0x000015ec                LCD_print_str
  .text.__vector_11
-                0x00000be6       0xe2 main.o
-                0x00000be6                __vector_11
- .text.main     0x00000cc8       0x5e main.o
-                0x00000cc8                main
-                0x00000d26                . = ALIGN (0x2)
+                0x00001626       0x9e main.o
+                0x00001626                __vector_11
+ .text.main     0x000016c4       0xa4 main.o
+                0x000016c4                main
+                0x00001768                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000d26        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000d26                _exit
-                0x00000d26                exit
+ .fini9         0x00001768        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00001768                _exit
+                0x00001768                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -689,72 +775,81 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000d26        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00001768        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000d2a                _etext = .
+                0x0000176c                _etext = .
 
-.data           0x00800060       0x84 load address 0x00000d2a
+.data           0x00800060      0x19c load address 0x0000176c
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
- .data.pencil   0x00800060        0x9 driver_LCD.o
+ .data.pencil   0x00800060        0xb driver_LCD.o
                 0x00800060                pencil
- .data.text_buffer
-                0x00800069        0x2 main.o
-                0x00800069                text_buffer
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
- .rodata.FIRM_FIX_5HZ
-                0x0080006b       0x19 driver_GPS.o
-                0x0080006b                FIRM_FIX_5HZ
- .rodata.FIRM_ECHO_10HZ
-                0x00800084       0x11 driver_GPS.o
-                0x00800084                FIRM_ECHO_10HZ
- .rodata.FIRM_RMC
-                0x00800095       0x33 driver_GPS.o
-                0x00800095                FIRM_RMC
  .rodata.str1.1
-                0x008000c8       0x1b main.o
+                0x0080006b       0x96 driver_APPLICATION.o
+ .rodata.MSG_GPRMC_NOT_RECEIVED
+                0x00800101       0x14 driver_GPS.o
+                0x00800101                MSG_GPRMC_NOT_RECEIVED
+ .rodata.MSG_REPORT_UTC
+                0x00800115        0x7 driver_GPS.o
+                0x00800115                MSG_REPORT_UTC
+ .rodata.MSG_DATA_ERROR
+                0x0080011c        0xf driver_GPS.o
+                0x0080011c                MSG_DATA_ERROR
+ .rodata.FIRM_FIX_5HZ
+                0x0080012b       0x19 driver_GPS.o
+                0x0080012b                FIRM_FIX_5HZ
+ .rodata.FIRM_ECHO_10HZ
+                0x00800144       0x11 driver_GPS.o
+                0x00800144                FIRM_ECHO_10HZ
+ .rodata.FIRM_RMC
+                0x00800155       0x33 driver_GPS.o
+                0x00800155                FIRM_RMC
+ .rodata.logo_ColorCode
+                0x00800188        0xc driver_LCD.o
+ .rodata.str1.1
+                0x00800194       0x67 main.o
+                                 0x69 (size before relaxing)
  *(.gnu.linkonce.r*)
-                0x008000e4                . = ALIGN (0x2)
- *fill*         0x008000e3        0x1 
-                0x008000e4                _edata = .
-                0x008000e4                PROVIDE (__data_end, .)
+                0x008001fc                . = ALIGN (0x2)
+ *fill*         0x008001fb        0x1 
+                0x008001fc                _edata = .
+                0x008001fc                PROVIDE (__data_end, .)
 
-.bss            0x008000e4       0x9d
-                0x008000e4                PROVIDE (__bss_start, .)
+.bss            0x008001fc       0xe0
+                0x008001fc                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss.GPS_MESSAGE_READY
-                0x008000e4        0x1 driver_GPS.o
-                0x008000e4                GPS_MESSAGE_READY
+                0x008001fc        0x1 driver_GPS.o
+                0x008001fc                GPS_MESSAGE_READY
  .bss.GPS_BUFFER_INDEX
-                0x008000e5        0x1 driver_GPS.o
-                0x008000e5                GPS_BUFFER_INDEX
- .bss.text_x    0x008000e6        0x1 main.o
-                0x008000e6                text_x
- .bss.text_column
-                0x008000e7        0x1 main.o
-                0x008000e7                text_column
+                0x008001fd        0x1 driver_GPS.o
+                0x008001fd                GPS_BUFFER_INDEX
  *(COMMON)
- COMMON         0x008000e8        0x4 driver_EEPROM.o
-                0x008000e8                NV_SYSTEM_STATUS_1
-                0x008000e9                NV_USER_PREFERENCES_0
-                0x008000ea                NV_USER_PREFERENCES_1
-                0x008000eb                NV_SYSTEM_STATUS_0
- COMMON         0x008000ec       0x95 driver_GPS.o
-                0x008000ec                GPS_BUFFER
-                0x00800169                SYS_GPS
-                0x00800181                PROVIDE (__bss_end, .)
-                0x00000d2a                __data_load_start = LOADADDR (.data)
-                0x00000dae                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008001fe        0x4 driver_EEPROM.o
+                0x008001fe                NV_SYSTEM_STATUS_1
+                0x008001ff                NV_USER_PREFERENCES_0
+                0x00800200                NV_USER_PREFERENCES_1
+                0x00800201                NV_SYSTEM_STATUS_0
+ COMMON         0x00800202       0xbe driver_GPS.o
+                0x00800202                GPS_BUFFER
+                0x0080027f                SYS_GPS
+ COMMON         0x008002c0       0x1c driver_LCD.o
+                0x008002c0                grid
+                0x008002d3                arrow
+                0x008002dc                PROVIDE (__bss_end, .)
+                0x0000176c                __data_load_start = LOADADDR (.data)
+                0x00001908                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800181        0x0
+.noinit         0x008002dc        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800181                _end = .
+                0x008002dc                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -796,8 +891,10 @@ END GROUP
 
 .comment        0x00000000       0x30
  *(.comment)
- .comment       0x00000000       0x30 driver_EEPROM.o
+ .comment       0x00000000       0x30 driver_APPLICATION.o
                                  0x31 (size before relaxing)
+ .comment       0x00000030       0x31 driver_BUZZER.o
+ .comment       0x00000030       0x31 driver_EEPROM.o
  .comment       0x00000030       0x31 driver_GPS.o
  .comment       0x00000030       0x31 driver_LCD.o
  .comment       0x00000030       0x31 main.o
@@ -822,69 +919,87 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x1a0
+.debug_aranges  0x00000000      0x288
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x38 driver_EEPROM.o
+                0x00000000       0x40 driver_APPLICATION.o
  .debug_aranges
-                0x00000038       0x60 driver_GPS.o
+                0x00000040       0x48 driver_BUZZER.o
  .debug_aranges
-                0x00000098       0xd8 driver_LCD.o
+                0x00000088       0x38 driver_EEPROM.o
  .debug_aranges
-                0x00000170       0x30 main.o
+                0x000000c0       0x68 driver_GPS.o
+ .debug_aranges
+                0x00000128      0x130 driver_LCD.o
+ .debug_aranges
+                0x00000258       0x30 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3841
+.debug_info     0x00000000     0x62ef
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x52e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
- .debug_info    0x0000052e      0x1b5 driver_EEPROM.o
- .debug_info    0x000006e3      0x4a3 driver_GPS.o
- .debug_info    0x00000b86     0x1942 driver_LCD.o
- .debug_info    0x000024c8     0x1379 main.o
+ .debug_info    0x0000052e     0x17bd driver_APPLICATION.o
+ .debug_info    0x00001ceb      0x2a4 driver_BUZZER.o
+ .debug_info    0x00001f8f      0x1bc driver_EEPROM.o
+ .debug_info    0x0000214b      0x786 driver_GPS.o
+ .debug_info    0x000028d1     0x206d driver_LCD.o
+ .debug_info    0x0000493e     0x19b1 main.o
 
-.debug_abbrev   0x00000000      0xcb7
+.debug_abbrev   0x00000000     0x109f
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4e7 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
- .debug_abbrev  0x000004e7       0xda driver_EEPROM.o
- .debug_abbrev  0x000005c1      0x19b driver_GPS.o
- .debug_abbrev  0x0000075c      0x361 driver_LCD.o
- .debug_abbrev  0x00000abd      0x1fa main.o
+ .debug_abbrev  0x000004e7      0x1b7 driver_APPLICATION.o
+ .debug_abbrev  0x0000069e      0x1be driver_BUZZER.o
+ .debug_abbrev  0x0000085c       0xda driver_EEPROM.o
+ .debug_abbrev  0x00000936      0x1bf driver_GPS.o
+ .debug_abbrev  0x00000af5      0x375 driver_LCD.o
+ .debug_abbrev  0x00000e6a      0x235 main.o
 
-.debug_line     0x00000000      0xfb7
+.debug_line     0x00000000     0x19b3
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0x1a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
- .debug_line    0x0000001a      0x150 driver_EEPROM.o
- .debug_line    0x0000016a      0x280 driver_GPS.o
- .debug_line    0x000003ea      0x918 driver_LCD.o
- .debug_line    0x00000d02      0x2b5 main.o
+ .debug_line    0x0000001a      0x1cf driver_APPLICATION.o
+ .debug_line    0x000001e9      0x213 driver_BUZZER.o
+ .debug_line    0x000003fc      0x150 driver_EEPROM.o
+ .debug_line    0x0000054c      0x3a7 driver_GPS.o
+ .debug_line    0x000008f3      0xe16 driver_LCD.o
+ .debug_line    0x00001709      0x2aa main.o
 
-.debug_frame    0x00000000      0x650
+.debug_frame    0x00000000      0x990
  *(.debug_frame)
- .debug_frame   0x00000000       0x54 driver_EEPROM.o
- .debug_frame   0x00000054       0xc8 driver_GPS.o
- .debug_frame   0x0000011c      0x494 driver_LCD.o
- .debug_frame   0x000005b0       0xa0 main.o
+ .debug_frame   0x00000000       0x7c driver_APPLICATION.o
+ .debug_frame   0x0000007c       0xa0 driver_BUZZER.o
+ .debug_frame   0x0000011c       0x54 driver_EEPROM.o
+ .debug_frame   0x00000170       0xf0 driver_GPS.o
+ .debug_frame   0x00000260      0x690 driver_LCD.o
+ .debug_frame   0x000008f0       0xa0 main.o
 
-.debug_str      0x00000000      0x91c
+.debug_str      0x00000000      0xc6c
  *(.debug_str)
  .debug_str     0x00000000      0x1af c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5/crtatmega16a.o
- .debug_str     0x000001af      0x1e8 driver_EEPROM.o
-                                0x221 (size before relaxing)
- .debug_str     0x00000397      0x1ee driver_GPS.o
-                                0x377 (size before relaxing)
- .debug_str     0x00000585      0x311 driver_LCD.o
-                                0x4ce (size before relaxing)
- .debug_str     0x00000896       0x86 main.o
-                                0x40d (size before relaxing)
+ .debug_str     0x000001af      0x34c driver_APPLICATION.o
+                                0x393 (size before relaxing)
+ .debug_str     0x000004fb       0xbb driver_BUZZER.o
+                                0x243 (size before relaxing)
+ .debug_str     0x000005b6       0xa6 driver_EEPROM.o
+                                0x22a (size before relaxing)
+ .debug_str     0x0000065c      0x27a driver_GPS.o
+                                0x415 (size before relaxing)
+ .debug_str     0x000008d6      0x30e driver_LCD.o
+                                0x5bc (size before relaxing)
+ .debug_str     0x00000be4       0x88 main.o
+                                0x4fb (size before relaxing)
 
-.debug_loc      0x00000000     0x2120
+.debug_loc      0x00000000     0x302e
  *(.debug_loc)
- .debug_loc     0x00000000       0x26 driver_EEPROM.o
- .debug_loc     0x00000026      0x1a4 driver_GPS.o
- .debug_loc     0x000001ca     0x1d85 driver_LCD.o
- .debug_loc     0x00001f4f      0x1d1 main.o
+ .debug_loc     0x00000000       0xca driver_APPLICATION.o
+ .debug_loc     0x000000ca      0x215 driver_BUZZER.o
+ .debug_loc     0x000002df       0x26 driver_EEPROM.o
+ .debug_loc     0x00000305      0x448 driver_GPS.o
+ .debug_loc     0x0000074d     0x2754 driver_LCD.o
+ .debug_loc     0x00002ea1      0x18d main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -904,12 +1019,14 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x2a0
+.debug_ranges   0x00000000      0x380
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x28 driver_EEPROM.o
- .debug_ranges  0x00000028       0x50 driver_GPS.o
- .debug_ranges  0x00000078      0x208 driver_LCD.o
- .debug_ranges  0x00000280       0x20 main.o
+ .debug_ranges  0x00000000       0x30 driver_APPLICATION.o
+ .debug_ranges  0x00000030       0x38 driver_BUZZER.o
+ .debug_ranges  0x00000068       0x28 driver_EEPROM.o
+ .debug_ranges  0x00000090       0x58 driver_GPS.o
+ .debug_ranges  0x000000e8      0x278 driver_LCD.o
+ .debug_ranges  0x00000360       0x20 main.o
 
 .debug_macro
  *(.debug_macro)

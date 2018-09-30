@@ -37,8 +37,8 @@
  */ 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/io.h>
-#define F_CPU 16000000UL
-#define FOSC 16000000
+#define F_CPU 8000000UL
+#define FOSC 8000000
 #include "util/delay.h"
 #include "header_FUNCTIONS.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +152,7 @@ void GPS_send_byte(char data);
 char GPS_receive_byte(void);
 void GPS_flush_buffer(void);
 void GPS_parse_data(void);
+void GPS_TX_PARSE_ERROR(void);
 
 /* FIRMWARE COMMANDS */
 //Or at least the ones we care about:
@@ -162,6 +163,12 @@ const unsigned char FIRM_ECHO_1HZ[18] =		"$PMTK220,1000*1F\r\n";
 const unsigned char FIRM_ECHO_10HZ[17] =	"$PMTK220,100*2F\r\n";
 const unsigned char FIRM_FIX_1HZ[26] =		"$PMTK300,1000,0,0,0,0*1C\r\n";
 const unsigned char FIRM_FIX_5HZ[25] =		"$PMTK300,200,0,0,0,0*2F\r\n";
+
+/* BUILT-IN MESSAGES */
+//These messages always contain their length as the first character:
+const unsigned char MSG_DATA_ERROR[15] =			"DATA NOT VALID!";
+const unsigned char MSG_REPORT_UTC[7] =				"[UTC] ";
+const unsigned char MSG_GPRMC_NOT_RECEIVED[20] =	"GPRMC NOT AVAILABLE!";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 	FUNCTION:		GPS_configure_firmware(void);
@@ -358,8 +365,12 @@ void GPS_parse_data(void){
 			//Continue normally!
 		}
 	else{
-		//Enter an interminable loop for debugging:
-		//while(1);		//YOU FAILED!
+		//When the GPRMC is not detected, we need to let the serial monitor know.
+		for(int i = 0; i < 20; i++){
+			GPS_send_byte(MSG_GPRMC_NOT_RECEIVED[i]);
+		}
+		GPS_send_byte('\r');
+		GPS_send_byte('\n');
 	}
 	
 	//4. Unpack all of the data between '$' and '*'. Store it on the SYS_GPS object.
@@ -369,41 +380,103 @@ void GPS_parse_data(void){
 		SYS_GPS.UTC_S = ((GPS_BUFFER[RMC_UTC + 4] * 10) + (GPS_BUFFER[RMC_UTC + 5]));
 		//B. STATUS:
 		SYS_GPS.STATUS = GPS_BUFFER[RMC_STATUS];
+// LOGICAL CHECK:
+// If the data received is NOT valid, then the program will skip over the rest of the parse, and send out a
+// "no fix" message:
+if (SYS_GPS.STATUS == 'V'){
+	//Send the error message containing the UTC data:
+	GPS_TX_PARSE_ERROR();
+	GPS_enable_stream();
+	return;	
+}
 		//C. LATITUDE:
-		SYS_GPS.latitude_H =	(	(GPS_BUFFER[RMC_LAT] * 1000) + 
-									(GPS_BUFFER[RMC_LAT + 1] * 100)+
-									(GPS_BUFFER[RMC_LAT + 2] * 10)+
-									(GPS_BUFFER[RMC_LAT + 3])	);
-		SYS_GPS.latitude_L =	(	(GPS_BUFFER[RMC_LAT + 5] * 1000) +
-									(GPS_BUFFER[RMC_LAT + 6] * 100)+
-									(GPS_BUFFER[RMC_LAT + 7] * 10)+
-									(GPS_BUFFER[RMC_LAT + 8])	);
+		//Buffer ASCII characters:
+		for(uint8_t i = 0; i < GPS_BYTES_ASCII_LATITUDE; i++){
+			SYS_GPS.LATITUDE_ASCII[i] = GPS_BUFFER[RMC_LAT + i];
+		}
+		//Compress to decimal:
+		SYS_GPS.latitude_H =	(	(GPS_BUFFER[RMC_LAT]		* 1000)		+ 
+									(GPS_BUFFER[RMC_LAT + 1]	* 100)		+
+									(GPS_BUFFER[RMC_LAT + 2]	* 10)		+
+									(GPS_BUFFER[RMC_LAT + 3]));
+		SYS_GPS.latitude_L =	(	(GPS_BUFFER[RMC_LAT + 5]	* 1000)		+
+									(GPS_BUFFER[RMC_LAT + 6]	* 100)		+
+									(GPS_BUFFER[RMC_LAT + 7]	* 10)		+
+									(GPS_BUFFER[RMC_LAT + 8]));
 		SYS_GPS.NS = GPS_BUFFER[RMC_NS];
 		//D. LONGITUDE
-		SYS_GPS.longitude_H =	(	(GPS_BUFFER[RMC_LON] * 10000)+
-									(GPS_BUFFER[RMC_LON + 1] * 1000)+
-									(GPS_BUFFER[RMC_LON + 2] * 100)+
-									(GPS_BUFFER[RMC_LON + 3] * 10)+
-									(GPS_BUFFER[RMC_LON + 4])	);
-		SYS_GPS.longitude_L =	(	(GPS_BUFFER[RMC_LON + 6] * 1000)+
-									(GPS_BUFFER[RMC_LON + 7] * 100)+
-									(GPS_BUFFER[RMC_LON + 8] * 10)+
-									(GPS_BUFFER[RMC_LON + 9])	);
+		//Buffer ASCII characters:
+		for(uint8_t i = 0; i < GPS_BYTES_ASCII_LONGITUDE; i++){
+		SYS_GPS.LONGITUDE_ASCII[i] = GPS_BUFFER[RMC_LON + i];
+		}
+		//Compress to decimal:
+		SYS_GPS.longitude_H =	(	(GPS_BUFFER[RMC_LON]		* 10000)	+
+									(GPS_BUFFER[RMC_LON + 1]	* 1000)		+
+									(GPS_BUFFER[RMC_LON + 2]	* 100)		+
+									(GPS_BUFFER[RMC_LON + 3]	* 10)		+
+									(GPS_BUFFER[RMC_LON + 4]));
+		SYS_GPS.longitude_L =	(	(GPS_BUFFER[RMC_LON + 6]	* 1000)		+
+									(GPS_BUFFER[RMC_LON + 7]	* 100)		+
+									(GPS_BUFFER[RMC_LON + 8]	* 10)		+
+									(GPS_BUFFER[RMC_LON + 9]));
 		SYS_GPS.EW = GPS_BUFFER[RMC_EW];
 		//E. SPEED AND COURSE
+		//Buffer ASCII characters:
+		for(uint8_t i = 0; i < GPS_BYTES_ASCII_SPEED; i++){
+			SYS_GPS.SPEED_ASCII[i] = GPS_BUFFER[RMC_SPEED + i];
+		}
+		//Compress to decimal:
 		SYS_GPS.ground_speed_high = GPS_BUFFER[RMC_SPEED];
-		SYS_GPS.ground_speed_low = ((GPS_BUFFER[RMC_SPEED + 2] * 10) + (GPS_BUFFER[RMC_SPEED + 3]));
-		SYS_GPS.course_high =	(	(GPS_BUFFER[RMC_COURSE] * 100)+
-									(GPS_BUFFER[RMC_COURSE + 1] * 10)+
-									(GPS_BUFFER[RMC_COURSE + 2])	);
-		SYS_GPS.course_low = ((GPS_BUFFER[RMC_COURSE + 4] * 10) + (GPS_BUFFER[RMC_COURSE + 5]));
+		SYS_GPS.ground_speed_low = ((GPS_BUFFER[RMC_SPEED + 2]		* 10)	+ 
+									(GPS_BUFFER[RMC_SPEED + 3]));
+		//Buffer ASCII characters:
+		for(uint8_t i = 0; i < GPS_BYTES_ASCII_COURSE; i++){
+			SYS_GPS.COURSE_ASCII[i] = GPS_BUFFER[RMC_COURSE + i];
+		}
+		//Compress to decimal:
+		SYS_GPS.course_high =	(	(GPS_BUFFER[RMC_COURSE]			* 100)	+
+									(GPS_BUFFER[RMC_COURSE + 1]		* 10)	+
+									(GPS_BUFFER[RMC_COURSE + 2]));
+		SYS_GPS.course_low = (		(GPS_BUFFER[RMC_COURSE + 4]		* 10)	+ 
+									(GPS_BUFFER[RMC_COURSE + 5]));
 		//F. DATE
-		SYS_GPS.UTC_DAY =	((GPS_BUFFER[RMC_DATE] * 10) + (GPS_BUFFER[RMC_DATE + 1]));
-		SYS_GPS.UTC_MONTH = ((GPS_BUFFER[RMC_DATE + 2] * 10) + (GPS_BUFFER[RMC_DATE + 3]));
-		SYS_GPS.UTC_YEAR =	((GPS_BUFFER[RMC_DATE + 4] * 10) + (GPS_BUFFER[RMC_DATE + 5]));
+		//Buffer ASCII characters:
+		for(uint8_t i = 0; i < GPS_BYTES_ASCII_UTC_DATE; i++){
+			SYS_GPS.UTC_DATE_ASCII[i] = GPS_BUFFER[RMC_DATE + i];
+		}
+		//Compress to decimal:
+		SYS_GPS.UTC_DAY =	((GPS_BUFFER[RMC_DATE]		* 10)	+ (GPS_BUFFER[RMC_DATE + 1]));
+		SYS_GPS.UTC_MONTH = ((GPS_BUFFER[RMC_DATE + 2]	* 10)	+ (GPS_BUFFER[RMC_DATE + 3]));
+		SYS_GPS.UTC_YEAR =	((GPS_BUFFER[RMC_DATE + 4]	* 10)	+ (GPS_BUFFER[RMC_DATE + 5]));
 	
 	//?. Enable stream, thereby flushing the buffer of all its contents.
 	GPS_enable_stream();
 	
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+void GPS_TX_PARSE_ERROR(void){
+	//To get here, the invalid data character was detected.
+	
+	//Send a transmission containing the UTC time, as well as
+	//a generic NO FIX message:
+	for(uint8_t i = 0; i < 15; i++){
+		GPS_send_byte(MSG_DATA_ERROR[i]);
+	}
+	
+	//Send carriage return and linefeed:
+	GPS_send_byte('\r');
+	GPS_send_byte('\n');
+	
+	//Send the UTC time and date:
+	for(uint8_t i = 0; i < 7; i++){
+		GPS_send_byte(MSG_REPORT_UTC[i]);
+	}
+	GPS_send_byte(SYS_GPS.UTC_H);
+	GPS_send_byte('.');
+	GPS_send_byte(SYS_GPS.UTC_M);
+	GPS_send_byte('.');
+	GPS_send_byte(SYS_GPS.UTC_S);
+	GPS_send_byte('\r');
+	GPS_send_byte('\n');
+
+}

@@ -3,14 +3,27 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/io.h>
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #include "util/delay.h"
 #include "header_BUZZER.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//								SYSTEM DEFINITIONS		    									  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* FROM GPS */
+//Byte length definitions for passing ASCII strings:
+#define GPS_BYTES_ASCII_UTC_TIME		6
+#define GPS_BYTES_ASCII_UTC_DATE		6
+#define GPS_BYTES_ASCII_LATITUDE		9
+#define GPS_BYTES_ASCII_LONGITUDE		10
+#define GPS_BYTES_ASCII_COURSE			6
+#define GPS_BYTES_ASCII_SPEED			4
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //								SYSTEM VARIABLES/FUNCTIONS    									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #define BAUD 9600
-#define FOSC 16000000
+#define FOSC 8000000
 #define MY_UBBR FOSC/16/BAUD-1
 
 /* FROM SD */
@@ -37,15 +50,18 @@ extern void GPS_flush_buffer(void);
 extern void GPS_parse_data(void);
 extern void GPS_configure_firmware(void);
 extern void GPS_USART_Transmit(unsigned char data);
+extern void GPS_TX_PARSE_ERROR(void);
 //Variables:
 /* GPS CURRENT READINGS DATA STRUCTURE */
 typedef struct{
 	//Temporal data
+	uint8_t UTC_TIME_ASCII[6];		//Stores all of the characters from USART buffer, but without conversion.
 	uint8_t UTC_H;
 	uint8_t UTC_M;			//Technically, you can afford greater precision but we don't
 	uint8_t UTC_S;			//care in this application.			
 			
 	//Date, DD/MM/YY
+	uint8_t UTC_DATE_ASCII[6];
 	uint8_t UTC_DAY;			//The current day of the month.
 	uint8_t UTC_MONTH;			//The current month.
 	uint8_t UTC_YEAR;			//The current year.
@@ -54,18 +70,22 @@ typedef struct{
 	uint8_t STATUS;
 									
 	//Latitude and longitude in degrees
+	uint8_t LATITUDE_ASCII[9];
 	uint16_t latitude_H;
 	uint16_t latitude_L;	//Below the decimal point
 	uint8_t NS;				//Indicates your placement relative to the equator.
+	uint8_t LONGITUDE_ASCII[10];
 	uint32_t longitude_H;
 	uint16_t longitude_L;	//Below the decimal point
 	uint8_t EW;				//Indicates you placement relative to the prime meridian.
 	
 	//Ground speed
+	uint8_t SPEED_ASCII[4];
 	uint8_t ground_speed_high;
 	uint8_t ground_speed_low;
 	
 	//Course over ground (azimuth angle from GPS North) {DECIMATED}
+	uint8_t COURSE_ASCII[6];
 	uint16_t course_high;	//Indicates the 360 degrees above the decimal point.
 	uint8_t  course_low;		//Indicates the precision value below the decimal point.
 	
