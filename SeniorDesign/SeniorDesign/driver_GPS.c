@@ -375,6 +375,9 @@ void GPS_parse_data(void){
 	
 	//4. Unpack all of the data between '$' and '*'. Store it on the SYS_GPS object.
 		//A. UTC data:
+		for(int i = 0; i < GPS_BYTES_ASCII_UTC_TIME; i++){
+			SYS_GPS.UTC_TIME_ASCII[i] = GPS_BUFFER[RMC_UTC + i];
+		}
 		SYS_GPS.UTC_H = (GPS_BUFFER[RMC_UTC] * 10)		+ (GPS_BUFFER[RMC_UTC + 1]);	
 		SYS_GPS.UTC_M = ((GPS_BUFFER[RMC_UTC + 2] * 10) + (GPS_BUFFER[RMC_UTC + 3])); 
 		SYS_GPS.UTC_S = ((GPS_BUFFER[RMC_UTC + 4] * 10) + (GPS_BUFFER[RMC_UTC + 5]));

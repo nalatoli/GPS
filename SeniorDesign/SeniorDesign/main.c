@@ -69,6 +69,7 @@ ISR(USARTRXC_vect){
 	//If the character received is instead a terminator, begin the parsing!
 	else if((vector_data == '*') && (GPS_MESSAGE_READY)){
 		GPS_parse_data();
+		APP_update_menu_debug_updateAll();
 	}
 	//If neither character was detected, but '$' appeared previously, then just buffer the characters:
 	else if(GPS_MESSAGE_READY){

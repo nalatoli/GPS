@@ -1,15 +1,16 @@
+#ifndef HEADER_LCD_H
+#define HEADER_LCD_H
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //									          LCD Header										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef HEADER_LCD_H
-#define HEADER_LCD_H
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //											 LCD Libraries										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/pgmspace.h>
+#include <string.h>
+#include <stdlib.h>
+
 
 
 
@@ -78,9 +79,10 @@ typedef struct Vector2{
 		A grid is an empty rectangle object with horizontal and vertical lines running along
 		its interior. The parameters above describe the "rectangle" and its lines.
 		
-		A grid is an "One Instance Drawing". This means that once a grid is drawn, another one cannot
-		be drawn until the current one is deleted. A grid has its own functions that can manipulate
-		the behavior of its lines. Furthermore, a grid will not overwrite other objects on the LCD.
+		A grid is an "One Instance Drawing" (OID). This means that once a grid is drawn, another 
+		one cannot be drawn until the current one is deleted. A grid has its own functions that can 
+		manipulate the behavior of its lines. Furthermore, a grid will not overwrite other objects 
+		on the LCD.
 		
 ***************************************************************************************************/
 typedef struct Grid{
@@ -107,9 +109,9 @@ typedef struct Grid{
 			fg:		 color of arrow
 			isDrawn: flag for indicating whether an arrow has already been drawn
 		
-		An arrow is an "One Instance Drawing". This means that once a arrow is drawn, another one 
-		cannot be drawn until the current one is deleted. An arrow has its own functions that can 
-		manipulate its behavior. An arrow has fixed size.
+		An arrow is a "One Instance Drawing" (OID). This means that once a arrow is drawn, another 
+		one cannot be drawn until the current one is deleted. An arrow has its own functions that 
+		can manipulate its behavior. An arrow has fixed size.
 		
 ***************************************************************************************************/
 typedef struct Arrow{
@@ -125,6 +127,7 @@ typedef struct Arrow{
 	Description:
 		Defines parameters for the text handler. The embedded data types are:
 		
+			xorigin: Absolute x-position of first character's top-left corner [px]
 			x:		 absolute x-position of pending character's top-left corner [px]
 			y:		 absolute y-position of pending character's top-left corner [px]
 			size:	 text scaling factor
@@ -139,12 +142,12 @@ typedef struct Arrow{
 		
 ***************************************************************************************************/
 typedef struct{
-	uint16_t xorigin;
-	uint16_t x;		// Absolute x-position of pending character's top-left corner [px]
-	uint16_t y;		// Absolute y-position of pending character's top-left corner [px]
-	uint8_t size;	// Text scaling factor
-	Color fg;		// Color of characters
-	Color bg;		// Color around characters
+	uint16_t xorigin;	// Absolute x-position of first character's top-left corner [px]
+	uint16_t x;			// Absolute x-position of pending character's top-left corner [px]
+	uint16_t y;			// Absolute y-position of pending character's top-left corner [px]
+	uint8_t size;		// Text scaling factor
+	Color fg;			// Color of characters
+	Color bg;			// Color around characters
 } TextHandler;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,8 +164,8 @@ typedef struct{
 			4. Frame Rate
 			5. Gamma Control
 			6. DDRAM
-			7. Display
-			8. One-Instance Drawings		
+			7. Screen
+			8. OIO (One-Instance-Object) States		
 		
 ***************************************************************************************************/
 void LCD_init_system ();
@@ -256,12 +259,20 @@ void LCD_setText_color(Color fg, Color bg);
 void LCD_setText_all(uint16_t x, uint16_t y, uint8_t size, Color fg, Color bg);
 
 /***************************************************************************************************
-	Function: moveTextCursor	
+	Function: moveCursor	
 		- Moves cursor 'spaces' spaces horizontally and 'lines' lines vertically. Each parameter
 		  can be positive or negative and will move cursor with respect to text size.
 		
 ***************************************************************************************************/
-void LCD_moveTextCursor(int16_t spaces, int16_t lines);
+void LCD_moveCursor(int16_t spaces, int16_t lines);
+
+/***************************************************************************************************
+	Function: clearLine	
+		- Erases all text on line
+		! Objects in vicinity of text will also be erased
+		
+***************************************************************************************************/
+void LCD_clearLine();
 
 /***************************************************************************************************
 	Function: print_str	
@@ -271,6 +282,7 @@ void LCD_moveTextCursor(int16_t spaces, int16_t lines);
 ***************************************************************************************************/
 void LCD_print_str(char * str);
 void LCD_print_num(float num, uint8_t width, uint8_t prec);
+void LCD_printChar(char c);
 
 /* One-Instance Drawing */
 void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xoff, int16_t yoff, Color fg, Color bg);
@@ -450,6 +462,7 @@ static const uint16_t logo_BMP[LOGOPXCOUNT] PROGMEM = {
 		
 			font[n*5]:
 				c - ASCII decimal code (contains group of five 8-bit codes dC0[7:0] -> dC4[7:0])
+
 					<dC0.7>...<dC0.0>, <dC1.7>...<dC1.0>,..., <dC4.7>...<dC4.0>
 					
 					dC0[7:0]: Pixel states of character 'c's 1st column from left (furthest left)

@@ -42,16 +42,37 @@
 #include "header_APPLICATION.h"
 #include <string.h>
 
+void APP_generate_menu_loading();
+void APP_generate_menu_main();
+void APP_generate_menu_settings();
+void APP_generate_menu_debug();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //											Macros												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void APP_generate_menu_loading();
-void APP_generate_menu_debug();
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //										 Public Functions										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void APP_initSystems()
+{
+	/* Initialize All Modules */
+	// init GPS
+	LCD_init_system();
+	init_buzzer();
+	// init SD Card
+	// Enable EEPROM
+}
+
+//void APP_loadProgram()
+//{
+	///* Start Up */
+	//APP_generate_menu_main();
+	////APP_update_menu_loading_printStatusString();
+	//
+//}
 
 Bool APP_generate_menu(MenuType menu)
 {
@@ -62,9 +83,11 @@ Bool APP_generate_menu(MenuType menu)
 		return TRUE;
 		
 		case MAINMENU:
+		APP_generate_menu_main();
 		return TRUE;
 		
 		case SETTINGSMENU:
+		APP_generate_menu_settings();
 		return TRUE;
 		
 		case DEBUGMENU:
@@ -73,6 +96,93 @@ Bool APP_generate_menu(MenuType menu)
 	}
 	return FALSE;
 }
+
+void APP_update_menu_debug_updateGPSParameter(GPSDataType type)
+{
+	/* Display Updated Parameter on Debug Menu */
+	LCD_setText_all(DEBUGSCREEN_START_X,DEBUGSCREEN_START_Y,DEBUGSCREEN_TEXT_SIZE,DEBUGSCREEN_TEXT_COLOR,DEBUGSCREEN_SCREENCOLOR);
+	LCD_moveCursor(0,type);
+	LCD_clearLine();
+	
+	switch(type) {
+		case TIME:
+			for(int i = 0; i < GPS_BYTES_ASCII_UTC_TIME; i++){
+
+				LCD_printChar(SYS_GPS.UTC_TIME_ASCII[i]);
+				if(i%2==1)
+					LCD_printChar(':');
+
+			}
+			
+			return;	
+				
+		case DATE:
+			for(int i = 0; i < GPS_BYTES_ASCII_UTC_DATE; i++){
+				LCD_printChar(SYS_GPS.UTC_DATE_ASCII[i]);
+				if(i%2==1)
+					LCD_printChar('/');
+					
+			}
+			
+			return;
+		
+		case STATUS:
+			LCD_printChar(SYS_GPS.STATUS);
+			return;
+			
+		case LATITUDE:
+			for(int i = 0; i < GPS_BYTES_ASCII_LATITUDE; i++){
+				LCD_printChar(SYS_GPS.LATITUDE_ASCII[i]);
+			}
+			
+			return;
+
+		case LONGITUDE:
+			for(int i = 0; i < GPS_BYTES_ASCII_LONGITUDE; i++){
+				LCD_printChar(SYS_GPS.LONGITUDE_ASCII[i]);
+			}
+		
+			return;
+			
+		case N_S:
+			LCD_printChar(SYS_GPS.NS);
+			return;
+			
+		case E_W:
+			LCD_printChar(SYS_GPS.EW);
+			return;
+			
+		case SPEED:
+			for(int i = 0; i < GPS_BYTES_ASCII_SPEED; i++){
+				LCD_printChar(SYS_GPS.SPEED_ASCII[i]);
+			}
+			
+			return;
+			
+		case COURSE:
+			for(int i = 0; i < GPS_BYTES_ASCII_COURSE; i++){
+				LCD_printChar(SYS_GPS.COURSE_ASCII[i]);
+			}
+			
+			return;
+		}	
+}
+
+void APP_update_menu_debug_updateAll()
+{
+	for(int i = 0; i < 9; i++){
+		APP_update_menu_debug_updateGPSParameter(i);
+	}
+}
+
+//void APP_update_menu_loading_printStatusString(char * str)
+//{
+	///* Display Status String on Debug Menu */
+	//LCD_setText_all(LOADSCREEN_STATUSTEXT_XOFF,LOADSCREEN_STATUSTEXT_YOFF,LOADSCREEN_STATUSTEXT_SIZE,LOADSCREEN_STATUSTEXT_COLOR,LOADSCREEN_SCREENCOLOR);
+	//LCD_clearLine();
+	//LCD_print_str(str);
+	//
+//}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //										 Private Functions										  //
@@ -83,57 +193,37 @@ void APP_generate_menu_main()
 }
 
 void APP_generate_menu_settings()
-{
-	
+{	
 }
 
 void APP_generate_menu_loading()
 {
-	/* Set Loading Screen Parameters */
-	int16_t logo_xoff = 0;
-	int16_t logo_yoff = -30;
-	int16_t text_xoff = -7;
-	int16_t text_yoff = 10;
-	uint8_t text_size = 2;
-	Color text_color = GREEN;
-	Color screenColor = GREY;
-		
 	/* Set Logo Pivot Coordinates and Text Parameters */
-	uint16_t x = TFTWIDTH / 2 - LOGOSIZE * (text_size + 2) / 2 + logo_xoff;
-	uint16_t y = TFTHEIGHT / 2 - LOGOSIZE * (text_size + 2) / 2 + logo_yoff;
-	LCD_setText_all(x + text_xoff, y + LOGOSIZE * (text_size + 2) + text_yoff, text_size, text_color, screenColor);
+	uint16_t x = TFTWIDTH / 2 - LOGOSIZE * (LOADSCREEN_TEXT_SIZE + 2) / 2 + LOADSCREEN_LOGO_XOFF;
+	uint16_t y = TFTHEIGHT / 2 - LOGOSIZE * (LOADSCREEN_TEXT_SIZE + 2) / 2 + LOADSCREEN_LOGO_YOFF;
+	LCD_setText_all(x + LOADSCREEN_TEXT_XOFF, y + LOGOSIZE * (LOADSCREEN_TEXT_SIZE + 2) + LOADSCREEN_TEXT_YOFF, LOADSCREEN_TEXT_SIZE, LOADSCREEN_TEXT_COLOR, LOADSCREEN_SCREENCOLOR);
 		
 	/* Draw Loading Screen */
-	LCD_clear(screenColor);
-	LCD_drawLogo(x,y,text_size + 2);
+	LCD_clear(LOADSCREEN_SCREENCOLOR);
+	LCD_drawLogo(x,y,LOADSCREEN_TEXT_SIZE + 2);
 	LCD_print_str("Power Couple");
-	LCD_setText_size(text_size - 1);
+	LCD_setText_size(LOADSCREEN_TEXT_SIZE - 1);
 	LCD_print_str("TM");
-	//LCD_drawRect_empty(0,0,TFTWIDTH,TFTHEIGHT,RED);
-	//LCD_drawRect_empty(1,1,TFTWIDTH-2,TFTHEIGHT-2,WHITE);
-	//LCD_drawRect_empty(2,2,TFTWIDTH-4,TFTHEIGHT-4,RED);
 }
 
 void APP_generate_menu_debug()
 {
-	/* Set Debug Screen Parameters */
-	Color screenColor = BLACK;
-	uint16_t identifier_size = 3;
-	uint16_t identifier_xoff = 10;
-	uint16_t identifier_yoff = 10;
-	Color identifier_color = GREEN;
-	uint16_t text_size = 2;
-	uint16_t text_yoff = 40;
-	Color text_color = ORANGE;
+	/* Set Text Parameters */
+	LCD_setText_all(DEBUGSCREEN_IDENTIFIER_XOFF, DEBUGSCREEN_IDENTIFIER_YOFF, DEBUGSCREEN_IDENTIFIER_SIZE,DEBUGSCREEN_IDENTIFIER_COLOR,DEBUGSCREEN_SCREENCOLOR);
 	
-	LCD_setText_all(identifier_xoff, identifier_yoff, identifier_size,identifier_color,screenColor);
-	LCD_clear(screenColor);
-	
-	
-	LCD_drawRect_empty(identifier_xoff - 2, identifier_yoff - 2, strlen("DEBUG") * 6 * identifier_size + 4, 8 * identifier_size + 4, identifier_color);
+	/* Print Identifier with Border */
+	LCD_clear(DEBUGSCREEN_SCREENCOLOR);
+	LCD_drawRect_empty(DEBUGSCREEN_IDENTIFIER_XOFF - DEBUGSCREEN_BORDEROFF, DEBUGSCREEN_IDENTIFIER_YOFF - DEBUGSCREEN_BORDEROFF, strlen("DEBUG") * 6 * DEBUGSCREEN_IDENTIFIER_SIZE + DEBUGSCREEN_BORDEROFF * 2, 8 * DEBUGSCREEN_IDENTIFIER_SIZE + DEBUGSCREEN_BORDEROFF * 2, DEBUGSCREEN_IDENTIFIER_COLOR);
 	LCD_print_str("DEBUG\n\n");
 	
-	LCD_setText_all(identifier_xoff, identifier_yoff + text_yoff, text_size, text_color, screenColor);
+	/* Print Debug Parameters */
+	LCD_setText_size(DEBUGSCREEN_TEXT_SIZE);
+	LCD_setText_color(DEBUGSCREEN_TEXT_COLOR,DEBUGSCREEN_SCREENCOLOR);
 	LCD_print_str("Time (UTC) :\n");
 	LCD_print_str("Date       :\n");
 	LCD_print_str("Data Status:\n");
@@ -143,10 +233,6 @@ void APP_generate_menu_debug()
 	LCD_print_str("E/W        :\n");
 	LCD_print_str("Speed      :\n");
 	LCD_print_str("Course     :\n");
-	
-	
-	
-
 }
 		
 		

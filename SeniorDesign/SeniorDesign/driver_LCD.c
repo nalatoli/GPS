@@ -1,25 +1,11 @@
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//									      ILI9341 DRIVER										  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
- *	DESCRIPTION: Provides all-in-one drawing library for 240 x 320 LCD driven by the IL9341.
- *
- *	Public Functions:
- *
- */
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//									Libraries/Private Functions									  //
+//								LCD Libraries/Private Functions									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <avr/io.h>
 #include <math.h>
+#include "header_LCD.h"
 #define F_CPU 16E6
 #include "util/delay.h"
-#include "header_LCD.h"
-#include <avr/pgmspace.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 void LCD_spi_init(void);
 void LCD_spi_send(uint8_t data);
@@ -35,14 +21,14 @@ void LCD_gridSmart_eraseVL(uint16_t x);
 void LCD_gridSmart_eraseHL(uint16_t y);
 void LCD_gridSmart_addOff(int8_t x, int8_t y);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//									   One Instance Objects										  //
+//									    LCD Driver Objects									      //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Grid grid;
 Arrow arrow;
-TextHandler pencil = {0,0,1,WHITE,BLACK};
+TextHandler pencil = {0,0,0,1,WHITE,BLACK};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//										 Public Functions										  //
+//									   LCD Public Functions										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void LCD_init_system ()
 {
@@ -53,15 +39,15 @@ void LCD_init_system ()
 	LCD_writecommand8(0x28);	// Turn off Display
 	
 	/* Configure Power Settings */	// ***
-	LCD_writecommand8(0xC0);		// Set VRH
+	LCD_writecommand8(0xC0);		// Set GVDD
 	LCD_writedata8(0x26);			//  to 4.75V
 	LCD_writecommand8(0xC1);		// Set AVDD, VGH, and VGL
 	LCD_writedata8(0x11);			//  to VCl x 2, VCl x 7, and -VCl x 4 respectively
-	LCD_writecommand8(0xC5);		// Set VCOM-
+	LCD_writecommand8(0xC5);		// Set VCOM
 	LCD_writedata8(0x5C);			//  H to 5V
 	LCD_writedata8(0x4C);			//  L to -0.6V
 	LCD_writecommand8(0xC7);		// Set VCOM offset
-	LCD_writedata8(0x94);			//  to level 44
+	LCD_writedata8(0x94);			//  shift to +/-44
 	
 	/* Configure Memory Settings */	// ***
 	LCD_writecommand8(0x36);		// Set Memory Access Control
@@ -126,19 +112,20 @@ void LCD_init_system ()
 	LCD_writecommand8(0xB7);		// Set Entry Mode Control
 	LCD_writedata8(0x07);			//  to 0x07 (0,0,0,0,DSTB,GON,DTE,GAS)
 	
-	/* Configure Display Settings */	// ***
+	/* Configure Screen Settings */	// ***
 	LCD_writecommand8(0xB6);			// Set Display Function
 	LCD_writedata8(0x0A);				//  Interval Scan Control to AGND
 	LCD_writedata8(0x82);				//  to 0x82 (REV,GS,SS,SM,ISC[3:0])
 	LCD_writedata8(0x27);				//  Number of Driving Lines to 320 lines
 	LCD_writedata8(0x00);				//  PCDIV to 0 (fosc,ext = DOTCLK/(2*(0+1)))
+	LCD_writecommand8(0x36);			// Set Memory Access Control
+	LCD_writedata8(0x20|0x08);			//  Orientation to Landscape
 	LCD_writecommand8(0x11);			// Turn Sleep Mode OFF
 	_delay_ms(100);						// Wait 100 ms
 	LCD_writecommand8(0x29);			// Turn Display ON
 	_delay_ms(100);						// Wait 100 ms
-	LCD_writecommand8(0x2C);			// Perform memory write
-	LCD_writecommand8(0x36);			// Set Memory Access Control
-	LCD_writedata8(0x20|0x08);			// Set Landscape // (0x20|0x08);
+	
+	/* Initialize OID Object States */ 
 	grid.isDrawn = FALSE;				// Mark grid as UNDRAWN
 	arrow.isDrawn = FALSE;				// Mark arrow as UNDRAWN
 	
@@ -262,11 +249,17 @@ void LCD_setText_all(uint16_t x, uint16_t y,uint8_t size, Color fg, Color bg)
 	LCD_setText_color(fg,bg);
 }
 
-void LCD_moveTextCursor(int16_t spaces, int16_t lines)
+void LCD_moveCursor(int16_t spaces, int16_t lines)
 {
 	/* Move Text Cursor */					// ***
 	pencil.x += pencil.size * 6 * spaces;	// Move cursor in the x-direction
-	pencil.y += (pencil.size * 7) * lines; 	// Move cursor in the y-direction
+	pencil.y += (pencil.size * 8) * lines; 	// Move cursor in the y-direction
+}
+
+void LCD_clearLine()
+{
+	/* Clear Current Line of Text */
+	LCD_drawRect_filled(pencil.x, pencil.y, TFTWIDTH - pencil.x, 8 * pencil.size, pencil.bg);
 }
 
 void LCD_print_str(char * str)
@@ -519,14 +512,14 @@ void LCD_zoomGridOut(uint16_t x, uint16_t y)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//										 Private Functions										  //
+//									   LCD Private Functions									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void LCD_spi_init()
 {
 	/* Set SPI Speed and Settings */	
-	SPDDR |= (1<<1)|(1<<3)|(1<<4)|(1<<5)|(1<<7);	// Set CS(1), RST(3), D/C(4), MOSI(5), and SCK(7) as outputs
-	SPCR = (1<<SPE)|(1<<MSTR);				// Enable SPI - fclk/16
-	SPPORT |= (1<<CS);								// Disable CS during startup
+	SPDDR |= (1<<1)|(1<<4)|(1<<5)|(1<<7);	// Set CS(1), D/C(4), MOSI(5), and SCK(7) as outputs
+	SPCR = (1<<SPE)|(1<<MSTR);				// Enable SPI - fclk/4
+	SPPORT |= (1<<CS);						// Disable CS during startup
 }
 
 void LCD_spi_send(uint8_t data)
@@ -612,7 +605,7 @@ void LCD_printChar(char c)
 	/* Draw 'c' */																// ***
 	if (c == '\n') {															// If the character is '\n'
 		pencil.y += pencil.size * 8;											//  Move pencil cursor down and 
-		pencil.x = pencil.xorigin;															//  Move pencil cursor all the way to the left
+		pencil.x = pencil.xorigin;												//  Move pencil cursor back to xoriging
 	}
 	
 	else {																		// Else, 
@@ -651,12 +644,6 @@ void LCD_gridSmart_eraseVL(uint16_t x)
 
 void LCD_gridSmart_eraseHL(uint16_t y)
 {
-	if(!grid.isDrawn || y < grid.y || y >= grid.y + grid.h){
-		LCD_print_str("FAIL!");	LCD_moveTextCursor(-strlen("FAIL!"), 0)	;
-		return;
-	}
-	
-	LCD_print_str("SUCCESS!");	LCD_moveTextCursor(-strlen("SUCCESS!"), 0)	;
 	LCD_setAddress(grid.x, y, grid.x + grid.w, y);
 	
 	for(int i = 0; i < grid.w; i++)
