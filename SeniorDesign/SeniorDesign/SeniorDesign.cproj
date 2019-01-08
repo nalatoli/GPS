@@ -5,7 +5,7 @@
     <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
     <ProjectGuid>dce6c7e3-ee26-4d79-826b-08594b9ad897</ProjectGuid>
-    <avrdevice>ATmega16A</avrdevice>
+    <avrdevice>ATmega324A</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
     <Language>C</Language>
@@ -38,16 +38,15 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
-    <avrtoolserialnumber>J41800089356</avrtoolserialnumber>
-    <avrdeviceexpectedsignature>0x1E9403</avrdeviceexpectedsignature>
+    <avrtool>com.atmel.avrdbg.tool.jtagicemkii</avrtool>
+    <avrtoolserialnumber>FFFFFFFFFFFF</avrtoolserialnumber>
+    <avrdeviceexpectedsignature>0x1E9515</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_simulator>
       <ToolOptions>
         <InterfaceProperties>
-          <JtagDbgClock>200000</JtagDbgClock>
+          <JtagDbgClock>0</JtagDbgClock>
         </InterfaceProperties>
-        <InterfaceName>
-        </InterfaceName>
+        <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.simulator</ToolType>
       <ToolNumber>
@@ -58,19 +57,19 @@
     <com_atmel_avrdbg_tool_jtagicemkii>
       <ToolOptions>
         <InterfaceProperties>
-          <JtagDbgClock>0</JtagDbgClock>
+          <JtagDbgClock>200000</JtagDbgClock>
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
-      <ToolNumber>070000005FA3</ToolNumber>
+      <ToolNumber>FFFFFFFFFFFF</ToolNumber>
       <ToolName>JTAGICE mkII</ToolName>
     </com_atmel_avrdbg_tool_jtagicemkii>
     <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
     <com_atmel_avrdbg_tool_atmelice>
       <ToolOptions>
         <InterfaceProperties>
-          <JtagDbgClock>200000</JtagDbgClock>
+          <JtagDbgClock>0</JtagDbgClock>
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
@@ -97,7 +96,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.Device>-mmcu=atmega16a -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega16a"</avrgcc.common.Device>
+        <avrgcc.common.Device>-mmcu=atmega324a -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega324a"</avrgcc.common.Device>
         <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
         <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
         <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -135,7 +134,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.Device>-mmcu=atmega16a -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega16a"</avrgcc.common.Device>
+        <avrgcc.common.Device>-mmcu=atmega324a -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega324a"</avrgcc.common.Device>
         <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
         <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
         <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -173,19 +172,40 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="driver_BUZZER.c">
+    <Compile Include="driver_APPLICATION.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="driver_I2C.c">
+    <Compile Include="driver_KEYPAD.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver_SFX.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver_EEPROM.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver_GPS.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="driver_LCD.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="header_BUZZER.h">
+    <Compile Include="driver_DISK.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="header_I2C.h">
+    <Compile Include="header_APPLICATION.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_DISK.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_KEYPAD.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_SFX.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="header_FUNCTIONS.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="header_LCD.h">

@@ -1,72 +1,42 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//									      ILI9341 DRIVER										  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
- *	DESCRIPTION: Provides all-in-one drawing library for 240 x 320 LCD driven by the IL9341.
- *
- *	Public Functions:
- *
- */
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//									Libraries/Private Functions									  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#include <avr/io.h>
-#include <math.h>
-#define F_CPU 16E6
-#include "util/delay.h"
 #include "header_LCD.h"
-#include <avr/pgmspace.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-void LCD_spi_init(void);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//										LCD Private Functions									  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void LCD_spi_init();
 void LCD_spi_send(uint8_t data);
 void LCD_writecommand8(uint8_t command);
 void LCD_writedata8(uint8_t data);
 void LCD_pushColor(Color color);
 void LCD_setAddress(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 void LCD_drawChar(int16_t x, int16_t y, char c, Color color, Color bg, uint8_t size);
-void LCD_printChar(char c);
-void LCD_gridSmart_drawVL(uint16_t x);
-void LCD_gridSmart_drawHL(uint16_t y);
-void LCD_gridSmart_eraseVL(uint16_t x);
-void LCD_gridSmart_eraseHL(uint16_t y);
-void LCD_gridSmart_addOff(int8_t x, int8_t y);
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//											Macros												  //
-////////////////////////////////////////////////////////////////////////////////////////////////////
-Grid grid;
-Arrow arrow;
-TextHandler pencil = {0,0,1,WHITE,BLACK};
 
-//volatile uint16_t textColor_fg;
-//volatile uint16_t textColor_bg;
-//volatile uint16_t textCursor_x;
-//volatile uint16_t textCursor_y;
-//volatile uint8_t textFPrecision;
-//volatile uint8_t textSize;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//										 Public Functions										  //
+//									    LCD Driver Objects									      //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void LCD_init_system ()
-{
+TextHandler pencil = {0,0,0,1,WHITE,BLACK};
+ ScreenType screen;
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//									   LCD Public Functions										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void LCD_init()
+{	
 	/* Initialize Driver */		// ***
-	LCD_spi_init();				// Initialize SPI		
-	LCD_writecommand8(0x01);	// Perform Software Reset
-	_delay_ms(10);				// Wait 10 ms
+	LCD_spi_init();				// Initialize SPI and perform hard reset		
+	LCD_writecommand8(0x01);	// Perform soft Reset
+//	_delay_ms(10);				// Wait 10 ms
 	LCD_writecommand8(0x28);	// Turn off Display
 	
 	/* Configure Power Settings */	// ***
-	LCD_writecommand8(0xC0);		// Set VRH
+	LCD_writecommand8(0xC0);		// Set GVDD
 	LCD_writedata8(0x26);			//  to 4.75V
 	LCD_writecommand8(0xC1);		// Set AVDD, VGH, and VGL
 	LCD_writedata8(0x11);			//  to VCl x 2, VCl x 7, and -VCl x 4 respectively
-	LCD_writecommand8(0xC5);		// Set VCOM-
+	LCD_writecommand8(0xC5);		// Set VCOM
 	LCD_writedata8(0x5C);			//  H to 5V
 	LCD_writedata8(0x4C);			//  L to -0.6V
 	LCD_writecommand8(0xC7);		// Set VCOM offset
-	LCD_writedata8(0x94);			//  to level 44
+	LCD_writedata8(0x94);			//  shift to +/-44
 	
 	/* Configure Memory Settings */	// ***
 	LCD_writecommand8(0x36);		// Set Memory Access Control
@@ -79,7 +49,7 @@ void LCD_init_system ()
 	LCD_writedata8(0x00);			//  Division Ratio to 1 (fosc/1)
 	LCD_writedata8(0x18);			//  Frame Rate to 70 Hz (default)
 	
-	/* Configure Gamma Control */	// *** 
+	/* Configure Gamma Control */	// ***
 	LCD_writecommand8(0xF2);	
 	LCD_writedata8(0x08);	
 	LCD_writecommand8(0x26);		// Select Gamma Curve
@@ -131,22 +101,21 @@ void LCD_init_system ()
 	LCD_writecommand8(0xB7);		// Set Entry Mode Control
 	LCD_writedata8(0x07);			//  to 0x07 (0,0,0,0,DSTB,GON,DTE,GAS)
 	
-	/* Configure Display Settings */	// ***
+	/* Configure Screen Settings */	// ***
 	LCD_writecommand8(0xB6);			// Set Display Function
 	LCD_writedata8(0x0A);				//  Interval Scan Control to AGND
 	LCD_writedata8(0x82);				//  to 0x82 (REV,GS,SS,SM,ISC[3:0])
 	LCD_writedata8(0x27);				//  Number of Driving Lines to 320 lines
 	LCD_writedata8(0x00);				//  PCDIV to 0 (fosc,ext = DOTCLK/(2*(0+1)))
+	LCD_writecommand8(0x36);			// Set Memory Access Control
+	LCD_writedata8(0xE0|0x08);			//  Orientation to Landscape
 	LCD_writecommand8(0x11);			// Turn Sleep Mode OFF
 	_delay_ms(100);						// Wait 100 ms
 	LCD_writecommand8(0x29);			// Turn Display ON
 	_delay_ms(100);						// Wait 100 ms
-	LCD_writecommand8(0x2C);			// Perform memory write
-	LCD_writecommand8(0x36);			// Set Memory Access Control
-	LCD_writedata8(0x20|0x08);			// Set Landscape // (0x20|0x08);
-	grid.isDrawn = FALSE;				// Mark grid as UNDRAWN
-	arrow.isDrawn = FALSE;				// Mark arrow as UNDRAWN
 	
+	/* Initialize OID Object States */ 
+	//grid.isDrawn = FALSE;				// Mark grid as UNDRAWN	
 }
 
 
@@ -161,12 +130,12 @@ void LCD_drawPixel (uint16_t x, uint16_t y, Color color)
 void LCD_drawRect_filled (uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color)
 {
 	/* Draw Filled Rectangle (PIVOT = UPPERLEFT) */	// ***	
-	LCD_setAddress(x, y, x+w-1, y+h-1);				// Select 'w'[px]-by-'h'[px] drawing zone from (x,y) to (x+w-1,y+h-1)
+	LCD_setAddress(x, y, x+w-1, y+h-1);				// Select (x,y) to (x+w-1,y+h-1) drawing zone
 	
 	for(y = 0; y < h; y++)							// For all rows,
 		for(x = 0; x < w; x++)						//  For all columns,
 			LCD_pushColor(color);					//	 Send color data
- 
+		
 }
 
 
@@ -182,6 +151,8 @@ void LCD_drawRect_empty (uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color c
 
 void LCD_drawCircle_filled(uint16_t x0, uint16_t y0, uint8_t radius, Color color)
 {
+	if(radius == 1) { LCD_drawPixel(x0,y0,color); return; }
+	
 	/* Draw Empty Circle (PIVOT = CENTER) */		// ***
 	uint16_t rSquared = radius*radius;				// Calculate radius^2
 	
@@ -198,6 +169,8 @@ void LCD_drawCircle_filled(uint16_t x0, uint16_t y0, uint8_t radius, Color color
 
 void LCD_drawCircle_empty(uint16_t x0, uint16_t y0, uint8_t radius, Color color)
 {
+	if(radius == 1) { LCD_drawPixel(x0,y0,color); return; }
+	
 	/* Draw Filled Circle (PIVOT = CENTER) */									// ***
 	uint16_t rSquared = radius*radius;											// Calculate radius^2
 	
@@ -211,331 +184,354 @@ void LCD_drawCircle_empty(uint16_t x0, uint16_t y0, uint8_t radius, Color color)
 		}
 }
 
-void LCD_clear (Color color)
+void LCD_drawLogo(uint16_t x, uint16_t y, uint16_t size)
 {
-	/* Fill Screen with Color */						// ***
-	LCD_drawRect_filled(0,0,TFTWIDTH,TFTHEIGHT,color);	// Draw screen-sized rectangle
+	/* Declare Temporary Variables */
+	uint16_t tmpWord, tmpOff_x, tmpOff_y, tmpColor;
+	
+	/* For Each Coordinate in BMP */
+	for(int i = 0; i < LOGOPXCOUNT; i++)
+	{
+		/* Fill in Parameters Based on Code in BMP */						// ***
+		tmpWord = pgm_read_word(logo_BMP + i);								// Read pixel code
+		tmpOff_x = tmpWord & 0x1F;											// Extract x offset
+		tmpOff_y = (tmpWord >> 5) & 0x1F;									// Extract y offset
+		tmpColor = pgm_read_word(&logo_ColorCode[(tmpWord >> 10) & 0x1F]);	// Extract color
+		
+		/* Draw Pixel */
+		if(size == 1)	LCD_drawPixel(x + tmpOff_x, y + tmpOff_y, tmpColor);
+		else			LCD_drawRect_filled(x + tmpOff_x * size, y + tmpOff_y * size, size, size, tmpColor);
+	}	
 }
 
-void LCD_setText_cursor(uint16_t x, uint16_t y)
+void LCD_drawArrow(uint16_t x, uint16_t y, int16_t rot, Color fg, Color bg)
 {
-	/* Set cursor at desired location to print data */
+	/* Return For Invalid Rotation */
+	if(rot > 360) return;
+	
+	/* Adjust Rotation */
+	while(rot < 0) rot += 360;
+	
+	/* Determine Correct Arrow BMP */
+	const uint32_t * bmpPtr = &arrow_BMPs[(rot % 90) / 10][0];
+	
+	/* For Each Coordinate */
+	for(int r = 0; r < ARROWSIZE; r++)
+	for(int c = 0; c < ARROWSIZE; c++) 
+	{
+		/* Obtain The State of the Corresponding Pixel */
+		uint8_t bitState;
+		if     (rot < 90)	bitState = (pgm_read_dword(&bmpPtr[r]) >> (ARROWSIZE - 1 - c)) & 0x0001;	
+		else if(rot < 180)	bitState = (pgm_read_dword(&bmpPtr[c]) >> r) & 0x0001;		
+		else if(rot < 270)	bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - r]) >> c) & 0x0001;	
+		else				bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - c]) >> (ARROWSIZE - 1 - r)) & 0x0001;
+		
+		/* Draw Pixel If State is High, Draw Pixel */
+		LCD_drawPixel(x + c, y + r, bitState ? fg : bg);
+	}
+}
+
+void LCD_drawImage(OutlineImage type, uint16_t x, uint16_t y, uint8_t size, Color color)
+{	
+	/* Declare Temporary Parameters */
+	const uint8_t * bmpPtr;
+	uint16_t h,w;
+	
+	/* Fill in Parameters Based on Image */
+	switch(type){
+		case CARDICON: bmpPtr = cardBMP;	h = CARDBMP_H;	w = CARDBMP_W / 8;	break;
+		case GPSICON:  bmpPtr = gpsBMP;		h = GPSBMP_H;	w = GPSBMP_W / 8;	break;
+		default: return;
+	}
+	
+	/* For Each Row in BMP */
+	for(int row = 0; row < h; row++)
+	{
+		/* For Each Byte in Row of BMP */
+		for(int group = 0; group < w; group++)
+		{
+			/* Get Byte */
+			uint8_t code = pgm_read_byte(bmpPtr);
+			
+			/* For Each Bit in Byte */
+			for(int bit = 0; bit < 8; bit++)
+			{
+				/* If Bit is High */
+				if((code >> (7-bit)) & 1)
+				{
+					/* Draw Pixel at Corresponding Coordinate */
+					 if (size == 1)	LCD_drawPixel(x+group*8+bit,y+row,color);
+					 else			LCD_drawRect_filled(x+(group*8+bit)*size,y+row*size,size,size,color);
+				}
+			}
+			
+			/* Increment to Next Byte */
+			bmpPtr++;
+		}
+	}
+}
+
+void LCD_clearScreen_down (Color color)
+{
+	/* Clear Screen Downwards */
+	LCD_drawRect_filled(0,0,TFTWIDTH,TFTHEIGHT,color);
+}
+
+void LCD_clearScreen_out (Color color)
+{
+	/* Clear Screen Outwards */
+	for(int i = 0; i <= TFTHEIGHT / 2; i++)
+		LCD_drawRect_empty(TFTHEIGHT/2-i, TFTHEIGHT/2-i, TFTWIDTH-TFTHEIGHT+2*i,2*i, color);
+}
+
+void LCD_clearScreen_in (Color color)
+{	
+	/* Clear Screen Inwards */
+	for(int i = 0; i < TFTHEIGHT / 2; i++)
+		LCD_drawRect_empty(i, i, TFTWIDTH-2*i,TFTHEIGHT-2*i, color);
+}
+
+
+void LCD_setText(uint16_t x, uint16_t y,uint8_t size, Color fg, Color bg)
+{
+	/* Set Cursor At Desired Location To Print Data */
+	pencil.xorigin = x;
 	pencil.x = x;
 	pencil.y = y;
-}
-
-void LCD_setText_size(uint8_t size)
-{
+	
 	/* Set text size to 's' if between 1 and 8, otherwise 1 by default */
 	pencil.size = (size > 0 && size <= 8) ? size : 1;
-}
-
-void LCD_setText_color(Color fg, Color bg)
-{
+	
 	/* Set Text Foreground/Background Colors */
 	pencil.fg = fg;
 	pencil.bg = bg;
 }
 
-void LCD_setText_all(uint16_t x, uint16_t y,uint8_t size, Color fg, Color bg)
-{
-	/* Set all text parameters */
-	LCD_setText_cursor(x,y);
-	LCD_setText_size(size);
-	LCD_setText_color(fg,bg);
-}
-
-void LCD_moveTextCursor(int16_t spaces, int16_t lines)
+void LCD_moveCursor(int16_t spaces, int16_t lines)
 {
 	/* Move Text Cursor */					// ***
 	pencil.x += pencil.size * 6 * spaces;	// Move cursor in the x-direction
-	pencil.y += (pencil.size * 7) * lines; 	// Move cursor in the y-direction
+	pencil.y += (pencil.size * 8) * lines; 	// Move cursor in the y-direction
+}
+
+void LCD_print_char(char c)
+{
+	/* Draw 'c' */																// ***
+	if (c == '\n') {															// If the character is '\n'
+		pencil.y += pencil.size * 8;											//  Move pencil cursor down and
+		pencil.x = pencil.xorigin;												//  Move pencil cursor back to xoriging
+	}
+	
+	else {																		// Else,
+		LCD_drawChar(pencil.x, pencil.y, c, pencil.fg, pencil.bg, pencil.size);	// Draw character using pencil
+		pencil.x += pencil.size * 6;											// Move pencil cursor 6 px to the right
+	}
 }
 
 void LCD_print_str(char * str)
 {
 	/* Print all letters of 'str' */			// ***
 	for(uint8_t i = 0; i < strlen(str); i++)	// For each letter in 'str'
-		LCD_printChar(str[i]);					//  Print letter
+		LCD_print_char(str[i]);					//  Print letter
 }
 
-void LCD_print_num(float num, uint8_t width, uint8_t prec)
+void LCD_println_str(char * str)
 {
-	/* Print Number with given parameters */	// ***
-	char str[20];								// Declare storage for new string
-	dtostrf(num,width,prec,str);				// Generate string from 'num'
-	LCD_print_str(str);							// Print string
+	/* Print 'str' with newline */
+	LCD_print_str(str);
+	LCD_print_char('\n');
 }
 
-void LCD_init_grid (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t space, int16_t xOff, int16_t yOff, Color fg, Color bg)
+void LCD_print_str_len(char * str, uint8_t len)
 {
-	/* Return if Grid is Already Drawn */
-	if(grid.isDrawn)
-		return;
-		
-	/* Draw Grid (PIVOT = TOP LEFT) */			// ***
-	LCD_drawRect_filled(x,y,w,h,bg);			//  Fill grid background color
-	uint16_t lineIt = x + xOff;					//  Initialize line iterator to first vertical line (x-pivot-coordinate + xOff)
-		
-	while(lineIt < x + w){						//  While the line iterator is within the horizontal-bounds of the grid,
-		LCD_drawRect_filled(lineIt,y,1,h,fg);	//   Draw a vertical line across the grid at x = lineIt and
-		lineIt += space;						//   Iterate the line iterator to the next vertical line
-	}
-		
-	lineIt = y + yOff;							//  Set line iterator to first horizontal line (y-pivot-coordinate + yOff)
-		
-	while(lineIt < y + h){						//  While the line iterator is within the vertical-bounds of the grid,
-		LCD_drawRect_filled(x,lineIt,w,1,fg);	//   Draw a horizontal line across the grid at y = lineIt and
-		lineIt += space;						//   Iterate the line iterator to the next horizontal line
-	}
-		
-	/* Store Grid Parameters */
-	grid.x = x;
-	grid.y = y;
-	grid.w = w;
-	grid.h = h;
-	grid.space = space;
-	grid.xoff = xOff;
-	grid.yoff = yOff;
-	grid.fg = fg;
-	grid.bg = bg;
-	grid.isDrawn = TRUE;
+	/* Print 'len' letters of 'str' */	// ***
+	for(uint8_t i = 0; i < len; i++)	// For each letter in 'str'
+		LCD_print_char(str[i]);			//  Print letter
+}
+
+void LCD_println_str_len(char * str, uint8_t len)
+{
+	/* Print 'str' with len with newline */
+	LCD_print_str_len(str,len);
+	LCD_print_char('\n');
+}
+
+void LCD_print_int(int num)
+{
+	/* Print 'num' */	// ***
+	char str[6];		//  Declare storage for string
+	itoa(num,str,10);	// Generate string from 'num'
+	LCD_print_str(str);	// Print string
+}
+
+void LCD_println_int(int num)
+{
+	/* Print 'num' with newline */
+	LCD_print_int(num);
+	LCD_print_char('\n');
+}
+
+void LCD_generateScreen(ScreenType type)
+{
+	switch(type) {
+		case MAINSCREEN:
+		/* Print Header */
+		LCD_clearScreen_in(MAINSCREEN_SCREENCOLOR);
+		LCD_drawLogo(ALLSCREENS_LOGO_X,ALLSCREENS_LOGO_Y,ALLSCREENS_LOGO_SIZE);
+		LCD_setIconState(CARDICON,0);
+		LCD_setIconState(GPSICON,0);
+		LCD_setText(MAINSCREEN_IDENTIFIER_XOFF, MAINSCREEN_IDENTIFIER_YOFF, MAINSCREEN_IDENTIFIER_SIZE,MAINSCREEN_IDENTIFIER_COLOR,MAINSCREEN_SCREENCOLOR);
+		LCD_drawRect_empty(MAINSCREEN_IDENTIFIER_XOFF - MAINSCREEN_BORDEROFF, MAINSCREEN_IDENTIFIER_YOFF - MAINSCREEN_BORDEROFF, strlen("MAIN") * 6 * MAINSCREEN_IDENTIFIER_SIZE + MAINSCREEN_BORDEROFF * 2, 8 * MAINSCREEN_IDENTIFIER_SIZE + MAINSCREEN_BORDEROFF * 2, MAINSCREEN_IDENTIFIER_COLOR);
+		LCD_print_str("MAIN\n\n");
+		/* Print Options */
+		LCD_setText(MAINSCREEN_OPTION_X,MAINSCREEN_OPTION_Y,MAINSCREEN_OPTION_SIZE,MAINSCREEN_OPTION_COLOR,MAINSCREEN_SCREENCOLOR);
 	
-}
-
-void LCD_init_arrow(uint16_t x0, uint16_t y0, uint16_t rot, uint16_t fg)
-{
-	/* Return if Arrow is Already Drawn or Rotation is Invalid */
-	if(arrow.isDrawn || rot >= 360 || rot % 5 != 0)
-		return;
-		
-	/* Determine Arrow Parameters */								// ***
-	const uint32_t * bmpPtr = &arrow_BMPs[(rot % 90) / 5][0];		// Determine specific arrow BMP to use	
-	uint16_t xCor = x0 - ARROWSIZE / 2;								// Determine x-corner coordinate
-	uint16_t yCor = y0 - ARROWSIZE / 2;								// Determine y-corner coordinate
-		
-	/* Draw Arrow (PIVOT = CENTER) */																		// ***	
-	for(int y = 0; y < ARROWSIZE; y++)																		// For each row in bounds,
-		for(int x = 0; x < ARROWSIZE; x++) {																//  For each column in bounds,		
-			uint8_t bitState;																				//   Declare variable for bit state
-					
-			if(rot < 90)																					//   If 0 <= rot < 90,
-				bitState = (pgm_read_dword(&bmpPtr[y]) >> (ARROWSIZE - 1 - x)) & 0x0001;					//	  Read bit at (x,y)
-							
-			else if(rot >= 90 && rot < 180)																	//   Else, if 90 <= rot < 180,
-				bitState = (pgm_read_dword(&bmpPtr[x]) >> y) & 0x0001;										//    Read bit at (-y,x)
-							
-			else if(rot >= 180 && rot < 270)																//   Else, if 180 <= rot < 270
-				bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - y]) >> x) & 0x0001;						//	  Read bit at (-x,-y)
-						
-			else                                                                                            //	 Else (270 <= rot < 360),
-				bitState = (pgm_read_dword(&bmpPtr[ARROWSIZE - 1 - x]) >> (ARROWSIZE - 1 - y)) & 0x0001;	//    Read bit at (y,-x)
-									
-			if(bitState == 1)																				//   If bit read is '1'
-				LCD_drawPixel(xCor + x, yCor + y, fg);														//    Draw a pixel at (xCor + x, y + yCor)
-					
+		for(int i = 0; i < MAINSCREEN_OPTION_COUNT; i++){
+			LCD_print_str("   ");	LCD_println_str(optionsMAIN[i].label);
 		}
+		pencil.x = MAINSCREEN_OPTION_X; pencil.y = MAINSCREEN_OPTION_Y;
+		LCD_print_char('>');
 		
-	/* Save Arrow Parameters */
-	arrow.x0 = x0;
-	arrow.y0 = y0;
-	arrow.rot = rot;
-	arrow.color = fg;
-	arrow.isDrawn = TRUE;
-
-}
-
-Grid LCD_get_grid(){ return grid; }
-	
-Arrow LCD_get_arrow(){ return arrow; }
-
-void LCD_shiftGrid(Vector2 dir)
-{
-	/* Return if Grid is NOT Drawn */
-	if(!grid.isDrawn)
-		return;
+		break;
 		
-	/* Shift Grid Horizontally*/																//  ***
-	if(dir.x != 0){																				//  If 'dir' has horizontal component,
-		Bool isReversed = (dir.x == -1);														//   Flag whether direction is positive (RIGHT) or negative (LEFT)
-		uint16_t lineIt = grid.x + grid.xoff;													//   Initialize line iterator to first vertical line				
-			
-		while(lineIt <= grid.x + grid.w){														//   While the line iterator is within the horizontal-bounds of the grid,
-				
-			if ((lineIt == grid.x + grid.w && !isReversed) || (lineIt == grid.x && isReversed))	//    If the line iterator is at about to extend out of bounds,
-				LCD_gridSmart_eraseVL(lineIt);													//     Smart erase vertical line at line iterator			
-				
-			else{																				//    Else,
-				LCD_gridSmart_drawVL(lineIt + dir.x);											//     Smart draw vertical line at new location
-				LCD_gridSmart_eraseVL(lineIt);													//     Smart erase old vertical line					
-			}
-				
-			lineIt += grid.space;																//    Iterate the line iterator				
+		case DEBUGSCREEN:
+		/* Print Header */
+		LCD_clearScreen_in(DEBUGSCREEN_SCREENCOLOR);
+		LCD_drawLogo(ALLSCREENS_LOGO_X,ALLSCREENS_LOGO_Y,ALLSCREENS_LOGO_SIZE);
+		LCD_setIconState(CARDICON,0);
+		LCD_setIconState(GPSICON,0);
+		LCD_setText(DEBUGSCREEN_IDENTIFIER_XOFF, DEBUGSCREEN_IDENTIFIER_YOFF, DEBUGSCREEN_IDENTIFIER_SIZE,DEBUGSCREEN_IDENTIFIER_COLOR,DEBUGSCREEN_SCREENCOLOR);
+		LCD_drawRect_empty(DEBUGSCREEN_IDENTIFIER_XOFF - DEBUGSCREEN_BORDEROFF, DEBUGSCREEN_IDENTIFIER_YOFF - DEBUGSCREEN_BORDEROFF, strlen("DEBUG") * 6 * DEBUGSCREEN_IDENTIFIER_SIZE + DEBUGSCREEN_BORDEROFF * 2, 8 * DEBUGSCREEN_IDENTIFIER_SIZE + DEBUGSCREEN_BORDEROFF * 2, DEBUGSCREEN_IDENTIFIER_COLOR);
+		LCD_print_str("DEBUG\n\n");
+		/* Print GPS Parameter List */
+		pencil.size = DEBUGSCREEN_TEXT_SIZE;
+		pencil.fg = DEBUGSCREEN_TEXT_COLOR;
+		LCD_print_str("Time (UTC) :\n");
+		LCD_print_str("Date       :\n");
+		LCD_print_str("Data Status:\n");
+		LCD_print_str("Latitude   :\n");
+		LCD_print_str("Longitude  :\n");
+		LCD_print_str("Speed      :\n");
+		LCD_print_str("Course     :\n\n\n");
+		/* Print Options */
+		LCD_setText(DEBUGSCREEN_OPTION_X,DEBUGSCREEN_OPTION_Y,DEBUGSCREEN_OPTION_SIZE,DEBUGSCREEN_OPTION_COLOR,DEBUGSCREEN_SCREENCOLOR);
+		
+		for(int i = 0; i < DEBUGSCREEN_OPTION_COUNT; i++){
+			LCD_print_str("   ");	LCD_println_str(optionsDEBUG[i].label);
 		}
-				
-		LCD_gridSmart_addOff(dir.x,0);														//   Update XOff
-					
-	}
+		pencil.x = DEBUGSCREEN_OPTION_X; pencil.y = DEBUGSCREEN_OPTION_Y;
+		LCD_print_char('>');
+		break;
 		
-	/* Shift Grid Vertically */																	//  ***
-	if(dir.y != 0){																				//  If 'dir' has vertical component,
-		Bool isReversed = (dir.y == -1);														//   Flag whether direction is positive (UP) or negative (DOWN)
-		uint16_t lineIt = grid.y + grid.yoff;													//   Initialize line iterator to first horizontal line
-			
-		while(lineIt <= grid.y + grid.h){														//   While the line iterator is within the vertical-bounds of the grid,
-				
-			if ((lineIt == grid.y + grid.h && isReversed) || (lineIt == grid.x && !isReversed))	//    If the line iterator is at about to extend out of bounds,
-				LCD_gridSmart_eraseHL(lineIt);													//     Smart erase horizontal line at line iterator
-				
-			else{																				//    Else,
-				LCD_gridSmart_drawHL(lineIt - dir.y);;											//     Smart draw horizontal line at new location
-				LCD_gridSmart_eraseHL(lineIt);													//	   Smart erase old horizontal line
-						
-			}
-				
-			lineIt += grid.space;																//    Iterate the line iterator
+		case TRACESCREEN:
+		/* Draw Panes*/
+		LCD_clearScreen_in(NAVSCREEN_SCREENCOLOR);
+		LCD_drawLogo(ALLSCREENS_LOGO_X,ALLSCREENS_LOGO_Y,ALLSCREENS_LOGO_SIZE);
+		LCD_setIconState(CARDICON,0);
+		LCD_setIconState(GPSICON,0);
+		LCD_drawRect_empty(NAVSCREEN_MAP_PANEX, NAVSCREEN_MAP_PANEY, NAVSCREEN_MAP_PANEW, NAVSCREEN_MAP_PANEH, NAVSCREEN_MAP_PANECOLOR);
+		LCD_drawRect_empty(NAVSCREEN_DIRA_PANEX,NAVSCREEN_DIRA_PANEY,NAVSCREEN_DIRA_PANEW,NAVSCREEN_DIRA_PANEH,NAVSCREEN_DIRA_PANECOLOR);
+		LCD_drawRect_empty(NAVSCREEN_DIRB_PANEX,NAVSCREEN_DIRB_PANEY,NAVSCREEN_DIRB_PANEW,NAVSCREEN_DIRB_PANEH,NAVSCREEN_DIRB_PANECOLOR);
+		LCD_drawRect_empty(NAVSCREEN_UTC_PANEX, NAVSCREEN_UTC_PANEY, NAVSCREEN_UTC_PANEW, NAVSCREEN_UTC_PANEH, NAVSCREEN_UTC_PANECOLOR);
+		LCD_drawRect_empty(NAVSCREEN_INFO_PANEX,NAVSCREEN_INFO_PANEY,NAVSCREEN_INFO_PANEW,NAVSCREEN_INFO_PANEH,NAVSCREEN_INFO_PANECOLOR);
+		/* Print Text */
+		LCD_setText(NAVSCREEN_DIRA_TEXTX,NAVSCREEN_DIRA_TEXTY,NAVSCREEN_DIRA_SIZE,NAVSCREEN_DIRA_PANECOLOR,NAVSCREEN_SCREENCOLOR);
+		LCD_print_str("Now: ");
+		LCD_setText(NAVSCREEN_DIRB_TEXTX,NAVSCREEN_DIRB_TEXTY,NAVSCREEN_DIRB_SIZE,NAVSCREEN_DIRB_PANECOLOR,NAVSCREEN_SCREENCOLOR);
+		LCD_print_str("Last:");
+		LCD_setText(NAVSCREEN_UTC_TEXTX,TFTHEIGHT-10,1,BLUE,NAVSCREEN_SCREENCOLOR);
+		LCD_print_str("TRACEMODE");
+		LCD_setText(NAVSCREEN_INFO_TEXTX,NAVSCREEN_INFO_TEXTY,2,NAVSCREEN_INFO_PANECOLOR,NAVSCREEN_SCREENCOLOR);
+		LCD_print_str("Options:");
+		LCD_setText(NAVSCREEN_OPTION_X,NAVSCREEN_OPTION_Y,NAVSCREEN_OPTION_SIZE,NAVSCREEN_OPTION_COLOR,NAVSCREEN_SCREENCOLOR);
+		
+		for(int i = 0; i < NAVSCREEN_OPTION_COUNT; i++){
+			LCD_print_str("   ");	LCD_println_str(optionsTRACE[i].label);
 		}
-					
-		LCD_gridSmart_addOff(0,-dir.y);														//   Update YOff
-			
-	}		
+		pencil.x = NAVSCREEN_OPTION_X; pencil.y = NAVSCREEN_OPTION_Y;
+		LCD_print_char('>');
+	}
+	
+	screen = type;
+	globalOption = 0;
 }
 
-void LCD_zoomGridIn(uint16_t x, uint16_t y)
+void LCD_moveScreenCursor(uint8_t optionNumber)
 {
-	/* Return if Zoom-Point is NOT Within Bounds of Grid */
-	if(x < grid.x || x > grid.x + grid.h || y < grid.y || y > grid.y + grid.w)
-		return;
+	/* Initialize Max Count Parameter */
+	uint8_t optionCount;
 	
-	/* Initialize Parameters */														// ***
-	int16_t nV = ((x - grid.x + grid.space - grid.xoff) / grid.space) * -2 + 1 ;	// Initialize nV to shift magnitude+direction of first vertical line
-	int16_t nH = ((y - grid.y + grid.space - grid.yoff) / grid.space) * -2 + 1;		// Initialize nH to shift magnitude+direction of first horizontal line
-	
-	/* Shift Vertical Lines */					// ***
-	int16_t lineIt = grid.x + grid.xoff;		// Initialize lineIt to first vertical line				
-	int16_t count = nV;							// Initialize count to nV			
-			
-	while(lineIt < grid.x + grid.w){			// While the line iterator is within the horizontal-bounds of the grid,		
-		LCD_gridSmart_drawVL(lineIt + count);	//  Smart draw vertical line 'count' away from current vertical line
-		LCD_gridSmart_eraseVL(lineIt);			//  Smart erase current vertical line
-		lineIt += grid.space;					//  Move on to next vertical line
-		count += 2;								//  Increase count by 2
+	/* Set Text and Max Count Parameters */
+	switch(screen) {
+		case MAINSCREEN:
+		LCD_setText(MAINSCREEN_OPTION_X,MAINSCREEN_OPTION_Y,MAINSCREEN_OPTION_SIZE,MAINSCREEN_OPTION_COLOR,MAINSCREEN_SCREENCOLOR);
+		optionCount = MAINSCREEN_OPTION_COUNT;
+		break;
 		
+		case DEBUGSCREEN:
+		LCD_setText(DEBUGSCREEN_OPTION_X,DEBUGSCREEN_OPTION_Y,DEBUGSCREEN_OPTION_SIZE,DEBUGSCREEN_OPTION_COLOR,DEBUGSCREEN_SCREENCOLOR);
+		optionCount = DEBUGSCREEN_OPTION_COUNT;
+		break;
+		
+		case TRACESCREEN:
+		LCD_setText(NAVSCREEN_OPTION_X,NAVSCREEN_OPTION_Y,NAVSCREEN_OPTION_SIZE,NAVSCREEN_OPTION_COLOR,NAVSCREEN_SCREENCOLOR);
+		optionCount = NAVSCREEN_OPTION_COUNT;
+		break;
+		
+		default: return;
 	}
-	
-	/* Update Parameters */			// ***
-	grid.space += 2;				// Update space
-	LCD_gridSmart_addOff(nV, 0);	// Update XOff	
-	
-	/* Shift Horizontal Lines */				// ***
-	lineIt = grid.y + grid.yoff;				// Set lineIt to first horizontal line
-	count = nH;									// Set count to nH
-		
-	while(lineIt < grid.y + grid.h){			// While the line iterator is within the vertical-bounds of the grid,	
-		LCD_gridSmart_drawHL(lineIt + count);	//  Draw horizontal line 'count' away from current horizontal line	
-		LCD_gridSmart_eraseHL(lineIt);			//  Smart erase current horizontal line
-		lineIt += grid.space - 2;				//  Move on to next horizontal line
-		count += 2;								//  Increase count by 2
-		
+
+	/* Redraw Pointer */
+	for(int i = 0; i < optionCount; i++){
+		if(i == optionNumber)	LCD_print_str(">\n");
+		else					LCD_print_str(" \n");
 	}
-	
-	/* Update YOff */	
-	LCD_gridSmart_addOff(0,nH);
-	
 }
 
-void LCD_zoomGridOut(uint16_t x, uint16_t y)
+void LCD_setIconState(OutlineImage type, uint8_t state)
 {
-	/* Return if Zoom-Point is NOT Within Bounds of Grid */
-	if(x < grid.x || x > grid.x + grid.h || y < grid.y || y > grid.y + grid.w)
-		return;
-	
-	/* Initialize Parameters */														// ***
-	int16_t nV = ((x - grid.x + grid.space - grid.xoff) / grid.space) * 2 + 1;		// Initialize nV to shift magnitude+direction of ghost vertical line
-	int16_t nH = ((y - grid.y + grid.space - grid.yoff) / grid.space) * 2 + 1;		// Initialize nH to shift magnitude+direction of ghost horizontal line
-	
-	/* Shift Vertical Lines */							// ***
-	int16_t lineIt = grid.x + grid.xoff - grid.space;	// Initialize lineIt to ghost vertical line
-	int16_t count = nV;									// Initialize count to nV
-	
-	while(lineIt < grid.x + grid.w){			// While the line iterator is within the horizontal-bounds of the grid,
-		LCD_gridSmart_drawVL(lineIt + count);	//  Smart draw vertical line 'count' away from current vertical line
-		LCD_gridSmart_eraseVL(lineIt);			//  Smart erase current vertical line
-		lineIt += grid.space;					//  Move on to next vertical line
-		count -= 2;								//  Increase count by 2
-		_delay_ms(1000);
+	/* Set State of Specified Icon */
+	switch(type){
+		case CARDICON: LCD_drawImage(CARDICON,ALLSCREENS_CARD_X, ALLSCREENS_CARD_Y, ALLSCREENS_CARD_SIZE, state ? ALLSCREENS_CARD_COLORON : ALLSCREENS_CARD_COLOROFF);	break;
+		case GPSICON:  LCD_drawImage(GPSICON, ALLSCREENS_GPS_X,  ALLSCREENS_GPS_Y,  ALLSCREENS_GPS_SIZE,  state ? ALLSCREENS_GPS_COLORON : ALLSCREENS_GPS_COLOROFF);	break;
 	}
-	
-	/* Update Parameters */							// ***
-	int16_t ghostOff = grid.xoff - grid.space + nV;	// Calculate y-coordinate of shifted ghost line
-	
-	if(ghostOff > 0)								// If ghost offset is within grid bounds,
-		grid.xoff = ghostOff;						//  Set xoff to ghost offset
-		
-	else{											// Else,
-		grid.space -= 2;							//  Update space
-		LCD_gridSmart_addOff(nV > 1 ? (nV - 2): -1, 0);	//  Update XOff
-	}
-		
-	/* Shift Horizontal Lines */				// ***
-	lineIt = grid.y + grid.yoff - grid.space;	// Set lineIt to first horizontal line
-	count = nH;									// Set count to nH
-	
-	while(lineIt < grid.y + grid.h){			// While the line iterator is within the vertical-bounds of the grid,
-		LCD_gridSmart_drawHL(lineIt + count);	//  Draw horizontal line 'count' away from current horizontal line
-		LCD_gridSmart_eraseHL(lineIt);			//  Smart erase current horizontal line
-		lineIt += grid.space;				//  Move on to next horizontal line
-		count -= 2;								//  Increase count by 2
-		_delay_ms(1000);
-	}
-	
-	///* Update YOff */								// ***
-	//ghostOff = grid.yoff - grid.space + nH;			// Calculate y-coordinate of shifted ghost line
-		//
-	//if(ghostOff > 0)								// If ghost offset is within grid bounds,
-	//grid.yoff = ghostOff;							//  Set xoff to ghost offset
-		//
-	//else{											// Else,
-		//LCD_gridSmart_addOff(0, nH > 1 ? nV : -1);	//  Update YOff
-	//}
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//										 Private Functions										  //
+//									   LCD Private Functions									  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void LCD_spi_init()
 {
 	/* Set SPI Speed and Settings */	
-	SPDDR |= (1<<1)|(1<<3)|(1<<4)|(1<<5)|(1<<7);	// Set CS(1), RST(3), D/C(4), MOSI(5), and SCK(7) as outputs
-	SPCR = (1<<SPE)|(1<<MSTR);				// Enable SPI - fclk/16
-	SPPORT |= (1<<CS);								// Disable CS during startup
+	SPDDR |= (1<<LDC)|(1<<LCS)|(1<<5)|(1<<7);
+	SPPORT |= (1<<LCS);					// Disable CS and RST during startup
+	SPCR0 |= (1<<SPE0)|(1<<MSTR0);						// Enable SPI - fclk/4
+	SPSR0 |= (1<<SPI2X0);								// Double SPI speed
 }
 
 void LCD_spi_send(uint8_t data)
 {
 	/* Send SPI data */
-	SPDR = data ;					// Load data into SPDR - initiates transmission
-	while(!(SPSR & (1<<SPIF))) ;	// Wait till the transmission is finished
+	SPDR0 = data ;					// Load data into SPDR - initiates transmission
+	while(!(SPSR0 & (1<<SPIF0))) ;	// Wait till the transmission is finished
 }
-
 
 void LCD_writecommand8(uint8_t command)
 {
 	/* Write 8-bit Command */
-	SPPORT &= ~((1<<DC)|(1<<CS));		// Enable chip select and set command-mode
+	SPPORT &= ~((1<<LDC)|(1<<LCS));	// Enable chip select and set command-mode
 	LCD_spi_send(command);			// Send command
-	SPPORT |= (1<<CS);					// Disable chip select
+	SPPORT |= (1<<LCS);				// Disable chip select
+	SPPORT |= (1<<LDC);				// EXPLICITELY ENABLE DATA [SD LCD CIVIL WAR]
 }
-
 
 void LCD_writedata8(uint8_t data)
 {
 	/*Write 8-bit Data */
-	SPPORT |=(1<<DC);		// Set data-mode
-	SPPORT &= ~(1<<CS);		// Enable chip select
-	LCD_spi_send(data);	// Send data
-	SPPORT |=(1<<CS);		// Disable chip select
+	SPPORT |=(1<<LDC);		// Set data-mode
+	SPPORT &= ~(1<<LCS);	// Enable chip select
+	LCD_spi_send(data);		// Send data
+	SPPORT |=(1<<LCS);		// Disable chip select
 }
 
 void LCD_pushColor(uint16_t color)
@@ -588,89 +584,4 @@ void LCD_drawChar(int16_t x, int16_t y, char c, Color fg, Color bg, uint8_t size
 			pattern >>= 1;																//   Advance to next bit in pattern
 		}	
 	}
-}
-
-void LCD_printChar(char c)
-{
-	/* Draw 'c' */																// ***
-	if (c == '\n') {															// If the character is '\n'
-		pencil.y += pencil.size * 8;											//  Move pencil cursor down and 
-		pencil.x = 0;															//  Move pencil cursor all the way to the left
-	}
-	
-	else {																		// Else, 
-		LCD_drawChar(pencil.x, pencil.y, c, pencil.fg, pencil.bg, pencil.size);	// Draw character using pencil
-		pencil.x += pencil.size * 6;											// Move pencil cursor 6 px to the right
-	}
-}
-
-void LCD_gridSmart_drawVL(uint16_t x)
-{
-	if(!grid.isDrawn || x < grid.x || x >= grid.x + grid.w)
-		return;
-		
-	LCD_drawRect_filled(x, grid.y, 1, grid.h, grid.fg);
-}
-
-void LCD_gridSmart_drawHL(uint16_t y)
-{
-	if(!grid.isDrawn || y < grid.y || y >= grid.y + grid.h)
-		return;
-	
-	LCD_drawRect_filled(grid.x, y, grid.w, 1, grid.fg);
-}
-
-void LCD_gridSmart_eraseVL(uint16_t x)
-{
-	if(!grid.isDrawn || x < grid.x || x >= grid.x + grid.w)
-		return;
-		
-	LCD_setAddress(x, grid.y, x, grid.y + grid.h);
-	
-	for(int i = 0; i < grid.h; i++)
-		LCD_pushColor(i % grid.space != grid.yoff ? grid.bg : grid.fg);
-		
-}
-
-void LCD_gridSmart_eraseHL(uint16_t y)
-{
-	if(!grid.isDrawn || y < grid.y || y >= grid.y + grid.h){
-		LCD_print_str("FAIL!");	LCD_moveTextCursor(-strlen("FAIL!"), 0)	;
-		return;
-	}
-	
-	LCD_print_str("SUCCESS!");	LCD_moveTextCursor(-strlen("SUCCESS!"), 0)	;
-	LCD_setAddress(grid.x, y, grid.x + grid.w, y);
-	
-	for(int i = 0; i < grid.w; i++)
-		LCD_pushColor(i % grid.space != grid.xoff ? grid.bg : grid.fg);
-	
-}
-
-void LCD_gridSmart_addOff(int8_t x, int8_t y)
-{
-	if(!grid.isDrawn)
-		return;
-		
-	if(x != 0){
-		grid.xoff += x;
-	
-		while(grid.xoff < 0)
-			grid.xoff += grid.space;
-			
-		while(grid.xoff > grid.space)
-			grid.xoff -= grid.space;
-		
-	}
-	
-	if(y != 0){
-		grid.yoff += y;
-			
-		while(grid.yoff < 0)
-			grid.yoff += grid.space;
-		
-		while(grid.yoff > grid.space)
-			grid.yoff -= grid.space;
-			
-	}		
 }
